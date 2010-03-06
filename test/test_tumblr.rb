@@ -1,7 +1,7 @@
 require 'helper'
 
 class TestTumblr < Test::Unit::TestCase  
-  describe 'Reader' do    
+  describe 'Reader' do
     test 'sets up credentials for authentication' do
       reader = Tumblr::Reader
       assert !reader.new.defaults
@@ -104,6 +104,13 @@ class TestTumblr < Test::Unit::TestCase
   describe 'Post' do
     describe 'Basic' do
       
+      test 'can have a post_id already set' do
+        post = Tumblr::Post.new
+        assert !post.post_id
+        post = Tumblr::Post.new 123
+        assert_equal 123, post.post_id
+      end
+      
       test 'sets a date for publishing in the past' do
         post = Tumblr::Post.new
         assert_respond_to post, :date
@@ -170,7 +177,7 @@ class TestTumblr < Test::Unit::TestCase
         assert_equal 'Updating twitter through tumblr', post.send_to_twitter
       end
       
-      test 'if the published state is in the queue, you specify a publish date' do
+      test 'if the published state is in the queue, specify a publish date' do
         post = Tumblr::Post.new
         assert_respond_to post, :publish_on
         right_now = Time.now.iso8601
@@ -181,6 +188,13 @@ class TestTumblr < Test::Unit::TestCase
         assert_equal right_now, post.publish_on
       end
       
+    end
+  
+    describe 'Regular' do
+      test 'is of regular type' do
+        reg = Tumblr::Post::Regular.new(123)
+        assert_equal :regular, reg.type
+      end
     end
   end
 end
