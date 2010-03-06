@@ -1,15 +1,26 @@
-require 'rubygems'
+begin
+  # Try to require the preresolved locked set of gems.
+  require File.expand_path('../.bundle/environment', __FILE__)
+rescue LoadError
+  # Fall back on doing an unlocked resolve at runtime.
+  require "rubygems"
+  require "bundler"
+  Bundler.setup
+end
+
 require 'rake'
 
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "tumblr"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = "Ruby wrapper and command line interface to the Tumblr API."
+    gem.description = "Ruby library and command line utility to work with the Tumblr Blogging Platform, powered by Weary."
     gem.email = "mark@markwunsch.com"
     gem.homepage = "http://github.com/mwunsch/tumblr"
     gem.authors = ["Mark Wunsch"]
+    gem.add_dependency 'weary'
+    gem.add_development_dependency "bundler", ">= 0.9.7"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new

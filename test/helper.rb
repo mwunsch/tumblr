@@ -1,9 +1,20 @@
-require 'rubygems'
+begin
+  # Try to require the preresolved locked set of gems.
+  require File.expand_path('../.bundle/environment', __FILE__)
+rescue LoadError
+  # Fall back on doing an unlocked resolve at runtime.
+  require "rubygems"
+  require "bundler"
+  Bundler.setup
+end
+
 require 'test/unit'
+require 'redgreen'
 
-$LOAD_PATH.unshift(File.dirname(__FILE__))
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-require 'tumblr'
-
-class Test::Unit::TestCase
+begin
+  require 'tumblr'
+rescue LoadError
+  lib_path = File.join(File.dirname(__FILE__), '..', 'lib')
+  $LOAD_PATH.unshift lib_path unless $LOAD_PATH.include?(lib_path)
+  require 'tumblr'
 end
