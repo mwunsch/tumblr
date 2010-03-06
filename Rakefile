@@ -14,7 +14,7 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "tumblr"
+    gem.name = "tumblr-rb"
     gem.summary = "Ruby wrapper and command line interface to the Tumblr API."
     gem.description = "Ruby library and command line utility to work with the Tumblr Blogging Platform, powered by Weary."
     gem.version = Tumblr::VERSION
