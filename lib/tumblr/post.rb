@@ -47,5 +47,10 @@ class Tumblr
       @send_to_twitter
     end
     
+    def publish_on(pubdate=nil)
+      @publish_on = pubdate if state.eql?(:queue) && pubdate
+      @publish_on
+    end
+    
   end
 end

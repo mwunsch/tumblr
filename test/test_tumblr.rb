@@ -170,6 +170,17 @@ class TestTumblr < Test::Unit::TestCase
         assert_equal 'Updating twitter through tumblr', post.send_to_twitter
       end
       
+      test 'if the published state is in the queue, you specify a publish date' do
+        post = Tumblr::Post.new
+        assert_respond_to post, :publish_on
+        right_now = Time.now.iso8601
+        post.publish_on right_now
+        assert !post.publish_on
+        post.state = :queue
+        post.publish_on right_now
+        assert_equal right_now, post.publish_on
+      end
+      
     end
   end
 end
