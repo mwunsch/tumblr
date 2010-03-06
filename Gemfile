@@ -5,6 +5,7 @@ gem 'weary','>= 0.7.1'
 group :test do
 	gem 'rake'
 	gem 'redgreen'
-	gem 'fakeweb'
+	gem 'contest'
+	gem 'vcr'
 	gem 'jeweler'
 end
