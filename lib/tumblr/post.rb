@@ -7,6 +7,10 @@ class Tumblr
     attr_reader :type, :state, :post_id, :format
     attr_accessor :slug, :date, :group
     
+    def initialize(post_id = nil)
+      @post_id = post_id if post_id
+    end
+    
     def private=(bool)
       @private = bool ? true : false
     end
@@ -54,3 +58,5 @@ class Tumblr
     
   end
 end
+
+require 'tumblr/post/regular'
