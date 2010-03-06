@@ -13,7 +13,7 @@ class Tumblr
     
     # http://www.tumblr.com/docs/en/api#authenticated_read
     def authenticated_read(username, params={})
-      raise 'Needs requirements badly' unless defaults
+      raise 'Needs requirements badly' unless (params.include?(:email) && params.include?(:password)) || defaults
       self.class.read username, :post, parameters(params)
     end
     

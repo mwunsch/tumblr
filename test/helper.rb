@@ -25,7 +25,7 @@ FakeWeb.allow_net_connect = false
 
 VCR.config do |c|
   # the cache_dir is where the cassette yml files will be saved.
-  c.cache_dir = File.join('fixtures', 'vcr_cassettes')
+  c.cache_dir = File.join(File.dirname(__FILE__),'fixtures', 'vcr_cassettes')
 
   # this record mode will be used for any cassette you create without specifying a record mode.
   c.default_cassette_record_mode = :none
