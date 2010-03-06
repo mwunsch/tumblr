@@ -83,4 +83,21 @@ class TestTumblr < Test::Unit::TestCase
       assert_respond_to reader, :unlike
     end
   end
+  
+  describe 'Writer' do
+    test 'sets up credentials for authentication' do
+      writer = Tumblr::Writer
+      assert !writer.new.defaults
+      params = {:email => 'test@testermcgee.com', :password => 'dontrevealmysecrets'}
+      credentials = writer.new(params[:email],params[:password]).defaults
+      assert credentials.has_key? :email
+      assert credentials.has_key? :password
+      assert_equal params, credentials
+    end
+  
+    test 'writes a post' do
+      writer = Tumblr::Writer
+      assert_respond_to writer.new, :write
+    end
+  end
 end
