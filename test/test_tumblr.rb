@@ -66,5 +66,12 @@ class TestTumblr < Test::Unit::TestCase
       assert !response.success?
       assert_equal 403, response.code
     end
+    
+    test 'can not do an authenticated read without credentials' do
+      reader = Tumblr::Reader
+      assert_raise RuntimeError do 
+        reader.new.authenticated_read('mwunsch')
+      end
+    end
   end
 end
