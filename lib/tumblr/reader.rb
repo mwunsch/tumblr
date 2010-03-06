@@ -32,27 +32,27 @@ class Tumblr
     end
     
     # http://www.tumblr.com/docs/en/api#api_dashboard
-    post 'dashboard' do |dashboard|
+    post :dashboard do |dashboard|
       dashboard.url = "http://www.tumblr.com/api/dashboard"
       dashboard.requires = [:email,:password]
       dashboard.with = [:start,:num,:type,:filter,:likes]
     end
     
     # http://www.tumblr.com/docs/en/api#api_likes
-    post 'likes' do |likes|
+    post :likes do |likes|
       likes.url = "http://www.tumblr.com/api/likes"
       likes.requires = [:email, :password]
       likes.with = [:start, :num, :filter]
     end
     
     # http://www.tumblr.com/docs/en/api#api_liking
-    post 'like' do |like|
+    post :like do |like|
       like.url = "http://www.tumblr.com/api/like"
       like.requires = [:email, :password, 'post-id', 'reblog-key']
     end
 
     # http://www.tumblr.com/docs/en/api#api_liking    
-    post 'unlike' do |unlike|
+    post :unlike do |unlike|
       unlike.url = "http://www.tumblr.com/api/unlike"
       unlike.requires = [:email, :password, 'post-id', 'reblog-key']
     end
