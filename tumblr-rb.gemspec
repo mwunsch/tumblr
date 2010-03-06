@@ -4,7 +4,7 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{tumblr}
+  s.name = %q{tumblr-rb}
   s.version = "0.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
@@ -25,7 +25,8 @@ Gem::Specification.new do |s|
      "Rakefile",
      "lib/tumblr.rb",
      "test/helper.rb",
-     "test/test_tumblr.rb"
+     "test/test_tumblr.rb",
+     "tumblr.gemspec"
   ]
   s.homepage = %q{http://github.com/mwunsch/tumblr}
   s.rdoc_options = ["--charset=UTF-8"]

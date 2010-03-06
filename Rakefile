@@ -21,7 +21,7 @@ begin
     gem.email = "mark@markwunsch.com"
     gem.homepage = "http://github.com/mwunsch/tumblr"
     gem.authors = ["Mark Wunsch"]
-    gem.add_dependency 'weary'
+    gem.add_dependency 'weary', '>= 0.7.1'
     gem.add_development_dependency "bundler", ">= 0.9.7"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
@@ -62,4 +62,9 @@ Rake::RDocTask.new do |rdoc|
   rdoc.title = "tumblr #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
+end
+
+desc "Open an irb session preloaded with this library"
+task :console do
+  sh "irb -rubygems -I lib -r tumblr"
 end
