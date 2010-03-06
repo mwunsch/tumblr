@@ -1,0 +1,40 @@
+--- 
+- !ruby/struct:VCR::RecordedResponse 
+  method: :post
+  uri: http://mwunsch.tumblr.com:80/api/read/
+  response: !ruby/object:Net::HTTPOK 
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <tumblr version="1.0"><tumblelog name="mwunsch" timezone="US/Eastern" title="M. Wunsch">Collected visual and aural interests of &lt;a href="http://markwunsch.com" rel="me"&gt;Mark Wunsch&lt;/a&gt;.</tumblelog><posts start="0" total="66"><post id="420292045" url="http://mwunsch.tumblr.com/post/420292045" url-with-slug="http://mwunsch.tumblr.com/post/420292045/testing-something-or-other" type="regular" date-gmt="2010-03-01 19:20:12 GMT" date="Mon, 01 Mar 2010 14:20:12" unix-timestamp="1267471212" format="markdown" reblog-key="Bdxz9T94" slug="testing-something-or-other" bookmarklet="true"><regular-body>Just a test.</regular-body></post></posts></tumblr>
+
+    body_exist: true
+    code: "200"
+    header: 
+      last-modified: 
+      - Fri, 05 Mar 2010 17:12:57 GMT
+      p3p: 
+      - CP="ALL ADM DEV PSAi COM OUR OTRo STP IND ONL"
+      content-type: 
+      - text/xml; charset=UTF-8
+      connection: 
+      - close
+      x-tumblr-usec: 
+      - D=126358
+      x-robots-tag: 
+      - noindex
+      server: 
+      - Apache/2.2.3 (CentOS)
+      date: 
+      - Sat, 06 Mar 2010 12:16:06 GMT
+      content-length: 
+      - "902"
+      x-tumblr-perf: 
+      - "\"ch:4/tumblelog_id_for_host,tumblelogs,country_code_for_ip,tumblelog_post_count cm:3/rate-limiter,rate-limiter,rate-limiter ce:0/ c:0/0 d:0/0 e:0/0\""
+      vary: 
+      - Accept-Encoding
+      cache-control: 
+      - max-age=900
+    http_version: "1.1"
+    message: OK
+    read: true
+    socket: 

@@ -36,9 +36,35 @@ class TestTumblr < Test::Unit::TestCase
       mwunsch = reader.new.read('mwunsch')
       assert_respond_to mwunsch, :perform
       assert_equal 'http://mwunsch.tumblr.com/api/read/', mwunsch.uri.normalize.to_s
-      response = hijack! mwunsch, 'read/mwunsch read'
+      response = hijack! mwunsch, 'read/mwunsch'
       assert response.success?
       assert_equal :xml, response.format
+    end
+    
+    test 'reads posts with some optional parameters' do
+      reader = Tumblr::Reader
+      options = {:num => 5, :type => :video}
+      posts = reader.new.read 'mwunsch', options
+      assert_equal options.to_params, posts.with
+      response = hijack! posts, 'read/optional'
+      parsed = response.parse["tumblr"]["posts"]
+      assert_equal "video", parsed["type"]
+      assert_equal 5, parsed['post'].count
+    end
+    
+    test 'attempts to perform an authenticated read' do
+      reader = Tumblr::Reader
+      auth = reader.new('test@testermcgee.com','dontrevealmysecrets').authenticated_read('mwunsch',{:state => :draft})
+      response = hijack! auth, 'read/authenticated'
+      assert_equal '420292045', response['tumblr']['posts']['post']['id']
+    end
+    
+    test 'sometimes authentication fails' do
+      reader = Tumblr::Reader
+      auth = reader.new('test@testermcgee.com','dontrevealmysecrets').authenticated_read('mwunsch')
+      response = hijack! auth, 'read/authentication failure'
+      assert !response.success?
+      assert_equal 403, response.code
     end
   end
 end

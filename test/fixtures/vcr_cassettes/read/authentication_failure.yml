@@ -1,0 +1,33 @@
+--- 
+- !ruby/struct:VCR::RecordedResponse 
+  method: :post
+  uri: http://mwunsch.tumblr.com:80/api/read/
+  response: !ruby/object:Net::HTTPForbidden 
+    body: Authentication failed.
+    body_exist: true
+    code: "403"
+    header: 
+      last-modified: 
+      - Fri, 05 Mar 2010 17:12:57 GMT
+      p3p: 
+      - CP="ALL ADM DEV PSAi COM OUR OTRo STP IND ONL"
+      content-type: 
+      - text/plain; charset=utf-8
+      connection: 
+      - close
+      x-tumblr-usec: 
+      - D=66602
+      server: 
+      - Apache/2.2.3 (CentOS)
+      date: 
+      - Sat, 06 Mar 2010 12:22:52 GMT
+      content-length: 
+      - "22"
+      x-tumblr-perf: 
+      - "\"ch:3/tumblelog_id_for_host,tumblelogs,country_code_for_ip cm:3/rate-limiter,rate-limiter,rate-limiter ce:0/ c:0/0 d:0/0 e:0/0\""
+      vary: 
+      - Accept-Encoding
+    http_version: "1.1"
+    message: Forbidden
+    read: true
+    socket: 
