@@ -100,4 +100,76 @@ class TestTumblr < Test::Unit::TestCase
       assert_respond_to writer.new, :write
     end
   end
+  
+  describe 'Post' do
+    describe 'Basic' do
+      
+      test 'sets a date for publishing in the past' do
+        post = Tumblr::Post.new
+        assert_respond_to post, :date
+        right_now = Time.now.iso8601
+        post.date = right_now
+        assert_equal right_now, post.date
+      end
+      
+      test 'can be a private post' do
+        post = Tumblr::Post.new
+        assert_respond_to post, :private?
+        assert !post.private?
+        post.private = true
+        assert post.private?
+      end
+      
+      test 'has a comma separated list of tags' do
+        post = Tumblr::Post.new
+        assert_respond_to post, :tags
+        post.tags :tumblr, :whatever, :ruby
+        assert_equal 'tumblr,whatever,ruby', post.tags
+      end
+      
+      test 'can set its format to be html or markdown' do
+        post = Tumblr::Post.new
+        assert_respond_to post, :format
+        post.format = :foobar
+        assert !post.format
+        post.format = :markdown
+        assert_equal :markdown, post.format
+      end
+      
+      test 'can set this post to be published to a secondary blog' do
+        post = Tumblr::Post.new
+        assert_respond_to post, :group
+        post.group = 'mygroup.tumblr.com'
+        assert_equal 'mygroup.tumblr.com', post.group
+      end
+      
+      test 'sets a slug for its url' do
+        post = Tumblr::Post.new
+        assert_respond_to post, :slug
+        post.slug = "this-string-right-here"
+        assert_equal "this-string-right-here", post.slug
+      end
+      
+      test 'can change published state' do
+        post = Tumblr::Post.new
+        assert_respond_to post, :state
+        post.state = 'queue'
+        assert_equal :queue, post.state
+        assert_raise RuntimeError do
+          post.state = 'foobar'
+        end
+      end
+      
+      test 'sends to twitter' do
+        post = Tumblr::Post.new
+        assert_respond_to post, :send_to_twitter
+        assert !post.send_to_twitter
+        post.send_to_twitter :no
+        assert !post.send_to_twitter
+        post.send_to_twitter 'Updating twitter through tumblr'
+        assert_equal 'Updating twitter through tumblr', post.send_to_twitter
+      end
+      
+    end
+  end
 end

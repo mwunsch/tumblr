@@ -9,8 +9,8 @@ class Tumblr
     post :write do |write|
       write.url = 'http://www.tumblr.com/api/write'
       write.requires = [:email, :password, :type]
-      write.with = [:generator, :date, :private, :tags, :format, :group,
-                    :slug, :slate, 'send-to-twitter']
+      write.with = [:generator, :date, :private, :tags, :format,
+                    :group, :slug, :slate, 'send-to-twitter']
     end
     
   end
