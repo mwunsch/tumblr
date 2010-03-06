@@ -73,5 +73,14 @@ class TestTumblr < Test::Unit::TestCase
         reader.new.authenticated_read('mwunsch')
       end
     end
+    
+    # need to test these more thoroughly
+    test 'has several other authenticated read methods' do
+      reader = Tumblr::Reader.new
+      assert_respond_to reader, :dashboard
+      assert_respond_to reader, :likes
+      assert_respond_to reader, :like
+      assert_respond_to reader, :unlike
+    end
   end
 end
