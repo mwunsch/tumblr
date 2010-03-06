@@ -7,7 +7,8 @@ rescue LoadError
   require "bundler"
   Bundler.setup
 end
-
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), 'lib')
+require 'tumblr'
 require 'rake'
 
 begin
