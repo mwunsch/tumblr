@@ -1,3 +1,5 @@
+#TODO: Support file uploads
+
 class Tumblr
   class Post
     class Photo < Post
