@@ -20,5 +20,11 @@ class Tumblr
       edit.with = (Post::BASIC_PARAMS | Post::POST_PARAMS)
     end
     
+    # http://www.tumblr.com/docs/en/api#deleting_posts
+    post :delete do |del|
+      del.url = 'http://www.tumblr.com/api/delete'
+      del.requires = [:email, :password, :'post-id']
+    end
+    
   end
 end

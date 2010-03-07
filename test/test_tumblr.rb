@@ -109,6 +109,15 @@ class TestTumblr < Test::Unit::TestCase
       response = hijack! publisher.edit(post), 'write/edit'
       assert_equal 201, response.code
     end
+    
+    test 'deletes a post' do
+      assert_respond_to Tumblr::Writer.new, :edit
+      publisher = Tumblr::Writer.new('test@testermcgee.com','dontrevealmysecrets')
+      post = {:'post-id' => "431830023"}
+      response = hijack! publisher.delete(post), 'write/delete'
+      assert response.success?
+      assert_equal 'Deleted', response.body
+    end
   end
   
   describe 'Post' do
