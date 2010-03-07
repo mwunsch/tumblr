@@ -7,6 +7,8 @@ class Tumblr
         @type = :regular
       end
       
+      attr_accessor :title, :body
+      
     end
   end
 end

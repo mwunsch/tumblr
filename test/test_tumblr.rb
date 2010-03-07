@@ -103,7 +103,6 @@ class TestTumblr < Test::Unit::TestCase
   
   describe 'Post' do
     describe 'Basic' do
-      
       test 'can have a post_id already set' do
         post = Tumblr::Post.new
         assert !post.post_id
@@ -186,14 +185,27 @@ class TestTumblr < Test::Unit::TestCase
         post.state = :queue
         post.publish_on right_now
         assert_equal right_now, post.publish_on
-      end
-      
+      end 
     end
   
     describe 'Regular' do
       test 'is of regular type' do
-        reg = Tumblr::Post::Regular.new(123)
+        reg = Tumblr::Post::Regular.new
         assert_equal :regular, reg.type
+      end
+      
+      test 'has a body' do
+        reg = Tumblr::Post::Regular.new
+        assert_respond_to reg, :body
+        reg.body = "Hi"
+        assert_equal "Hi", reg.body
+      end
+      
+      test 'has a title' do
+        reg = Tumblr::Post::Regular.new
+        assert_respond_to reg, :title
+        reg.title = "Hi"
+        assert_equal "Hi", reg.title
       end
     end
   end
