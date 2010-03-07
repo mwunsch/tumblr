@@ -60,3 +60,4 @@ class Tumblr
 end
 
 require 'tumblr/post/regular'
+require 'tumblr/post/photo'

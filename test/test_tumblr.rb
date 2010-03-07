@@ -208,5 +208,30 @@ class TestTumblr < Test::Unit::TestCase
         assert_equal "Hi", reg.title
       end
     end
+  
+    describe 'Photo' do
+      test 'is a photo' do
+        photo = Tumblr::Post::Photo.new
+        assert_equal :photo, photo.type
+      end
+      
+      test 'has a source' do
+        photo = Tumblr::Post::Photo.new
+        photo.source = "http://foo.bar/picture.png"
+        assert_equal "http://foo.bar/picture.png", photo.source
+      end
+      
+      test 'has a caption' do
+        photo = Tumblr::Post::Photo.new
+        photo.caption = "Me in my youth"
+        assert_equal "Me in my youth", photo.caption
+      end
+      
+      test 'has a click-through-url' do
+        photo = Tumblr::Post::Photo.new
+        photo.click_through_url = "http://tumblr.com"
+        assert_equal "http://tumblr.com", photo.click_through_url
+      end
+    end
   end
 end
