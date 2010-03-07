@@ -24,6 +24,8 @@ class Tumblr
       params.reject {|key,value| !allowed.include? key }
     end
     
+    # Get the Posts as Post objects from a Read response.
+    # Pass an additional type parameter to only get Posts of a certain type.
     def self.get_posts(response, type = nil)
       tumblr_post = response['tumblr']['posts']['post']
       posts = tumblr_post.respond_to?(:each_pair) ? [tumblr_post] : tumblr_post
@@ -32,6 +34,7 @@ class Tumblr
       posts
     end
     
+    # Build a Post object from Reader's Post XML
     def self.build_post(post)
       tumblr_post = setup_post(post)
       tumblr_post.date = post['date_gmt']
