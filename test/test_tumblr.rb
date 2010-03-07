@@ -280,8 +280,19 @@ class TestTumblr < Test::Unit::TestCase
     
     describe 'Conversation' do
       test 'is a conversation' do
-        conversation = Tumblr::Post::Conversation.new
+        conversation = Tumblr::Post::Conversation.new('Me: hey whatsup')
         assert_equal :conversation, conversation.type
+      end
+      
+      test 'requires a chat' do
+        conversation = Tumblr::Post::Conversation.new('Me: hey whatsup')
+        assert_equal 'Me: hey whatsup', conversation.conversation
+      end
+      
+      test 'has an optional title' do
+        conversation = Tumblr::Post::Conversation.new('Me: hey whatsup')
+        conversation.title = 'Inner dialogue'
+        assert_equal 'Inner dialogue', conversation.title
       end
     end
     
