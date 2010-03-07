@@ -8,7 +8,7 @@ class Tumblr
         @type = :link
       end
       
-      attr_accessor :url, :name, :description
+      parameters :url, :name, :description
             
     end
   end

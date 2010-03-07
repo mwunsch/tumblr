@@ -103,6 +103,17 @@ class TestTumblr < Test::Unit::TestCase
   
   describe 'Post' do
     describe 'Basic' do
+      test 'has a set of post-specific parameters' do
+        klass = Class.new(Tumblr::Post)
+        assert_respond_to klass, :parameters
+        klass.parameters :title, :body
+        assert klass.parameters.include? :title
+        post = klass.new
+        assert_respond_to post, :title
+        post.title = 'Hello world'
+        assert_equal 'Hello world', post.title
+      end
+      
       test 'can have a post_id already set' do
         post = Tumblr::Post.new
         assert !post.post_id
@@ -186,6 +197,14 @@ class TestTumblr < Test::Unit::TestCase
         post.publish_on right_now
         assert_equal right_now, post.publish_on
       end 
+    
+      test 'converts to a hash' do
+        post = Tumblr::Post.new(123)
+        post.private = 1
+        assert_respond_to post, :to_h
+        assert post.to_h['private']
+        assert_equal 123, post.to_h['post-id']
+      end
     end
   
     describe 'Regular' do
@@ -209,7 +228,7 @@ class TestTumblr < Test::Unit::TestCase
       end
     end
   
-    describe 'Photo' do
+    describe 'Photo' do        
       test 'is a photo' do
         photo = Tumblr::Post::Photo.new
         assert_equal :photo, photo.type

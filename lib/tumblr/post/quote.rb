@@ -8,7 +8,7 @@ class Tumblr
         @type = :quote
       end
       
-      attr_accessor :quote, :source
+      parameters :quote, :source
       
             
     end

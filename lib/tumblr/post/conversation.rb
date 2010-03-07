@@ -8,7 +8,7 @@ class Tumblr
         @type = :conversation
       end
       
-      attr_accessor :conversation, :title
+      parameters :conversation, :title
             
     end
   end

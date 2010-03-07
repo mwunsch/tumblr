@@ -10,7 +10,7 @@ class Tumblr
         @type = :video
       end
       
-      attr_accessor :caption, :embed
+      parameters :caption, :embed
             
     end
   end

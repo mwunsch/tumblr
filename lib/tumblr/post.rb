@@ -4,8 +4,16 @@
 class Tumblr
   class Post
     
+    def self.parameters(*attributes)
+      if !attributes.blank?
+        @parameters = attributes
+        attr_accessor *@parameters
+      end
+      @parameters
+    end
+    
     attr_reader :type, :state, :post_id, :format
-    attr_accessor :slug, :date, :group
+    attr_accessor :slug, :date, :group, :generator
     
     def initialize(post_id = nil)
       @post_id = post_id if post_id
@@ -31,7 +39,6 @@ class Tumblr
       end
       @state = published_state.to_sym
     end
-    # need to do published_on
     
     def format=(markup)
       markup_format = markup.to_sym
@@ -54,6 +61,19 @@ class Tumblr
     def publish_on(pubdate=nil)
       @publish_on = pubdate if state.eql?(:queue) && pubdate
       @publish_on
+    end
+    
+    # Convert to a hash to be used in post writing/editing
+    def to_h
+      return @to_h if @to_h
+      hash = {}
+      basics = [:post_id, :type, :date, :tags, :format, :group, :generator,
+                :slug, :state, :send_to_twitter, :publish_on]
+      params = basics.select {|opt| respond_to?(opt) && send(opt) }
+      # params |= self.class.parameters if !parameters.blank?
+      params.each { |key| hash[key.to_s.gsub('_','-')] = send(key) } unless params.empty?
+      hash['private'] = 1 if private?
+      @to_h = hash
     end
     
   end
