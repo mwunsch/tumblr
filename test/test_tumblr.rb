@@ -204,6 +204,12 @@ class TestTumblr < Test::Unit::TestCase
         assert_respond_to post, :to_h
         assert post.to_h['private']
         assert_equal 123, post.to_h['post-id']
+        klass = Class.new(post.class)
+        klass.parameters :title, :body
+        new_post = klass.new(456)
+        new_post.title = "Hello world"
+        assert_equal 'Hello world', new_post.to_h['title']
+        assert !new_post.to_h.has_key?('body')
       end
     end
   
@@ -228,7 +234,7 @@ class TestTumblr < Test::Unit::TestCase
       end
     end
   
-    describe 'Photo' do        
+    describe 'Photo' do
       test 'is a photo' do
         photo = Tumblr::Post::Photo.new
         assert_equal :photo, photo.type

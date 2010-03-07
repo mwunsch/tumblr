@@ -70,7 +70,7 @@ class Tumblr
       basics = [:post_id, :type, :date, :tags, :format, :group, :generator,
                 :slug, :state, :send_to_twitter, :publish_on]
       params = basics.select {|opt| respond_to?(opt) && send(opt) }
-      # params |= self.class.parameters if !parameters.blank?
+      params |= self.class.parameters.select {|opt| send(opt) } unless self.class.parameters.blank?
       params.each { |key| hash[key.to_s.gsub('_','-')] = send(key) } unless params.empty?
       hash['private'] = 1 if private?
       @to_h = hash
