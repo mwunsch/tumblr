@@ -233,5 +233,40 @@ class TestTumblr < Test::Unit::TestCase
         assert_equal "http://tumblr.com", photo.click_through_url
       end
     end
+    
+    describe 'Quote' do
+      test 'is a quote' do
+        quote = Tumblr::Post::Quote.new
+        assert_equal :quote, quote.type
+      end
+    end
+    
+    describe 'Link' do
+      test 'is a link' do
+        link = Tumblr::Post::Link.new
+        assert_equal :link, link.type
+      end
+    end
+    
+    describe 'Conversation' do
+      test 'is a conversation' do
+        conversation = Tumblr::Post::Conversation.new
+        assert_equal :conversation, conversation.type
+      end
+    end
+    
+    describe 'Video' do
+      test 'is a video' do
+        video = Tumblr::Post::Video.new
+        assert_equal :video, video.type
+      end
+    end
+    
+    describe 'Audio' do
+      test 'is audio' do
+        audio = Tumblr::Post::Audio.new
+        assert_equal :audio, audio.type
+      end
+    end
   end
 end

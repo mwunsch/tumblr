@@ -61,3 +61,8 @@ end
 
 require 'tumblr/post/regular'
 require 'tumblr/post/photo'
+require 'tumblr/post/quote'
+require 'tumblr/post/link'
+require 'tumblr/post/conversation'
+require 'tumblr/post/video'
+require 'tumblr/post/audio'
