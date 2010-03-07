@@ -1,6 +1,29 @@
 require 'helper'
 
-class TestTumblr < Test::Unit::TestCase  
+class TestTumblr < Test::Unit::TestCase
+  describe 'Tumblr' do
+    test 'maps post types to the right class' do
+      assert_respond_to Tumblr, :map
+      assert_equal Tumblr::Post::Photo, Tumblr.map(:photo)
+      assert_raise RuntimeError do
+        Tumblr.map(:foobar)
+      end
+    end
+    
+    test 'parses a post out of a document' do
+      klass = Class.new Tumblr::Post
+      klass.parameters :title, :body
+      post = klass.new
+      post.instance_variable_set(:@type,:regular)
+      post.tags 'hello', 'stuff'
+      post.state = :queue
+      post.body = "Hello world."
+      document = post.to_s
+      
+      assert Tumblr.parse(document).is_a? Tumblr::Post::Regular
+    end
+  end
+    
   describe 'Reader' do
     test 'sets up credentials for authentication' do
       reader = Tumblr::Reader
@@ -169,18 +192,7 @@ class TestTumblr < Test::Unit::TestCase
     end
   end
   
-  describe 'Post' do
-    describe 'Class methods' do
-      test 'maps post types to the right class' do
-        post = Tumblr::Post
-        assert_respond_to post, :map
-        assert_equal Tumblr::Post::Photo, post.map(:photo)
-        assert_raise RuntimeError do
-          post.map(:foobar)
-        end
-      end
-    end
-    
+  describe 'Post' do    
     describe 'Basic' do
       test 'has a set of post-specific parameters' do
         klass = Class.new(Tumblr::Post)
