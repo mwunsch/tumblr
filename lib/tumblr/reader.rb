@@ -33,25 +33,7 @@ class Tumblr
     end
     
     def self.build_post(post)
-      post_type = post['type'].to_sym
-      tumblr_post = case post_type
-        when :regular
-          build_regular(post)
-        when :photo
-          build_photo(post)
-        when :quote
-          build_quote(post)
-        when :link
-          build_link(post)
-        when :conversation
-          build_conversation(post)
-        when :video
-          build_video(post)
-        when :audio
-          build_audio(post)
-        else
-          raise "#{post_type} is not a recognized Tumblr post type."
-      end
+      tumblr_post = setup_post(post)
       tumblr_post.date = post['date_gmt']
       tumblr_post.format = post['format'].to_sym if post['format']
       tumblr_post.slug = post['slug']
@@ -93,6 +75,28 @@ class Tumblr
     end
     
     private
+    
+    def self.setup_post(post)
+      post_type = post['type'].to_sym
+      case post_type
+        when :regular
+          build_regular(post)
+        when :photo
+          build_photo(post)
+        when :quote
+          build_quote(post)
+        when :link
+          build_link(post)
+        when :conversation
+          build_conversation(post)
+        when :video
+          build_video(post)
+        when :audio
+          build_audio(post)
+        else
+          raise "#{post_type} is not a recognized Tumblr post type."
+      end
+    end
     
     def self.build_regular(post)
       post_id = post['id']
