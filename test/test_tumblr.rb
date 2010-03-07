@@ -13,14 +13,13 @@ class TestTumblr < Test::Unit::TestCase
     test 'parses a post out of a document' do
       klass = Class.new Tumblr::Post
       klass.parameters :title, :body
+      type = :regular
       post = klass.new
-      post.instance_variable_set(:@type,:regular)
-      post.tags 'hello', 'stuff'
-      post.state = :queue
+      post.instance_variable_set(:@type,type)
       post.body = "Hello world."
       document = post.to_s
-      
-      assert Tumblr.parse(document).is_a? Tumblr::Post::Regular
+      assert Tumblr.parse(document).is_a? Tumblr.map(type)
+      assert_equal post.body, Tumblr.parse(document).body
     end
   end
     
@@ -40,7 +39,7 @@ class TestTumblr < Test::Unit::TestCase
       options = {:start => 5, :num => 10, :foo => 'Bar', :type => 'video'}
       cred = {:email => 'test@testermcgee.com', :password => 'dontrevealmysecrets'}
       assert !reader.new.parameters(options).has_key?(:foo)
-      assert_equal cred[:email], reader.new(*cred.values).parameters(options)[:email]
+      assert_equal cred[:email], reader.new(cred[:email],cred[:password]).parameters(options)[:email]
       assert reader.new(*cred.values).parameters(options).has_key?(:password)
     end
     
@@ -68,7 +67,6 @@ class TestTumblr < Test::Unit::TestCase
       reader = Tumblr::Reader
       options = {:num => 5, :type => :video}
       posts = reader.new.read 'mwunsch', options
-      assert_equal options.to_params, posts.with
       response = hijack! posts, 'read/optional'
       parsed = response.parse["tumblr"]["posts"]
       assert_equal "video", parsed["type"]
