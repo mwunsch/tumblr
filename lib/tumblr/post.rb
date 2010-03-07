@@ -1,10 +1,9 @@
 # An object that represents a post. From:
 # http://www.tumblr.com/docs/en/api#api_write
-
 class Tumblr
   class Post
-    BASIC_PARAMS = [:date,:tags,:format,:group,:generator, :private,
-                    :'slug',:'state',:'send-to-twitter',:'publish-on']
+    BASIC_PARAMS = [:date,:tags,:format,:group,:generator,:private,
+                    :slug,:state,:'send-to-twitter',:'publish-on']
     POST_PARAMS = [:title,:body,:source,:caption,:'click-through-url',
                    :quote,:name,:url,:description,:conversation,
                    :embed,:'externally-hosted-url']
@@ -85,7 +84,7 @@ class Tumblr
     def write(email, password)
       options = to_h
       options[:type] = type if type
-      Write.new(email,password).write(options)
+      Writer.new(email,password).write(options)
     end
     
   end

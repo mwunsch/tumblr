@@ -2,7 +2,8 @@ class Tumblr
   class Writer < Weary::Base
     
     def initialize(*credentials)
-      @defaults = {:email => credentials[0], :password => credentials[1]} unless credentials.blank?
+      @defaults = {:generator => Tumblr::GENERATOR}
+      @defaults.merge!({:email => credentials[0], :password => credentials[1]}) unless credentials.blank?
     end
     
     # http://www.tumblr.com/docs/en/api#api_write

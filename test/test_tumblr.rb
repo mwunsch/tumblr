@@ -87,12 +87,10 @@ class TestTumblr < Test::Unit::TestCase
   describe 'Writer' do
     test 'sets up credentials for authentication' do
       writer = Tumblr::Writer
-      assert !writer.new.defaults
       params = {:email => 'test@testermcgee.com', :password => 'dontrevealmysecrets'}
       credentials = writer.new(params[:email],params[:password]).defaults
       assert credentials.has_key? :email
       assert credentials.has_key? :password
-      assert_equal params, credentials
     end
   
     test 'writes a post' do
@@ -214,6 +212,13 @@ class TestTumblr < Test::Unit::TestCase
         new_post.title = "Hello world"
         assert_equal 'Hello world', new_post.to_h[:title]
         assert !new_post.to_h.has_key?(:body)
+      end
+    
+      test 'publishes itself on tumblr' do
+        klass = Class.new Tumblr::Post
+        post = klass.new
+        post.instance_variable_set(:@type,:regular)
+        assert post.write('test@testermcgee.com','dontrevealmysecrets').is_a? Weary::Request
       end
     end
   
