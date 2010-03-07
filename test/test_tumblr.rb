@@ -344,6 +344,20 @@ class TestTumblr < Test::Unit::TestCase
         assert_equal :queue, post.state
         assert_equal 'tuesday',post.publish_on
       end
+    
+      test 'converts itself to YAML' do
+        klass = Class.new Tumblr::Post
+        klass.parameters :title, :body
+        post = klass.new
+        post.instance_variable_set(:@type,:regular)
+        post.tags 'hello', 'stuff'
+        post.state = :queue
+        post.body = "Hello world."
+        assert_respond_to post, :to_yaml
+        post_yaml = post.to_yaml
+        assert_equal 'Hello world.', YAML.load(post_yaml)['body']
+        assert_equal 'regular', YAML.load(post_yaml)['data']['type']
+      end
     end
   
     describe 'Regular' do

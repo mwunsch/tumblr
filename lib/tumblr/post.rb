@@ -69,7 +69,6 @@ class Tumblr
     
     # Convert to a hash to be used in post writing/editing
     def to_h
-      return @to_h if @to_h
       post_hash = {}
       basics = [:post_id, :type, :date, :tags, :format, :group, :generator,
                 :slug, :state, :send_to_twitter, :publish_on]
@@ -77,7 +76,7 @@ class Tumblr
       params |= self.class.parameters.select {|opt| send(opt) } unless self.class.parameters.blank?
       params.each { |key| post_hash[key.to_s.gsub('_','-').to_sym] = send(key) } unless params.empty?
       post_hash[:private] = 1 if private?
-      @to_h = post_hash
+      post_hash
     end
     
     # Publish this post to Tumblr
@@ -115,6 +114,18 @@ class Tumblr
       write(email,password)
     end
     
+    # Convert post to a YAML representation
+    def to_yaml
+      post = {'data'=>{}}
+      to_h.reject do |key,value| 
+        key.eql?(post_body) 
+      end.each_pair do |key,value|
+        post['data'][key.to_s] = value.to_s
+      end
+      post['body'] = to_h[post_body].to_s
+      YAML.dump(post)
+    end
+    
     def self.map(key)
       case key
         when :regular
@@ -135,7 +146,29 @@ class Tumblr
           raise "#{key} is not an understood Tumblr post type"
       end
     end
+  
+    private
     
+    def post_body
+      case type
+        when :regular
+          :body
+        when :photo
+          :source
+        when :quote
+          :quote
+        when :link
+          :url
+        when :conversation
+          :conversation
+        when :video
+          :embed
+        when :audio
+          :'externally-hosted-url'
+        else
+          raise "#{type} is not a recognized Tumblr post type."
+      end
+    end
   end
 end
 
