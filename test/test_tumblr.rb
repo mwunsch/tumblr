@@ -20,6 +20,30 @@ class TestTumblr < Test::Unit::TestCase
       document = post.to_s
       assert Tumblr.parse(document).is_a? Tumblr.map(type)
       assert_equal post.body, Tumblr.parse(document).body
+      assert_equal post.to_h, Tumblr.parse(document).to_h
+    end
+        
+    test 'parses a document and sets up basic post' do
+      klass = Class.new Tumblr::Post
+      klass.parameters :title, :body
+      type = :regular
+      post = klass.new('123')
+      post.instance_variable_set(:@type,type)
+      post.tags 'hello', 'stuff'
+      post.state = :queue
+      post.format = :markdown
+      post.send_to_twitter 'Hi from tumblr'
+      post.publish_on 'tuesday'
+      post.date = Time.now.iso8601
+      post.body = "Hello world."
+      post.generator = Tumblr::GENERATOR
+      post.private = true
+      post.group = 'tumblrgemtest.tumblr.com'
+      document = post.to_s
+      
+      %w(post_id format state tags send_to_twitter publish_on date generator private? group).each do |attribute|
+        assert_equal post.send(attribute), Tumblr.parse(document).send(attribute)
+      end
     end
   end
     
