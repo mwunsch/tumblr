@@ -358,6 +358,17 @@ class TestTumblr < Test::Unit::TestCase
         assert_equal 'Hello world.', YAML.load(post_yaml)['body']
         assert_equal 'regular', YAML.load(post_yaml)['data']['type']
       end
+      
+      test 'converts itself to a string for writing to a file' do
+        klass = Class.new Tumblr::Post
+        klass.parameters :title, :body
+        post = klass.new
+        post.instance_variable_set(:@type,:regular)
+        post.tags 'hello', 'stuff'
+        post.state = :queue
+        post.body = "Hello world."
+        assert_equal 'regular', YAML.load(post.to_s)['type']
+      end
     end
   
     describe 'Regular' do

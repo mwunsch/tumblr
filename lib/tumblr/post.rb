@@ -116,14 +116,18 @@ class Tumblr
     
     # Convert post to a YAML representation
     def to_yaml
-      post = {'data'=>{}}
-      to_h.reject do |key,value| 
-        key.eql?(post_body) 
-      end.each_pair do |key,value|
-        post['data'][key.to_s] = value.to_s
-      end
+      post = {}
+      post['data'] = post_data
       post['body'] = to_h[post_body].to_s
       YAML.dump(post)
+    end
+    
+    # Convert post to a string for writing to a file
+    def to_s
+      post_string = YAML.dump(post_data)
+      post_string += "---\n"
+      post_string += YAML.load(to_yaml)['body']
+      post_string
     end
     
     def self.map(key)
@@ -148,6 +152,15 @@ class Tumblr
     end
   
     private
+    
+    def post_data
+      data = {}
+      to_h.each_pair do |key,value|
+        data[key.to_s] = value.to_s
+      end
+      data.reject! {|key,value| key.eql?(post_body.to_s) }
+      data
+    end
     
     def post_body
       case type
