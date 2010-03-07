@@ -1,3 +1,5 @@
+#TODO: Support File uploading
+
 class Tumblr
   class Post
     class Audio < Post
@@ -6,6 +8,8 @@ class Tumblr
         super post_id
         @type = :audio
       end
+      
+      attr_accessor :externally_hosted_url, :caption
             
     end
   end

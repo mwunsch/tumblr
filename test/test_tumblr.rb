@@ -298,8 +298,19 @@ class TestTumblr < Test::Unit::TestCase
     
     describe 'Video' do
       test 'is a video' do
-        video = Tumblr::Post::Video.new
+        video = Tumblr::Post::Video.new('http://www.youtube.com/watch?v=CW0DUg63lqU')
         assert_equal :video, video.type
+      end
+      
+      test 'has a url or embed code' do
+        video = Tumblr::Post::Video.new('http://www.youtube.com/watch?v=CW0DUg63lqU')
+        assert_equal 'http://www.youtube.com/watch?v=CW0DUg63lqU', video.embed
+      end
+      
+      test 'has a caption' do
+        video = Tumblr::Post::Video.new('http://www.youtube.com/watch?v=CW0DUg63lqU')
+        video.caption = 'Good artists copy...'
+        assert_equal 'Good artists copy...', video.caption
       end
     end
     
@@ -307,6 +318,18 @@ class TestTumblr < Test::Unit::TestCase
       test 'is audio' do
         audio = Tumblr::Post::Audio.new
         assert_equal :audio, audio.type
+      end
+      
+      test 'can be a hosted url to an mp3 file' do
+        audio = Tumblr::Post::Audio.new
+        audio.externally_hosted_url = 'http://foobar.com/some.mp3'
+        assert_equal 'http://foobar.com/some.mp3', audio.externally_hosted_url
+      end
+      
+      test 'has an optional caption' do
+        audio = Tumblr::Post::Audio.new
+        audio.caption = 'not pirated'
+        assert_equal 'not pirated', audio.caption
       end
     end
   end
