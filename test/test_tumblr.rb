@@ -291,7 +291,7 @@ class TestTumblr < Test::Unit::TestCase
         assert !new_post.to_h.has_key?(:body)
       end
     
-      test 'publishes itself on tumblr' do
+      test 'writes itself to tumblr' do
         klass = Class.new Tumblr::Post
         post = klass.new
         post.instance_variable_set(:@type,:regular)
@@ -306,6 +306,43 @@ class TestTumblr < Test::Unit::TestCase
       test 'deletes itself' do
         post = Tumblr::Post.new(123)
         assert post.delete('test@testermcgee.com','dontrevealmysecrets').is_a? Weary::Request
+      end
+    
+      test 'publishes to tumblr' do
+        klass = Class.new Tumblr::Post
+        post = klass.new
+        post.instance_variable_set(:@type,:regular)
+        post.state = :queue
+        assert post.publish_now('test@testermcgee.com','dontrevealmysecrets').is_a? Weary::Request
+        assert_equal :published, post.state
+      end
+      
+      test 'saves as a draft to tumblr' do
+        klass = Class.new Tumblr::Post
+        post = klass.new
+        post.instance_variable_set(:@type,:regular)
+        post.state = :published
+        assert post.save_as_draft('test@testermcgee.com','dontrevealmysecrets').is_a? Weary::Request
+        assert_equal :draft, post.state
+      end
+      
+      test 'adds to tumblr queue' do
+        klass = Class.new Tumblr::Post
+        post = klass.new
+        post.instance_variable_set(:@type,:regular)
+        post.state = :draft
+        assert post.add_to_queue('test@testermcgee.com','dontrevealmysecrets').is_a? Weary::Request
+        assert_equal :queue, post.state
+      end
+      
+      test 'publish on a specific date' do
+        klass = Class.new Tumblr::Post
+        post = klass.new
+        post.instance_variable_set(:@type,:regular)
+        post.state = :draft
+        assert post.add_to_queue('test@testermcgee.com','dontrevealmysecrets','tuesday').is_a? Weary::Request
+        assert_equal :queue, post.state
+        assert_equal 'tuesday',post.publish_on
       end
     end
   

@@ -93,6 +93,28 @@ class Tumblr
       Writer.new(email,password).delete(to_h)
     end
     
+    # Write to Tumblr and set state to Publish
+    def publish_now(email, password)
+      self.state = :published
+      return edit(email,password) if post_id
+      write(email,password)
+    end
+    
+    # Save as a draft
+    def save_as_draft(email, password)
+      self.state = :draft
+      return edit(email,password) if post_id
+      write(email,password)
+    end
+    
+    # Adds to Queue. Pass an additional date to publish at a specific date.
+    def add_to_queue(email, password, pubdate = nil)
+      self.state = :queue
+      self.publish_on(pubdate) if pubdate
+      return edit(email,password) if post_id
+      write(email,password)
+    end
+    
     def self.map(key)
       case key
         when :regular
