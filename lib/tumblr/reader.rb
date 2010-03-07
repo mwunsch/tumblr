@@ -30,7 +30,7 @@ class Tumblr
       tumblr_post = response['tumblr']['posts']['post']
       posts = tumblr_post.respond_to?(:each_pair) ? [tumblr_post] : tumblr_post
       posts.collect! { |post| build_post(post) }
-      return posts.select {|post| post.is_a?(Post.map(type)) } if type
+      return posts.select {|post| post.is_a?(Tumblr.map(type)) } if type
       posts
     end
     
