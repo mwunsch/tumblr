@@ -3,6 +3,11 @@
 
 class Tumblr
   class Post
+    BASIC_PARAMS = [:date,:tags,:format,:group,:generator, :private,
+                    :'slug',:'state',:'send-to-twitter',:'publish-on']
+    POST_PARAMS = [:title,:body,:source,:caption,:'click-through-url',
+                   :quote,:name,:url,:description,:conversation,
+                   :embed,:'externally-hosted-url']
     
     def self.parameters(*attributes)
       if !attributes.blank?
@@ -66,14 +71,21 @@ class Tumblr
     # Convert to a hash to be used in post writing/editing
     def to_h
       return @to_h if @to_h
-      hash = {}
+      post_hash = {}
       basics = [:post_id, :type, :date, :tags, :format, :group, :generator,
                 :slug, :state, :send_to_twitter, :publish_on]
       params = basics.select {|opt| respond_to?(opt) && send(opt) }
       params |= self.class.parameters.select {|opt| send(opt) } unless self.class.parameters.blank?
-      params.each { |key| hash[key.to_s.gsub('_','-')] = send(key) } unless params.empty?
-      hash['private'] = 1 if private?
-      @to_h = hash
+      params.each { |key| post_hash[key.to_s.gsub('_','-').to_sym] = send(key) } unless params.empty?
+      post_hash[:private] = 1 if private?
+      @to_h = post_hash
+    end
+    
+    # Publish this post to Tumblr
+    def write(email, password)
+      options = to_h
+      options[:type] = type if type
+      Write.new(email,password).write(options)
     end
     
   end

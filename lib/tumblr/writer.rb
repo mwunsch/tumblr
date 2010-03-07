@@ -8,9 +8,8 @@ class Tumblr
     # http://www.tumblr.com/docs/en/api#api_write
     post :write do |write|
       write.url = 'http://www.tumblr.com/api/write'
+      write.with = (Post::BASIC_PARAMS | Post::POST_PARAMS)
       write.requires = [:email, :password, :type]
-      write.with = [:generator, :date, :private, :tags, :format,
-                    :group, :slug, :slate, 'send-to-twitter']
     end
     
   end

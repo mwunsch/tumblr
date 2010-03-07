@@ -98,6 +98,10 @@ class TestTumblr < Test::Unit::TestCase
     test 'writes a post' do
       writer = Tumblr::Writer
       assert_respond_to writer.new, :write
+      post = {:type => :regular, :body => 'Hello world.', :group => 'tumblrgemtest.tumblr.com'}
+      publisher = Tumblr::Writer.new('test@testermcgee.com','dontrevealmysecrets')
+      response = hijack! publisher.write(post), 'write/write'
+      assert_equal 201, response.code
     end
   end
   
@@ -202,14 +206,14 @@ class TestTumblr < Test::Unit::TestCase
         post = Tumblr::Post.new(123)
         post.private = 1
         assert_respond_to post, :to_h
-        assert post.to_h['private']
-        assert_equal 123, post.to_h['post-id']
+        assert_equal 1, post.to_h[:private]
+        assert_equal 123, post.to_h[:'post-id']
         klass = Class.new(post.class)
         klass.parameters :title, :body
         new_post = klass.new(456)
         new_post.title = "Hello world"
-        assert_equal 'Hello world', new_post.to_h['title']
-        assert !new_post.to_h.has_key?('body')
+        assert_equal 'Hello world', new_post.to_h[:title]
+        assert !new_post.to_h.has_key?(:body)
       end
     end
   
