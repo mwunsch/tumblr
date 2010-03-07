@@ -8,6 +8,7 @@ rescue LoadError
   Bundler.setup
 end
 
+require 'pp'
 require 'test/unit'
 require 'contest'
 require 'redgreen'

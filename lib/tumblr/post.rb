@@ -93,6 +93,27 @@ class Tumblr
       Writer.new(email,password).delete(to_h)
     end
     
+    def self.map(key)
+      case key
+        when :regular
+          Post::Regular
+        when :photo
+          Post::Photo
+        when :quote
+          Post::Quote
+        when :link
+          Post::Link
+        when :conversation
+          Post::Conversation
+        when :video
+          Post::Video
+        when :audio
+          Post::Audio
+        else
+          raise "#{key} is not an understood Tumblr post type"
+      end
+    end
+    
   end
 end
 

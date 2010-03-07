@@ -82,6 +82,37 @@ class TestTumblr < Test::Unit::TestCase
       assert_respond_to reader, :like
       assert_respond_to reader, :unlike
     end
+  
+    test 'parses posts out of a read' do
+      reader = Tumblr::Reader
+      assert_respond_to reader, :get_posts
+      mwunsch = reader.new.read('mwunsch')
+      response = hijack! mwunsch, 'read/mwunsch'
+      assert_equal response['tumblr']['posts']['post'].count, reader.get_posts(response).count
+      assert reader.get_posts(response).first.is_a? Tumblr::Post::Quote
+    end
+    
+    test 'selects posts by type' do
+      reader = Tumblr::Reader
+      assert_respond_to reader, :get_posts
+      mwunsch = reader.new.read('mwunsch')
+      response = hijack! mwunsch, 'read/mwunsch'
+      assert reader.get_posts(response, :link).first.is_a? Tumblr::Post::Link
+    end
+    
+    test 'generates a Post object from a parsed post' do
+      reader = Tumblr::Reader
+      assert_respond_to reader, :build_post
+      mwunsch = reader.new.read('mwunsch')
+      response = hijack! mwunsch, 'read/mwunsch'
+      posts = response['tumblr']['posts']['post']
+      link = posts.select {|post| post['type'].eql?('link') }
+      link_post = reader.build_post(link.first)
+      assert link_post.is_a? Tumblr::Post::Link
+      assert_equal :link, link_post.type
+      assert_equal :markdown, link_post.format
+      assert_equal link.first['link_url'], link_post.url
+    end
   end
   
   describe 'Writer' do
@@ -139,6 +170,17 @@ class TestTumblr < Test::Unit::TestCase
   end
   
   describe 'Post' do
+    describe 'Class methods' do
+      test 'maps post types to the right class' do
+        post = Tumblr::Post
+        assert_respond_to post, :map
+        assert_equal Tumblr::Post::Photo, post.map(:photo)
+        assert_raise RuntimeError do
+          post.map(:foobar)
+        end
+      end
+    end
+    
     describe 'Basic' do
       test 'has a set of post-specific parameters' do
         klass = Class.new(Tumblr::Post)
