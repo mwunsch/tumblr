@@ -82,9 +82,15 @@ class Tumblr
     
     # Publish this post to Tumblr
     def write(email, password)
-      options = to_h
-      options[:type] = type if type
-      Writer.new(email,password).write(options)
+      Writer.new(email,password).write(to_h)
+    end
+    
+    def edit(email, password)
+      Writer.new(email,password).edit(to_h)
+    end
+    
+    def delete(email, password)
+      Writer.new(email,password).delete(to_h)
     end
     
   end

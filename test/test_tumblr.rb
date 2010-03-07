@@ -237,6 +237,16 @@ class TestTumblr < Test::Unit::TestCase
         post.instance_variable_set(:@type,:regular)
         assert post.write('test@testermcgee.com','dontrevealmysecrets').is_a? Weary::Request
       end
+      
+      test 'edits itself on tumblr' do
+        post = Tumblr::Post.new(123)
+        assert post.edit('test@testermcgee.com','dontrevealmysecrets').is_a? Weary::Request
+      end
+      
+      test 'deletes itself' do
+        post = Tumblr::Post.new(123)
+        assert post.delete('test@testermcgee.com','dontrevealmysecrets').is_a? Weary::Request
+      end
     end
   
     describe 'Regular' do
