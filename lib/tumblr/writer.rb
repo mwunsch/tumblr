@@ -9,8 +9,15 @@ class Tumblr
     # http://www.tumblr.com/docs/en/api#api_write
     post :write do |write|
       write.url = 'http://www.tumblr.com/api/write'
-      write.with = (Post::BASIC_PARAMS | Post::POST_PARAMS)
       write.requires = [:email, :password, :type]
+      write.with = (Post::BASIC_PARAMS | Post::POST_PARAMS)
+    end
+    
+    # http://www.tumblr.com/docs/en/api#editing_posts
+    post :edit do |edit|
+      edit.url = 'http://www.tumblr.com/api/write'
+      edit.requires = [:email, :password, :'post-id']
+      edit.with = (Post::BASIC_PARAMS | Post::POST_PARAMS)
     end
     
   end

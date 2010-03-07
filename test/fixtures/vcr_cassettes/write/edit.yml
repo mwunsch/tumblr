@@ -1,0 +1,31 @@
+--- 
+- !ruby/struct:VCR::RecordedResponse 
+  method: :post
+  uri: http://www.tumblr.com:80/api/write
+  response: !ruby/object:Net::HTTPCreated 
+    body: "431830023"
+    body_exist: true
+    code: "201"
+    header: 
+      p3p: 
+      - CP="ALL ADM DEV PSAi COM OUR OTRo STP IND ONL"
+      content-type: 
+      - text/plain; charset=utf-8
+      connection: 
+      - close
+      x-tumblr-usec: 
+      - D=128043
+      server: 
+      - Apache/2.2.3 (CentOS)
+      date: 
+      - Sun, 07 Mar 2010 07:01:22 GMT
+      content-length: 
+      - "9"
+      x-tumblr-perf: 
+      - "\"ch:7/country_code_for_ip,rate-limiter,posts,tumblelogs,version,users,users cm:2/rate-limiter,rate-limiter ce:0/ c:0/0 d:0/0 e:0/0\""
+      vary: 
+      - Accept-Encoding
+    http_version: "1.1"
+    message: Created
+    read: true
+    socket: 

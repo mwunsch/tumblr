@@ -101,6 +101,14 @@ class TestTumblr < Test::Unit::TestCase
       response = hijack! publisher.write(post), 'write/write'
       assert_equal 201, response.code
     end
+    
+    test 'edits an existing post' do
+      assert_respond_to Tumblr::Writer.new, :edit
+      publisher = Tumblr::Writer.new('test@testermcgee.com','dontrevealmysecrets')
+      post = {:'post-id' => "431830023", :body => 'Hello world?'}
+      response = hijack! publisher.edit(post), 'write/edit'
+      assert_equal 201, response.code
+    end
   end
   
   describe 'Post' do
