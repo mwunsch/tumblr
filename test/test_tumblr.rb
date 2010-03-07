@@ -236,8 +236,21 @@ class TestTumblr < Test::Unit::TestCase
     
     describe 'Quote' do
       test 'is a quote' do
-        quote = Tumblr::Post::Quote.new
+        quote = Tumblr::Post::Quote.new("To be or not to be")
         assert_equal :quote, quote.type
+      end
+      
+      test 'the quote is text' do
+        quote = Tumblr::Post::Quote.new("To be or not to be")
+        assert_equal "To be or not to be", quote.quote
+        quote.quote = "that is the question."
+        assert_equal "that is the question.", quote.quote
+      end
+      
+      test 'the quote has a source' do
+        quote = Tumblr::Post::Quote.new("To be or not to be")
+        quote.source = "Hamlet"
+        assert_equal 'Hamlet', quote.source
       end
     end
     
