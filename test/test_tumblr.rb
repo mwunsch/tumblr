@@ -256,8 +256,25 @@ class TestTumblr < Test::Unit::TestCase
     
     describe 'Link' do
       test 'is a link' do
-        link = Tumblr::Post::Link.new
+        link = Tumblr::Post::Link.new('http://tumblr.com')
         assert_equal :link, link.type
+      end
+      
+      test 'is a link to something' do
+        link = Tumblr::Post::Link.new('http://tumblr.com')
+        assert_equal 'http://tumblr.com', link.url
+      end
+      
+      test 'has an optional name' do
+        link = Tumblr::Post::Link.new('http://tumblr.com')
+        link.name = 'Tumblr'
+        assert_equal 'Tumblr', link.name
+      end
+      
+      test 'has an optional description' do
+        link = Tumblr::Post::Link.new('http://tumblr.com')
+        link.description = "Simple blogging"
+        assert_equal 'Simple blogging', link.description
       end
     end
     
