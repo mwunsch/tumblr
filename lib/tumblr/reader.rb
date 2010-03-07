@@ -48,13 +48,13 @@ class Tumblr
     # http://www.tumblr.com/docs/en/api#api_liking
     post :like do |like|
       like.url = "http://www.tumblr.com/api/like"
-      like.requires = [:email, :password, 'post-id', 'reblog-key']
+      like.requires = [:email, :password, :'post-id', :'reblog-key']
     end
 
     # http://www.tumblr.com/docs/en/api#api_liking    
     post :unlike do |unlike|
       unlike.url = "http://www.tumblr.com/api/unlike"
-      unlike.requires = [:email, :password, 'post-id', 'reblog-key']
+      unlike.requires = [:email, :password, :'post-id', :'reblog-key']
     end
   
   end
