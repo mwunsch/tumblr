@@ -120,6 +120,24 @@ class TestTumblr < Test::Unit::TestCase
     end
   end
   
+  describe 'Authenticator' do
+    test 'sets up credentials for authentication' do
+      user = Tumblr::Authenticator
+      params = {:email => 'test@testermcgee.com', :password => 'dontrevealmysecrets'}
+      credentials = user.new(params[:email],params[:password]).defaults
+      assert credentials.has_key? :email
+      assert credentials.has_key? :password
+    end
+    
+    test 'authenticates a user to get information' do
+      user = Tumblr::Authenticator.new('test@testermcgee.com','dontrevealmysecrets')
+      assert_respond_to user, :authenticate
+      response = hijack! user.authenticate, 'authenticate/authenticate'
+      assert response.success?
+      assert_equal 'mwunsch', response["tumblr"]["tumblelog"].first["name"]
+    end
+  end
+  
   describe 'Post' do
     describe 'Basic' do
       test 'has a set of post-specific parameters' do

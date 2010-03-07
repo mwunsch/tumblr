@@ -1,0 +1,39 @@
+--- 
+- !ruby/struct:VCR::RecordedResponse 
+  method: :post
+  uri: http://www.tumblr.com:80/api/authenticate
+  response: !ruby/object:Net::HTTPOK 
+    body: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <tumblr version="1.0">
+        <user default-post-format="markdown" can-upload-audio="1" can-upload-aiff="1" can-ask-question="1" can-upload-video="1" max-video-bytes-uploaded="26214400"/>
+        <tumblelog title="M. Wunsch" is-admin="1" name="mwunsch" url="http://mwunsch.tumblr.com/" type="public" avatar-url="http://27.media.tumblr.com/avatar_14a45e5585e1_128.png" is-primary="yes" backup-post-limit="30000"/>
+        <tumblelog title="Hacking in the Movies" is-admin="1" name="hackinginthemovies" url="http://hackinginthemovies.tumblr.com/" type="public" avatar-url="http://29.media.tumblr.com/avatar_ccdceda8f0ea_128.png" backup-post-limit="30000"/>
+        <tumblelog title="Testing Tumblr Gem" is-admin="1" private-id="3723757" type="private" backup-post-limit="30000"/>
+      </tumblr>
+
+    body_exist: true
+    code: "200"
+    header: 
+      p3p: 
+      - CP="ALL ADM DEV PSAi COM OUR OTRo STP IND ONL"
+      content-type: 
+      - text/xml
+      connection: 
+      - close
+      x-tumblr-usec: 
+      - D=106425
+      server: 
+      - Apache/2.2.3 (Red Hat)
+      date: 
+      - Sun, 07 Mar 2010 07:38:07 GMT
+      content-length: 
+      - "804"
+      x-tumblr-perf: 
+      - "\"ch:4/country_code_for_ip,rate-limiter,tumblelogs,tumblelog_posts_ref cm:2/rate-limiter,rate-limiter ce:0/ c:0/0 d:0/0 e:0/0\""
+      vary: 
+      - Accept-Encoding
+    http_version: "1.1"
+    message: OK
+    read: true
+    socket: 
