@@ -1,0 +1,58 @@
+--- 
+dependencies: 
+  contest: 
+    group: 
+    - :test
+    version: ">= 0"
+  rake: 
+    group: 
+    - :test
+    version: ">= 0"
+  weary: 
+    group: 
+    - :default
+    version: ">= 0.7.1"
+  vcr: 
+    group: 
+    - :test
+    version: ">= 0"
+  jeweler: 
+    group: 
+    - :test
+    version: ">= 0"
+  redgreen: 
+    group: 
+    - :test
+    version: ">= 0"
+specs: 
+- json_pure: 
+    version: 1.2.2
+- git: 
+    version: 1.2.5
+- redgreen: 
+    version: 1.2.2
+- rubyforge: 
+    version: 2.0.4
+- ruby-hmac: 
+    version: 0.4.0
+- crack: 
+    version: 0.1.7
+- oauth: 
+    version: 0.3.6
+- weary: 
+    version: 0.7.1
+- rake: 
+    version: 0.8.7
+- gemcutter: 
+    version: 0.5.0
+- jeweler: 
+    version: 1.4.0
+- contest: 
+    version: 0.1.2
+- fakeweb: 
+    version: 1.2.8
+- vcr: 
+    version: 0.1.2
+hash: c4f81bd854c0ac103c3a0434d4d004dd192b9b45
+sources: []
+
