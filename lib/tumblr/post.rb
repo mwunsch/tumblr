@@ -125,7 +125,7 @@ class Tumblr
     # Convert post to a string for writing to a file
     def to_s
       post_string = YAML.dump(post_data)
-      post_string += "---\n"
+      post_string += "---\x0D\x0A"
       post_string += YAML.load(to_yaml)['body']
       post_string
     end
