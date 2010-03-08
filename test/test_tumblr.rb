@@ -17,10 +17,12 @@ class TestTumblr < Test::Unit::TestCase
       post = klass.new
       post.instance_variable_set(:@type,type)
       post.body = "Hello world."
+      post.title = "Regular post"
       document = post.to_s
       assert Tumblr.parse(document).is_a? Tumblr.map(type)
       assert_equal post.body, Tumblr.parse(document).body
       assert_equal post.to_h, Tumblr.parse(document).to_h
+      assert_equal post.title, Tumblr.parse(document).title
     end
         
     test 'parses a document and sets up basic post' do
