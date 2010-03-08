@@ -70,6 +70,24 @@ link
       assert_equal 'The Something Website', post.name
       assert_equal 'http://something.com', post.url
     end
+  
+    test 'sets up credentials for authentication' do
+      params = {:email => 'test@testermcgee.com', :password => 'dontrevealmysecrets'}
+      credentials = Tumblr.new(params[:email],params[:password]).instance_variable_get(:@credentials)
+      assert credentials.has_key? :email
+      assert credentials.has_key? :password
+      assert_equal params, credentials
+    end
+    
+    test 'can read posts' do
+      assert Tumblr.new.read('mwunsch').is_a? Weary::Request
+    end
+    
+    test 'can publish posts to tumblr' do
+      tumbl = Tumblr.new('test@testermcgee.com','dontrevealmysecrets')
+      write = tumbl.post('Hello world')
+      assert write.is_a? Weary::Request
+    end
   end
     
   describe 'Reader' do

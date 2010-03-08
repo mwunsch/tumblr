@@ -9,6 +9,30 @@ class Tumblr
   VERSION = "0.0.1"
   GENERATOR = "The Tumblr Gem v#{VERSION}"
   
+  def initialize(*credentials)
+    @credentials = {:email => credentials[0], :password => credentials[1]} unless credentials.blank?
+  end
+  
+  # Convenience method for Reader#read
+  def read(username, parameters={})
+    reader = !@credentials.blank? ? Reader.new(@credentials[:email],@credentials[:password]) : Reader.new
+    reader.read(username, parameters)
+  end
+  
+  # Post a document to Tumblr. If the document has a post-id, it will be edited.
+  def post(doc)
+    raise 'Requires an e-mail address and password' unless @credentials
+    tumblr_post = if doc.is_a?(Tumblr::Post)
+      doc.to_h
+    elsif doc.respond_to?(:keys)
+      doc
+    else
+      Tumblr.parse(doc).to_h
+    end
+    writer = Writer.new(@credentials[:email],@credentials[:password])
+    tumblr_post.has_key?(:'post-id') ? writer.edit(tumblr_post) : writer.write(tumblr_post)
+  end
+  
   # Parse a post out of a string
   def self.parse(doc)
     document = {}
