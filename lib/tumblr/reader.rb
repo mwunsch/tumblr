@@ -40,7 +40,7 @@ class Tumblr
       tumblr_post.date = post['date_gmt']
       tumblr_post.format = post['format'].to_sym if post['format']
       tumblr_post.slug = post['slug']
-      tumblr_post.tags(*post['tag'].split(',').collect {|tag| tag.strip }) if post['tag']
+      tumblr_post.tags post['tag'] if post['tag']
       tumblr_post
     end
     
