@@ -47,6 +47,29 @@ class TestTumblr < Test::Unit::TestCase
         assert_equal post.send(attribute), Tumblr.parse(document).send(attribute)
       end
     end
+    
+    test 'infers a post type from a document if none is explicitly set' do
+      link = 'http://something.com'
+      video = 'http://www.youtube.com/watch?v=CW0DUg63lqU'
+      text = "Hello world"
+      assert_equal :video, Tumblr.infer_post_type(video)
+      assert_equal :link, Tumblr.infer_post_type(link)
+      assert_equal :regular, Tumblr.infer_post_type(text)            
+    end
+    
+    test 'parses a document' do
+      link = <<-link
+---
+name: The Something Website
+---
+http://something.com
+link
+      
+      post = Tumblr.parse(link)
+      assert_equal :link, post.type
+      assert_equal 'The Something Website', post.name
+      assert_equal 'http://something.com', post.url
+    end
   end
     
   describe 'Reader' do

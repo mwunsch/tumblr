@@ -14,7 +14,7 @@ class Tumblr
     document = {}
     if doc =~ /^(\s*---(.*)---\s*)/m
       document[:data] = YAML.load(Regexp.last_match[2].strip)
-      document[:body] = doc.sub(Regexp.last_match[1],'')
+      document[:body] = doc.sub(Regexp.last_match[1],'').strip
     else
       document[:data] = {'type' => infer_post_type(doc)}
       document[:body] = doc
@@ -22,8 +22,18 @@ class Tumblr
     create_post document
   end
   
-  def infer_post_type(doc)
-    :regular
+  # Guess the Type of Post for a given documents
+  def self.infer_post_type(doc)
+    begin
+      url = URI.parse(doc)
+      if url.is_a?(URI::HTTP)
+        (url.host.include?('youtube.com') || url.host.include?('vimeo.com')) ? :video : :link
+      else
+        :regular
+      end
+    rescue URI::InvalidURIError
+      :regular
+    end
   end
       
   # Map a post type key to its class
@@ -51,16 +61,66 @@ class Tumblr
   private
   
   def self.create_post(document)
-    data = document[:data]
-    body = document[:body]
-    type = data['type'].to_sym
-    case type
+    post_data = document[:data]
+    type = (post_data['type'] || infer_post_type(document[:body])).to_sym
+    post = case type
       when :regular
-        post = map(type).new(data['post-id'])
-        post.body = body
-        post
+        create_regular document
+      when :photo
+        create_photo document
+      when :audio
+        create_audio document
+      when :quote, :link, :conversation, :video
+        create_simple type, document
       else
-        raise "How did you get here? #{post} is not a Tumblr post."
+        raise "#{type} is not a recognized Tumblr post type."
     end
+    basic_setup post, post_data
   end
+  
+  def self.basic_setup(post, post_data)
+    %w(format state private slug date group generator).each do |basic|
+      post.send "#{basic}=".intern, post_data[basic] if post_data[basic]
+    end
+    %w(tags send-to-twitter publish-on).each do |attribute|
+      post.send attribute.gsub('-','_').intern, post_data[attribute] if post_data[attribute]
+    end
+    post
+  end
+  
+  def self.setup_params(post, data)
+    post_params = post.class.parameters.collect {|param| param.to_s.gsub('_','-') }
+    post_params.each do |param|
+      post.send "#{param.gsub('-','_')}=".intern, data[param] if data[param]
+    end
+    post
+  end
+    
+  def self.create_regular(doc)
+    data = doc[:data]
+    post = Tumblr::Post::Regular.new(data['post-id'])
+    post.body = doc[:body]
+    setup_params post, data
+  end
+  
+  def self.create_photo(doc)
+    data = doc[:data]
+    post = Tumblr::Post::Photo.new(data['post-id'])
+    post.source = doc[:body]
+    setup_params post, data
+  end
+  
+  def self.create_audio(doc)
+    data = doc[:data]
+    post = Tumblr::Post::Audio.new(data['post-id'])
+    post.externally_hosted_url = doc[:body]
+    setup_params post, data
+  end
+  
+  def self.create_simple(type, doc)
+    data = doc[:data]
+    post = map(type).new(doc[:body], data['post-id'])
+    setup_params post, data
+  end  
+  
 end
