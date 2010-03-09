@@ -1,0 +1,46 @@
+#!/usr/bin/env ruby
+## Tumblr is a command line interface for publishing to Tumblr.com
+##
+## Usage: tumblr [ OPTIONS ] [ FILE or URL ]
+## 
+## Publish to Tumblr. If a URL is given, it will create a link post.
+## If URL is a YouTube or Vimeo URL, it will create a video post. 
+## If a FILE is given, it will publish its contents. 
+## See tumblr(5) for formatting instructions for FILE.
+## If a URL or FILE is not given, tumblr will read from the Standard Input.
+##
+##
+
+require 'optparse'
+
+def usage
+  File.readlines(__FILE__).
+  grep(/^##.*/).
+  map { |line| line.chomp[3..-1] }.
+  join("\n")
+end
+
+begin
+  require 'weary'
+rescue LoadError
+  if !defined?(Gem)
+    warn "warn: #{$!.to_s}. trying again with rubygems."
+    require 'rubygems'
+    retry
+  end
+end
+
+begin
+  require 'tumblr'
+rescue LoadError
+  raise if $!.to_s !~ /tumblr/
+  libdir = File.expand_path("../../lib", __FILE__).sub(/^#{Dir.pwd}/, '.')
+  if !$:.include?(libdir)
+    warn "warn: #{$!.to_s}. trying again with #{libdir} on load path."
+    $:.unshift libdir
+    retry
+  end
+  raise
+end
+
+puts usage
