@@ -6,7 +6,7 @@ require 'tumblr/writer'
 require 'tumblr/authenticator'
 
 class Tumblr
-  VERSION = "0.1.0"
+  VERSION = "0.1.1"
   GENERATOR = "The Tumblr Gem v#{VERSION}"
   
   def initialize(*credentials)
