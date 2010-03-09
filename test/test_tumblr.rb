@@ -88,6 +88,27 @@ link
       write = tumbl.post('Hello world')
       assert write.is_a? Weary::Request
     end
+  
+    test 'can read the dashboard' do
+      dashboard = Tumblr.new('test@testermcgee.com','dontrevealmysecrets').dashboard
+      reader = Tumblr::Reader.new('test@testermcgee.com','dontrevealmysecrets').dashboard
+      assert dashboard.is_a? Weary::Request
+      assert_equal reader.uri, dashboard.uri
+    end
+    
+    test 'provides a convenience method for reader and writer' do
+      tumbl = Tumblr.new('test@testermcgee.com','dontrevealmysecrets')
+      assert tumbl.reader.is_a? Tumblr::Reader
+      assert tumbl.writer.is_a? Tumblr::Writer
+    end
+    
+    test 'authenticates to get user information' do
+      tumbl = Tumblr.new('test@testermcgee.com','dontrevealmysecrets')
+      auth = Tumblr::Authenticator.new('test@testermcgee.com','dontrevealmysecrets').authenticate
+      assert_respond_to tumbl, :authenticate
+      assert tumbl.authenticate.is_a? Weary::Request
+      assert_equal auth.uri, tumbl.authenticate.uri
+    end
   end
     
   describe 'Reader' do

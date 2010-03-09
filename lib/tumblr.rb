@@ -15,13 +15,11 @@ class Tumblr
   
   # Convenience method for Reader#read
   def read(username, parameters={})
-    reader = !@credentials.blank? ? Reader.new(@credentials[:email],@credentials[:password]) : Reader.new
     reader.read(username, parameters)
   end
   
   # Post a document to Tumblr. If the document has a post-id, it will be edited.
   def post(doc)
-    raise 'Requires an e-mail address and password' unless @credentials
     tumblr_post = if doc.is_a?(Tumblr::Post)
       doc.to_h
     elsif doc.respond_to?(:keys)
@@ -29,8 +27,30 @@ class Tumblr
     else
       Tumblr.parse(doc).to_h
     end
-    writer = Writer.new(@credentials[:email],@credentials[:password])
     tumblr_post.has_key?(:'post-id') ? writer.edit(tumblr_post) : writer.write(tumblr_post)
+  end
+  
+  def dashboard(parameters={})
+    raise 'Requires an e-mail address and password' unless @credentials
+    reader.dashboard(parameters)
+  end
+  
+  def authenticate
+    raise 'Requires an e-mail address and password' unless @credentials
+    Authenticator.new(@credentials[:email],@credentials[:password]).authenticate
+  end
+  
+  def reader
+    if @credentials.blank?
+      Reader.new
+    else
+      Reader.new(@credentials[:email],@credentials[:password])
+    end
+  end
+  
+  def writer
+    raise 'Requires an e-mail address and password' unless @credentials
+    Writer.new(@credentials[:email],@credentials[:password])
   end
   
   # Parse a post out of a string
