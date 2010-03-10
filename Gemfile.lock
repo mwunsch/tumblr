@@ -8,6 +8,10 @@ dependencies:
     group: 
     - :test
     version: ">= 0"
+  highline: 
+    group: 
+    - :default
+    version: ">= 1.5.2"
   weary: 
     group: 
     - :default
@@ -49,10 +53,12 @@ specs:
     version: 1.4.0
 - contest: 
     version: 0.1.2
+- highline: 
+    version: 1.5.2
 - fakeweb: 
     version: 1.2.8
 - vcr: 
     version: 0.1.2
-hash: c4f81bd854c0ac103c3a0434d4d004dd192b9b45
+hash: bb23bf752ce2daa339a799069ab0b6df9063a3a4
 sources: []
 
