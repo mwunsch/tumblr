@@ -8,6 +8,20 @@ Ruby wrapper and command line tool for the [Tumblr API](http://www.tumblr.com/do
 
 	gem install tumblr-rb
 	
+## Usage
+
+	$: tumblr path/to/a_post.markdown
+	Email Address: tumblr-user@foobarmail.com
+	Password:	
+	Published to Tumblr. The ID for this post is: 123456789
+	
+You can pass `tumblr` something from standard input, but you have to set your email and password as arguments:
+
+	$: echo 'Hello world.' | tumblr -a user@tumblr.com:supers3cretp4ssw0rd
+	Published to Tumblr. The ID for this post is: 123456790
+	
+Try `tumblr --help` if you are in need of guidance. Read tumblr(1) for more information.
+
 ## Getting Started
 
 Like [Jekyll](http://tom.preston-werner.com/jekyll/), and [Mustache](http://defunkt.github.com/mustache/), Tumblr gem will transform documents preceded by a [YAML](http://www.yaml.org/) frontmatter block.
@@ -23,6 +37,8 @@ YAML frontmatter beings with `---` on a single line, followed by YAML, ending wi
 	"To be or not to be."
 	
 Understood YAML parameters are taken from the Tumblr API: http://www.tumblr.com/docs/en/api#api_write
+
+Read tumblr(5) for more info.
 
 #### All Posts
 
