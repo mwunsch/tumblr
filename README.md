@@ -20,7 +20,7 @@ You can pass `tumblr` something from standard input, but you have to set your em
 	$: echo 'Hello world.' | tumblr -a user@tumblr.com:supers3cretp4ssw0rd
 	Published to Tumblr. The ID for this post is: 123456790
 	
-Try `tumblr --help` if you are in need of guidance. Read tumblr(1) for more information.
+Try `tumblr --help` if you are in need of guidance. Read [tumblr(1)](http://mwunsch.github.com/tumblr/tumblr.1.html) for more information.
 
 ## Getting Started
 
@@ -38,7 +38,7 @@ YAML frontmatter beings with `---` on a single line, followed by YAML, ending wi
 	
 Understood YAML parameters are taken from the Tumblr API: http://www.tumblr.com/docs/en/api#api_write
 
-Read tumblr(5) for more info.
+Read [tumblr(5)](http://mwunsch.github.com/tumblr/tumblr.5.html) for more info.
 
 #### All Posts
 
@@ -102,6 +102,7 @@ To publish to Tumblr, do this:
 ## TODO:
 
 + Tumblr::Post needs methods for liking and unliking.
++ Add options to CLI for adding to queue, drafts, etc.
 + File-uploading for Photos, Videos, Audio (needs to get into Weary)
 
 ## Copyright
