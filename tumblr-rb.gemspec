@@ -5,13 +5,15 @@
 
 Gem::Specification.new do |s|
   s.name = %q{tumblr-rb}
-  s.version = "0.1.1"
+  s.version = "1.0.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mark Wunsch"]
-  s.date = %q{2010-03-09}
+  s.date = %q{2010-03-10}
+  s.default_executable = %q{tumblr}
   s.description = %q{Ruby library and command line utility to work with the Tumblr Blogging Platform, powered by Weary.}
   s.email = %q{mark@markwunsch.com}
+  s.executables = ["tumblr"]
   s.extra_rdoc_files = [
     "LICENSE",
      "README.md"
@@ -23,6 +25,7 @@ Gem::Specification.new do |s|
      "LICENSE",
      "README.md",
      "Rakefile",
+     "bin/tumblr",
      "lib/tumblr.rb",
      "lib/tumblr/authenticator.rb",
      "lib/tumblr/post.rb",
@@ -35,6 +38,12 @@ Gem::Specification.new do |s|
      "lib/tumblr/post/video.rb",
      "lib/tumblr/reader.rb",
      "lib/tumblr/writer.rb",
+     "man/tumblr.1",
+     "man/tumblr.1.html",
+     "man/tumblr.1.ronn",
+     "man/tumblr.5",
+     "man/tumblr.5.html",
+     "man/tumblr.5.ronn",
      "test/fixtures/vcr_cassettes/authenticate/authenticate.yml",
      "test/fixtures/vcr_cassettes/read/authenticated.yml",
      "test/fixtures/vcr_cassettes/read/authentication_failure.yml",
@@ -63,13 +72,16 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<weary>, [">= 0.7.1"])
+      s.add_runtime_dependency(%q<highline>, [">= 1.5.2"])
       s.add_development_dependency(%q<bundler>, [">= 0.9.7"])
     else
       s.add_dependency(%q<weary>, [">= 0.7.1"])
+      s.add_dependency(%q<highline>, [">= 1.5.2"])
       s.add_dependency(%q<bundler>, [">= 0.9.7"])
     end
   else
     s.add_dependency(%q<weary>, [">= 0.7.1"])
+    s.add_dependency(%q<highline>, [">= 1.5.2"])
     s.add_dependency(%q<bundler>, [">= 0.9.7"])
   end
 end
