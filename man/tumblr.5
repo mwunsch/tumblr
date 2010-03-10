@@ -1,0 +1,137 @@
+.\" generated with Ronn/v0.4.1
+.\" http://github.com/rtomayko/ronn/
+.
+.TH "TUMBLR" "5" "March 2010" "Mark Wunsch" "Tumblr Manual"
+.
+.SH "NAME"
+\fBtumblr\fR \-\- tumblr posts in plaintext
+.
+.SH "SYNOPSIS"
+.
+.nf
+\-\-\-
+title: A typical Tumblr post
+state: queue
+publish\-on: next tuesday
+tags: unix, manpages
+format: markdown
+\-\-\-
+This will create a *Regular* type of post on Tumblr.com. It's so easy.
+That bit up at the top is called YAML frontmatter, and it just gives the
+post a bit of metadata, so publishing options are more flexible.
+They correspond to the Tumblr API. This post will be added to your Tumblr
+queue, to be published next Tuesday, tagged with "unix" and "manpages",
+and formatted in markdown.
+.
+.fi
+.
+.SH "DESCRIPTION"
+Any file can be published to Tumblr.com as a \fIRegular\fR post, but if you add a bit of YAML frontmatter (<yaml.org>) to the file, you can tell Tumblr exactly what you want to do.
+.
+.P
+YAML frontmatter beings with \fB\-\-\-\fR on a single line, followed by YAML, ending with another \fB\-\-\-\fR on a single line, e.g.
+.
+.IP "" 4
+.
+.nf
+\-\-\-
+type: quote
+source: Billy Shakespeare
+state: draft
+tags: hamlet, shakespeare
+\-\-\-
+"To be or not to be."
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Understood YAML parameters are documented and taken from the Tumblr API: http://www.tumblr.com/docs/en/api#api_write
+.
+.SH "BASIC PARAMETERS"
+These YAML parameters are available for all posts
+.
+.IP "\(bu" 4
+\fBtype\fR:
+  \fBregular\fR, \fBphoto\fR, \fBlink\fR, \fBquote\fR, \fBconversation\fR, \fBvideo\fR, \fBaudio\fR
+  Will take a guess if omitted.
+  See \fIPOST\-TYPE SPECIFIC PARAMETERS\fR below.
+.
+.IP "\(bu" 4
+\fBstate\fR:
+  \fBpublished\fR, \fBdraft\fR, \fBqueue\fR, \fBsubmission\fR
+.
+.IP "\(bu" 4
+\fBformat\fR:
+  \fBhtml\fR or \fBmarkdown\fR
+.
+.IP "\(bu" 4
+\fBtags\fR:
+.
+.br
+  Comma\-separated list of tags.
+.
+.IP "\(bu" 4
+\fBdate\fR:
+  Post date.
+.
+.IP "\(bu" 4
+\fBprivate\fR:
+  If the post should be marked private.
+.
+.IP "\(bu" 4
+\fBslug\fR:
+  A custom string to appear in the post's url.
+.
+.IP "\(bu" 4
+\fBgroup\fR:
+  ID for a secondary blog.
+.
+.IP "\(bu" 4
+\fBgenerator\fR:
+  Short description of the publishing application.
+.
+.IP "\(bu" 4
+\fBsend\-to\-twitter\fR:
+  Twitter status update to make if the tumblelog has enabled it.
+.
+.IP "\(bu" 4
+\fBpublish\-on\fR:
+  If the post state is 'queue', publish on this date
+.
+.IP "" 0
+.
+.SH "POST\-TYPE SPECIFIC PARAMETERS"
+These are parameters that are available for specific types of posts.
+.
+.TP
+\fBregular\fR
+  \fBtitle\fR
+.
+.TP
+\fBphoto\fR
+  \fBcaption\fR, \fBclick\-through\-url\fR
+.
+.TP
+\fBquote\fR
+  \fBsource\fR
+.
+.TP
+\fBlink\fR
+  \fBname\fR, \fBdescription\fR
+.
+.TP
+\fBconversation\fR
+  \fBtitle\fR
+.
+.TP
+\fBvideo\fR
+  \fBtitle\fR,\fBcaption\fR
+.
+.TP
+\fBaudio\fR
+  \fBcaption\fR
+.
+.SH "SEE ALSO"
+tumblr(1), markdown(5)

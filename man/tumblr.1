@@ -1,0 +1,112 @@
+.\" generated with Ronn/v0.4.1
+.\" http://github.com/rtomayko/ronn/
+.
+.TH "TUMBLR" "1" "March 2010" "Mark Wunsch" "Tumblr Manual"
+.
+.SH "NAME"
+\fBtumblr\fR \-\- publish to tumblr.com
+.
+.SH "SYNOPSIS"
+\fBtumblr\fR [\fIOPTIONS\fR] \fIFILE OR URL\fR
+.
+.SH "DESCRIPTION"
+\fBtumblr\fR is a command line utility and Ruby library for working with Tumblr.com. It can read plain\-text files and publish them to Tumblr.
+.
+.P
+The \fBtumblr\fR command will publish a named input \fIFILE\fR (or Standard Input if no file is given), or if a \fIURL\fR is given it will publish that URL as a Link post (or a Video post if the url is a YouTube or Vimeo post).
+.
+.P
+If you preface your \fIFILE\fR with a bit of YAML (<yaml.org>) frontmatter, you can give \fBtumblr\fR more explicit instructions for publishing your post. See tumblr(5) for available YAML parameters.
+.
+.SH "OPTIONS"
+.
+.TP
+\fB\-a\fR,\fB\-\-auth\fR [\fIEMAIL:PASSWORD\fR]
+  Provide Email Address and Password, to authenticate to Tumblr, separated by a colon.
+  If these are not provided, you will be prompted for them.
+  You \fBmust\fR provide this argument if the post comes from standard input.
+.
+.TP
+\fB\-e\fR, \fB\-\-email\fR [\fIEMAIL\fR]
+  Email Address associated with your Tumblr account.
+  You will be prompted for a password.
+.
+.P
+Other:
+.
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+  Print the help message and quit.
+.
+.TP
+\fB\-v\fR, \fB\-\-version\fR
+  Print the \fBtumblr\fR version and quit.
+.
+.SH "EXAMPLES"
+Publish a file to Tumblr.com:
+.
+.IP "" 4
+.
+.nf
+$ tumblr my_post.txt
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Or from standard input:
+.
+.IP "" 4
+.
+.nf
+$ cat data.yml my_post.txt | tumblr \-a tumblr_user@foobar.com:p4ssw0rd
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Make a Link post:
+.
+.IP "" 4
+.
+.nf
+$ tumblr http://github.com/mwunsch/tumblr
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Or a Video post:
+.
+.IP "" 4
+.
+.nf
+$ tumblr http://www.youtube.com/watch?v=CW0DUg63lqU
+.
+.fi
+.
+.IP "" 0
+.
+.SH "INSTALLATION"
+If you have RubyGems installed:
+.
+.IP "" 4
+.
+.nf
+gem install tumblr
+.
+.fi
+.
+.IP "" 0
+.
+.SH "COPYRIGHT"
+Tumblr (the gem) is Copyright (C) 2010 Mark Wunsch
+.
+.P
+Tumblr is Copyright (c) Tumblr, Inc. The Tumblr gem is NOT affiliated with Tumblr.
+.
+.SH "SEE ALSO"
+tumblr(5), gem(1)
