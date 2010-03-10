@@ -109,6 +109,15 @@ link
       assert tumbl.authenticate.is_a? Weary::Request
       assert_equal auth.uri, tumbl.authenticate.uri
     end
+    
+    test 'executes' do
+      cred = {:email => 'test@testermcgee.com', :password => 'dontrevealmysecrets'}
+      response = VCR.with_cassette('write/write') do
+        Tumblr.execute(cred, 'Hello World.')
+      end
+      assert response.is_a? Weary::Response
+      assert response.success?
+    end
   end
     
   describe 'Reader' do

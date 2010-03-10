@@ -54,6 +54,11 @@ class Tumblr
     Writer.new(@credentials[:email],@credentials[:password])
   end
   
+  def self.execute(credentials, input, state=nil)
+    request = new(credentials[:email],credentials[:password]).post(input)
+    request.perform
+  end
+  
   # Parse a post out of a string
   def self.parse(doc)
     document = {}
