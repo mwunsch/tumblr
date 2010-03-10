@@ -8,6 +8,7 @@
 ## If a FILE is given, it will publish its contents. 
 ## See tumblr(5) for formatting instructions for FILE.
 ## If a URL or FILE is not given, tumblr will read from the Standard Input.
+## If tumblr reads from the Standard Input, you must authenticate with -a.
 ##
 ##
 
@@ -21,26 +22,95 @@ def usage
 end
 
 begin
-  require 'weary'
-rescue LoadError
-  if !defined?(Gem)
-    warn "warn: #{$!.to_s}. trying again with bundler."
-    require File.expand_path('../../.bundle/environment', __FILE__)
-    retry
-  end
-end
-
-begin
   require 'tumblr'
 rescue LoadError
   raise if $!.to_s !~ /tumblr/
   libdir = File.expand_path("../../lib", __FILE__).sub(/^#{Dir.pwd}/, '.')
   if !$:.include?(libdir)
-    warn "warn: #{$!.to_s}. trying again with #{libdir} on load path."
     $:.unshift libdir
+    require File.expand_path('../../.bundle/environment', __FILE__)
     retry
   end
   raise
 end
 
-puts usage
+publisher = {}
+
+ARGV.options do |option|
+  option.banner = usage
+  option.separator "Options"
+  
+  auth_text = 'Email Address and Password, separated by a colon'
+  option.on('-a EMAIL:PASSWORD', '--auth EMAIL:PASSWORD', auth_text) do |auth|
+    credentials = auth.split(':')
+    publisher[:email] = credentials[0]
+    publisher[:password] = credentials[1]
+  end
+  
+  address_text = 'Email Address (will prompt for password)'
+  option.on('-e EMAIL', '--email EMAIL', address_text) do |email| 
+    publisher[:email] = email
+  end
+    
+  option.separator ""
+  
+  option.on('-h','--help', 'Show this help message') { puts option ; exit }
+  option.on('-v','--version', 'Show version number') do 
+    get_requirements
+    puts Tumblr::VERSION
+    exit
+  end
+  
+  option.separator ""  
+  
+  option.parse!
+end
+
+if ARGV.empty? && STDIN.tty?
+  puts usage
+  puts "See 'tumblr --help' for more information."
+  exit
+end
+  
+input = if !ARGV.empty?
+  path = ARGV.first
+  (path =~ /^https?:\/\/\S+$/i) ? path : File.read(path)
+else
+  STDIN.read
+end
+
+if !STDIN.tty? && (!publisher[:email] || !publisher[:password])
+  bad_auth = %q(Error: An email address and password are required. Use 'tumblr -a' to authenticate. See 'tumblr --help' for details.)
+  abort bad_auth
+end
+
+if !publisher[:email] || !publisher[:password]
+  begin
+    require 'highline/import'
+  rescue LoadError
+    require 'rubygems'
+    retry
+  end
+  
+  def get_email(pub)
+    pub[:email] = ask("Email Address:  ")
+    get_email(pub) if pub[:email].empty?
+  end
+
+  def get_password(pub)
+    pub[:password] = ask("Password:  ") { |q| q.echo = false }
+    get_password(pub) if pub[:password].empty?
+  end  
+    
+  if !publisher[:email]
+    get_email(publisher)
+  end
+
+  if !publisher[:password]
+    get_password(publisher)
+  end
+end
+
+Tumblr.execute publisher, input
+
+exit
