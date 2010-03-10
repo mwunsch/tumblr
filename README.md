@@ -102,8 +102,6 @@ To publish to Tumblr, do this:
 ## TODO:
 
 + Tumblr::Post needs methods for liking and unliking.
-+ Make the CLI
-+ Make the manpages for the CLI
 + File-uploading for Photos, Videos, Audio (needs to get into Weary)
 
 ## Copyright
