@@ -54,7 +54,7 @@ Or a Video post:
 
 If you have RubyGems installed:
 
-	gem install tumblr
+	gem install tumblr-rb
 
 ## COPYRIGHT
 
