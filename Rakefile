@@ -22,6 +22,7 @@ begin
     gem.homepage = "http://github.com/mwunsch/tumblr"
     gem.authors = ["Mark Wunsch"]
     gem.add_dependency 'weary', '>= 0.7.1'
+    gem.add_dependency 'highline', '>= 1.5.2'
     gem.add_development_dependency "bundler", ">= 0.9.7"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
