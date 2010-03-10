@@ -56,7 +56,6 @@ ARGV.options do |option|
   
   option.on('-h','--help', 'Show this help message') { puts option ; exit }
   option.on('-v','--version', 'Show version number') do 
-    get_requirements
     puts Tumblr::VERSION
     exit
   end
@@ -76,7 +75,7 @@ input = if !ARGV.empty?
   path = ARGV.first
   (path =~ /^https?:\/\/\S+$/i) ? path : File.read(path)
 else
-  STDIN.read
+  STDIN.read.chomp!
 end
 
 if !STDIN.tty? && (!publisher[:email] || !publisher[:password])
@@ -111,6 +110,10 @@ if !publisher[:email] || !publisher[:password]
   end
 end
 
-Tumblr.execute publisher, input
-
-exit
+response = Tumblr.execute(publisher, input)
+if response.success?
+  puts "Published to Tumblr. The ID for this post is: #{response.body}"
+  exit
+else
+  abort %Q(Oh no! Something went wrong. Tumblr says, "#{response.body}")
+end
