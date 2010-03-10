@@ -1,14 +1,14 @@
 require 'weary'
 
-require 'tumblr/post'
-require 'tumblr/reader'
-require 'tumblr/writer'
-require 'tumblr/authenticator'
-
 class Tumblr
   VERSION = "0.1.1"
   GENERATOR = "The Tumblr Gem v#{VERSION}"
   USER_AGENT = "TumblrGem/#{VERSION} (+http://github.com/mwunsch/tumblr)"
+  
+  require 'tumblr/post'
+  require 'tumblr/reader'
+  require 'tumblr/writer'
+  require 'tumblr/authenticator'
   
   def initialize(*credentials)
     @credentials = {:email => credentials[0], :password => credentials[1]} unless credentials.blank?

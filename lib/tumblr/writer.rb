@@ -1,6 +1,8 @@
 class Tumblr
   class Writer < Weary::Base
     
+    headers({"User-Agent" => Tumblr::USER_AGENT})
+    
     def initialize(*credentials)
       @defaults = {:generator => Tumblr::GENERATOR}
       @defaults.merge!({:email => credentials[0], :password => credentials[1]}) unless credentials.blank?

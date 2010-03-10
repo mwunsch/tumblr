@@ -2,6 +2,8 @@
 class Tumblr
   class Reader < Weary::Base
     
+    headers({"User-Agent" => Tumblr::USER_AGENT})
+    
     def initialize(*credentials)
       @defaults = {:email => credentials[0], :password => credentials[1]} unless credentials.blank?
     end
