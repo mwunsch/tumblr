@@ -103,6 +103,7 @@ To publish to Tumblr, do this:
 
 + Tumblr::Post needs methods for liking and unliking.
 + Add options to CLI for adding to queue, drafts, etc.
++ Add option to CLI for passing a YAML file for authentication, with keys for email & password.
 + File-uploading for Photos, Videos, Audio (needs to get into Weary)
 
 ## Copyright
