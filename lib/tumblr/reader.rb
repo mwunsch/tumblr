@@ -38,13 +38,13 @@ class Tumblr
     
     # Build a Post object from Reader's Post XML
     def self.build_post(post)
-      tumblr_post = setup_post(post)
-      tumblr_post.date = post['date_gmt']
-      tumblr_post.format = post['format'].to_sym if post['format']
-      tumblr_post.slug = post['slug']
-      tumblr_post.tags post['tag'] if post['tag']
-      tumblr_post.reblog_key = post['reblog_key'] if post['reblog_key']
-      tumblr_post
+      setup_post(post) do |tumblr_post|
+        tumblr_post.date = post['date_gmt']
+        tumblr_post.format = post['format'].to_sym if post['format']
+        tumblr_post.slug = post['slug']
+        tumblr_post.tags post['tag'] if post['tag']
+        tumblr_post.reblog_key = post['reblog_key'] if post['reblog_key']
+      end
     end
     
     # Helper method to facilitate standard GET Read and Authenticated Read
@@ -84,7 +84,7 @@ class Tumblr
     
     def self.setup_post(post)
       post_type = post['type'].to_sym
-      case post_type
+      tumblr_post = case post_type
         when :regular
           build_regular(post)
         when :photo
@@ -102,6 +102,8 @@ class Tumblr
         else
           raise "#{post_type} is not a recognized Tumblr post type."
       end
+      yield tumblr_post if block_given?
+      tumblr_post
     end
     
     def self.build_regular(post)

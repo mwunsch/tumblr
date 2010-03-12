@@ -288,7 +288,7 @@ link
     end
   end
   
-  describe 'Post' do    
+  describe 'Post' do
     describe 'Basic' do
       test 'has a set of post-specific parameters' do
         klass = Class.new(Tumblr::Post)
