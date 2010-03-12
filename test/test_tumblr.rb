@@ -230,6 +230,7 @@ link
       assert_equal :link, link_post.type
       assert_equal :markdown, link_post.format
       assert_equal link.first['link_url'], link_post.url
+      assert_equal link.first['reblog_key'], link_post.reblog_key
     end
   end
   
@@ -321,6 +322,13 @@ link
         assert !post.private?
         post.private = true
         assert post.private?
+      end
+      
+      test 'can have a reblog key' do
+        post = Tumblr::Post.new
+        assert_respond_to post, :reblog_key
+        post.reblog_key = 'reblog_me'
+        assert_equal 'reblog_me', post.reblog_key
       end
       
       test 'has a comma separated list of tags' do

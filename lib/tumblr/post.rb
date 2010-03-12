@@ -3,7 +3,7 @@
 class Tumblr
   class Post
     BASIC_PARAMS = [:date,:tags,:format,:group,:generator,:private,
-                    :slug,:state,:'send-to-twitter',:'publish-on']
+                    :slug,:state,:'send-to-twitter',:'publish-on',:'reblog-key']
     POST_PARAMS = [:title,:body,:source,:caption,:'click-through-url',
                    :quote,:name,:url,:description,:conversation,
                    :embed,:'externally-hosted-url']
@@ -17,7 +17,7 @@ class Tumblr
     end
     
     attr_reader :type, :state, :post_id, :format
-    attr_accessor :slug, :date, :group, :generator
+    attr_accessor :slug, :date, :group, :generator, :reblog_key
     
     def initialize(post_id = nil)
       @post_id = post_id if post_id
@@ -71,7 +71,7 @@ class Tumblr
     def to_h
       post_hash = {}
       basics = [:post_id, :type, :date, :tags, :format, :group, :generator,
-                :slug, :state, :send_to_twitter, :publish_on]
+                :slug, :state, :send_to_twitter, :publish_on, :reblog_key]
       params = basics.select {|opt| respond_to?(opt) && send(opt) }
       params |= self.class.parameters.select {|opt| send(opt) } unless self.class.parameters.blank?
       params.each { |key| post_hash[key.to_s.gsub('_','-').to_sym] = send(key) } unless params.empty?

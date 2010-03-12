@@ -43,6 +43,7 @@ class Tumblr
       tumblr_post.format = post['format'].to_sym if post['format']
       tumblr_post.slug = post['slug']
       tumblr_post.tags post['tag'] if post['tag']
+      tumblr_post.reblog_key = post['reblog_key'] if post['reblog_key']
       tumblr_post
     end
     

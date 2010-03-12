@@ -129,8 +129,8 @@ class Tumblr
   end
   
   def self.basic_setup(post, post_data)
-    %w(format state private slug date group generator).each do |basic|
-      post.send "#{basic}=".intern, post_data[basic] if post_data[basic]
+    %w(format state private slug date group generator reblog-key).each do |basic|
+      post.send "#{basic}=".gsub('-','_').intern, post_data[basic] if post_data[basic]
     end
     %w(tags send-to-twitter publish-on).each do |attribute|
       post.send attribute.gsub('-','_').intern, post_data[attribute] if post_data[attribute]
