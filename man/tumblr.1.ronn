@@ -23,6 +23,18 @@ If you preface your <FILE> with a bit of YAML (<yaml.org>) frontmatter, you can 
 * `-e`, `--email` [_EMAIL_]:
 	Email Address associated with your Tumblr account.
 	You will be prompted for a password.
+	
+* `-p`,`--publish`:
+	Publish the post immediately. This will ignore the `state` parameter set in the post.
+
+* `-q`,`--queue`:
+	Add the post to the queue.
+	
+* `-d`,`--draft`:
+	Save the post as a draft.
+	
+* `--group`=_GROUP_:
+	Publish the post to a _GROUP_ tumblelog.
 
 Other:
 
@@ -60,7 +72,7 @@ If you have RubyGems installed:
 
 Tumblr (the gem) is Copyright (C) 2010 Mark Wunsch
 
-Tumblr is Copyright (c) Tumblr, Inc. The Tumblr gem is NOT affiliated with Tumblr.
+Tumblr is Copyright (c) Tumblr, Inc. The Tumblr gem is NOT affiliated with Tumblr, Inc.
 
 ## SEE ALSO
 
