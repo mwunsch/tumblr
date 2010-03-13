@@ -232,6 +232,14 @@ link
       assert_equal link.first['link_url'], link_post.url
       assert_equal link.first['reblog_key'], link_post.reblog_key
     end
+    
+    test 'gets all the posts for a username' do
+      reader = Tumblr::Reader.new('test@testermcgee.com','dontrevealmysecrets')
+      posts = VCR.with_cassette('read/authenticated') do
+        reader.get_all_posts('mwunsch')
+      end
+      assert_equal 66, posts.count
+    end
   end
   
   describe 'Writer' do

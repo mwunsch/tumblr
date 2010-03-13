@@ -15,7 +15,7 @@ class Tumblr
     
     # http://www.tumblr.com/docs/en/api#authenticated_read
     def authenticated_read(username, params={})
-      raise 'Needs requirements badly' unless (params.include?(:email) && params.include?(:password)) || defaults
+      raise 'You must provide an email address and password' unless (params.include?(:email) && params.include?(:password)) || defaults
       self.class.read username, :post, parameters(params)
     end
     
@@ -24,6 +24,20 @@ class Tumblr
       allowed = [:start,:num,:type,:id,:filter,:tagged,:search,:state,:email,:password]
       params.merge! defaults if defaults
       params.reject {|key,value| !allowed.include? key }
+    end
+    
+    # Transform ALL of the posts for user/group to Post objects.
+    # This could take a while...
+    def get_all_posts(username, start = 0, total = nil)
+      first_read = authenticated_read(username, {:num => 50,:start => start}).perform
+      raise %Q(Tumblr response was not successful, "#{first_read.code}: #{first_read.message}") if !first_read.success?
+      posts = self.class.get_posts(first_read)
+      offset = start + posts.count
+      post_total = total || first_read['tumblr']['posts']['total'].to_i
+      if post_total > offset
+        posts |= get_all_posts(username, offset, post_total)
+      end
+      posts
     end
     
     # Get the Posts as Post objects from a Read response.
