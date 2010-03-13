@@ -1,0 +1,31 @@
+--- 
+- !ruby/struct:VCR::RecordedResponse 
+  method: :post
+  uri: http://www.tumblr.com:80/api/unlike
+  response: !ruby/object:Net::HTTPOK 
+    body: Unliked post 445597771.
+    body_exist: true
+    code: "200"
+    header: 
+      p3p: 
+      - CP="ALL ADM DEV PSAi COM OUR OTRo STP IND ONL"
+      content-type: 
+      - text/plain; charset=utf-8
+      connection: 
+      - close
+      x-tumblr-usec: 
+      - D=119300
+      server: 
+      - Apache/2.2.3 (Red Hat)
+      date: 
+      - Sat, 13 Mar 2010 16:33:13 GMT
+      content-length: 
+      - "23"
+      x-tumblr-perf: 
+      - "\"ch:0/ cm:0/ ce:0/ c:0/0 d:0/0 e:0/0\""
+      vary: 
+      - Accept-Encoding
+    http_version: "1.1"
+    message: OK
+    read: true
+    socket: 
