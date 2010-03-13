@@ -200,6 +200,18 @@ link
       assert_respond_to reader, :like
       assert_respond_to reader, :unlike
     end
+    
+    test 'likes a post' do
+      reader = Tumblr::Reader.new('test@testermcgee.com','dontrevealmysecrets')
+      like = hijack! reader.like(:'post-id' => '445597771', :'reblog-key' => 'DLVWOpfh'), 'read/like'
+      assert like.success?
+    end
+    
+    test 'unlikes a post' do
+      reader = Tumblr::Reader.new('test@testermcgee.com','dontrevealmysecrets')
+      unlike = hijack! reader.unlike(:'post-id' => '445597771', :'reblog-key' => 'DLVWOpfh'), 'read/unlike'
+      assert unlike.success?
+    end
   
     test 'parses posts out of a read' do
       reader = Tumblr::Reader
@@ -429,6 +441,22 @@ link
       test 'deletes itself' do
         post = Tumblr::Post.new(123)
         assert post.delete('test@testermcgee.com','dontrevealmysecrets').is_a? Weary::Request
+      end
+      
+      test 'likes itself' do
+        post = Tumblr::Post.new(445597771)
+        post.reblog_key = "DLVWOpfh"
+        like = post.like('test@testermcgee.com','dontrevealmysecrets')
+        assert like.is_a? Weary::Request
+        assert_equal 'http://www.tumblr.com/api/like', like.uri.to_s
+      end
+      
+      test 'unlikes itself' do
+        post = Tumblr::Post.new(445597771)
+        post.reblog_key = "DLVWOpfh"
+        unlike = post.unlike('test@testermcgee.com','dontrevealmysecrets')
+        assert unlike.is_a? Weary::Request
+        assert_equal 'http://www.tumblr.com/api/unlike', unlike.uri.to_s
       end
     
       test 'publishes to tumblr' do

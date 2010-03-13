@@ -101,7 +101,6 @@ To publish to Tumblr, do this:
 
 ## TODO:
 
-+ Tumblr::Post needs methods for liking and unliking.
 + Add option to CLI for passing a YAML file for authentication, with keys for email & password.
 + File-uploading for Photos, Videos, Audio (needs to get into Weary)
 
@@ -109,4 +108,4 @@ To publish to Tumblr, do this:
 
 The Tumblr gem is Copyright (c) 2010 Mark Wunsch and is licensed under the [MIT License](http://creativecommons.org/licenses/MIT/). 
 
-Tumblr is Copyright (c) Tumblr, Inc. The Tumblr gem is NOT affiliated with Tumblr.
+Tumblr is Copyright (c) Tumblr, Inc. The Tumblr gem is NOT affiliated with Tumblr, Inc.

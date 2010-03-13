@@ -92,6 +92,18 @@ class Tumblr
       Writer.new(email,password).delete(to_h)
     end
     
+    def like(email,password)
+      if (post_id && reblog_key)
+        Reader.new(email,password).like(:'post-id' => post_id, :'reblog-key' => reblog_key)
+      end
+    end
+    
+    def unlike(email,password)
+      if (post_id && reblog_key)
+        Reader.new(email,password).unlike(:'post-id' => post_id, :'reblog-key' => reblog_key)
+      end
+    end
+    
     # Write to Tumblr and set state to Publish
     def publish_now(email, password)
       self.state = :published
