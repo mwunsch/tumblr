@@ -35,6 +35,8 @@ rescue LoadError
 end
 
 publisher = {}
+publish_state = nil
+group = nil
 
 ARGV.options do |option|
   option.banner = usage
@@ -42,15 +44,19 @@ ARGV.options do |option|
   
   auth_text = 'Email Address and Password, separated by a colon'
   option.on('-a EMAIL:PASSWORD', '--auth EMAIL:PASSWORD', auth_text) do |auth|
-    credentials = auth.split(':')
-    publisher[:email] = credentials[0]
-    publisher[:password] = credentials[1]
+    publisher[:email],publisher[:password] = auth.split(':')
   end
   
   address_text = 'Email Address (will prompt for password)'
   option.on('-e EMAIL', '--email EMAIL', address_text) do |email| 
     publisher[:email] = email
   end
+  
+  option.on('-p','--publish', 'Publish the post immediately (ignores "state" parameter)') { publish_state = :published }
+  option.on('-q','--queue', 'Add the post to the queue') { publish_state = :queue }
+  option.on('-d','--draft', 'Save the post as a draft') { publish_state = :draft }
+  
+  option.on('--group=GROUP','Publish to a group blog') {|value| group = value }
     
   option.separator ""
   
@@ -110,7 +116,11 @@ if !publisher[:email] || !publisher[:password]
   end
 end
 
-response = Tumblr.execute(publisher, input)
+post = Tumblr.parse(input)
+post.state = publish_state if publish_state
+post.group = group if group
+
+response = Tumblr.execute(publisher, post)
 if response.success?
   puts "Published to Tumblr. The ID for this post is: #{response.body}"
   exit

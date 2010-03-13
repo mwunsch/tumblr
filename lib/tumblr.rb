@@ -54,7 +54,7 @@ class Tumblr
     Writer.new(@credentials[:email],@credentials[:password])
   end
   
-  def self.execute(credentials, input, state=nil)
+  def self.execute(credentials, input)
     request = new(credentials[:email],credentials[:password]).post(input)
     request.perform
   end
