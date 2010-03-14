@@ -20,6 +20,13 @@ You can pass `tumblr` something from standard input, but you have to set your em
 	$: echo 'Hello world.' | tumblr -a user@tumblr.com:supers3cretp4ssw0rd
 	Published to Tumblr. The ID for this post is: 123456790
 	
+Or the credentials can come from a YAML file:
+
+	$ cat ~/.tumblrlogin
+	email: tumblruser@generic-email.com
+	password: myvoiceismypassport
+	$ echo 'Hello world. | tumblr --credentials ~/.tumblrlogin
+	
 Try `tumblr --help` if you are in need of guidance. Read [tumblr(1)](http://mwunsch.github.com/tumblr/tumblr.1.html) for more information.
 
 ## Getting Started
