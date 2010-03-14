@@ -80,11 +80,12 @@
 <h2>OPTIONS</h2>
 
 <dl>
-<dt><code>-a</code>,<code>--auth</code> [<em>EMAIL:PASSWORD</em>]</dt><dd><p>  Provide Email Address and Password, to authenticate to Tumblr, separated by a colon.
+<dt><code>-a</code>,<code>--auth</code> <em>EMAIL:PASSWORD</em></dt><dd><p>  Provide Email Address and Password, to authenticate to Tumblr, separated by a colon.
   If these are not provided, you will be prompted for them.
-  You <b>must</b> provide this argument if the post comes from standard input.</p></dd>
-<dt><code>-e</code>, <code>--email</code> [<em>EMAIL</em>]</dt><dd><p>  Email Address associated with your Tumblr account.
+  You <b>must</b> provide this or the <code>--credentials</code> argument if the post comes from standard input.</p></dd>
+<dt><code>-e</code>, <code>--email</code> <em>EMAIL</em></dt><dd><p>  Email Address associated with your Tumblr account.
   You will be prompted for a password.</p></dd>
+<dt><code>--credentials</code> <em>FILE</em></dt><dd><p>  A YAML file with the user credentials. Should have keys <code>email</code> and <code>password</code>.</p></dd>
 <dt><code>-p</code>,<code>--publish</code></dt><dd><p>  Publish the post immediately. This will ignore the <code>state</code> parameter set in the post.</p></dd>
 <dt><code>-q</code>,<code>--queue</code></dt><dd><p>  Add the post to the queue.</p></dd>
 <dt><code>-d</code>,<code>--draft</code></dt><dd><p>  Save the post as a draft.</p></dd>
@@ -120,6 +121,19 @@
 <p>Or a Video post:</p>
 
 <pre><code>$ tumblr http://www.youtube.com/watch?v=CW0DUg63lqU
+</code></pre>
+
+<p>Save it as a draft:</p>
+
+<pre><code>$ tumblr -d http://www.youtube.com/watch?v=CW0DUg63lqU
+</code></pre>
+
+<p>Authenticate with credentials given from a file:</p>
+
+<pre><code>$ cat ~/.tumblrlogin
+email: tumblruser@generic-email.com
+password: myvoiceismypassport
+$ cat data.yml my_post.txt | tumblr --credentials ~/.tumblrlogin
 </code></pre>
 
 <h2>INSTALLATION</h2>

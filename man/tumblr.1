@@ -21,15 +21,19 @@ If you preface your \fIFILE\fR with a bit of YAML (<yaml.org>) frontmatter, you 
 .SH "OPTIONS"
 .
 .TP
-\fB\-a\fR,\fB\-\-auth\fR [\fIEMAIL:PASSWORD\fR]
+\fB\-a\fR,\fB\-\-auth\fR \fIEMAIL:PASSWORD\fR
   Provide Email Address and Password, to authenticate to Tumblr, separated by a colon.
   If these are not provided, you will be prompted for them.
-  You \fBmust\fR provide this argument if the post comes from standard input.
+  You \fBmust\fR provide this or the \fB\-\-credentials\fR argument if the post comes from standard input.
 .
 .TP
-\fB\-e\fR, \fB\-\-email\fR [\fIEMAIL\fR]
+\fB\-e\fR, \fB\-\-email\fR \fIEMAIL\fR
   Email Address associated with your Tumblr account.
   You will be prompted for a password.
+.
+.TP
+\fB\-\-credentials\fR \fIFILE\fR
+  A YAML file with the user credentials. Should have keys \fBemail\fR and \fBpassword\fR.
 .
 .TP
 \fB\-p\fR,\fB\-\-publish\fR
@@ -101,6 +105,33 @@ Or a Video post:
 .
 .nf
 $ tumblr http://www.youtube.com/watch?v=CW0DUg63lqU
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Save it as a draft:
+.
+.IP "" 4
+.
+.nf
+$ tumblr \-d http://www.youtube.com/watch?v=CW0DUg63lqU
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Authenticate with credentials given from a file:
+.
+.IP "" 4
+.
+.nf
+$ cat ~/.tumblrlogin
+email: tumblruser@generic\-email.com
+password: myvoiceismypassport
+$ cat data.yml my_post.txt | tumblr \-\-credentials ~/.tumblrlogin
 .
 .fi
 .
