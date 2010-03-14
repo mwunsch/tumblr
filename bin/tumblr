@@ -52,6 +52,12 @@ ARGV.options do |option|
     publisher[:email] = email
   end
   
+  option.on('--credentials FILE', 'A YAML file with "email" and "password" keys for authentication') do |file|
+    credentials = YAML.load(File.read(file))
+    publisher[:email] = credentials['email']
+    publisher[:password] = credentials['password']
+  end
+  
   option.on('-p','--publish', 'Publish the post immediately (ignores "state" parameter)') { publish_state = :published }
   option.on('-q','--queue', 'Add the post to the queue') { publish_state = :queue }
   option.on('-d','--draft', 'Save the post as a draft') { publish_state = :draft }

@@ -15,14 +15,17 @@ If you preface your <FILE> with a bit of YAML (<yaml.org>) frontmatter, you can 
 
 ## OPTIONS
 
-* `-a`,`--auth` [_EMAIL:PASSWORD_]:
+* `-a`,`--auth` _EMAIL:PASSWORD_:
 	Provide Email Address and Password, to authenticate to Tumblr, separated by a colon. 
 	If these are not provided, you will be prompted for them. 
-	You <b>must</b> provide this argument if the post comes from standard input.
+	You <b>must</b> provide this or the `--credentials` argument if the post comes from standard input.
 	
-* `-e`, `--email` [_EMAIL_]:
+* `-e`, `--email` _EMAIL_:
 	Email Address associated with your Tumblr account.
 	You will be prompted for a password.
+	
+* `--credentials` _FILE_:
+	A YAML file with the user credentials. Should have keys `email` and `password`.
 	
 * `-p`,`--publish`:
 	Publish the post immediately. This will ignore the `state` parameter set in the post.
@@ -61,6 +64,17 @@ Make a Link post:
 Or a Video post:
 
 	$ tumblr http://www.youtube.com/watch?v=CW0DUg63lqU
+	
+Save it as a draft:
+
+	$ tumblr -d http://www.youtube.com/watch?v=CW0DUg63lqU
+	
+Authenticate with credentials given from a file:
+
+	$ cat ~/.tumblrlogin
+	email: tumblruser@generic-email.com
+	password: myvoiceismypassport
+	$ cat data.yml my_post.txt | tumblr --credentials ~/.tumblrlogin
 	
 ## INSTALLATION
 
