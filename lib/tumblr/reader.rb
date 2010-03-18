@@ -44,10 +44,12 @@ class Tumblr
     # Pass an additional type parameter to only get Posts of a certain type.
     def self.get_posts(response, type = nil)
       tumblr_post = response['tumblr']['posts']['post']
-      posts = tumblr_post.respond_to?(:each_pair) ? [tumblr_post] : tumblr_post
-      posts.collect! { |post| build_post(post) }
-      return posts.select {|post| post.is_a?(Tumblr.map(type)) } if type
-      posts
+      if tumblr_post
+        posts = tumblr_post.respond_to?(:each_pair) ? [tumblr_post] : tumblr_post
+        posts.collect! { |post| build_post(post) }
+        return posts.select {|post| post.is_a?(Tumblr.map(type)) } if type
+        posts
+      end
     end
     
     # Build a Post object from Reader's Post XML
