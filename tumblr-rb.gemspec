@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{tumblr-rb}
-  s.version = "1.1.0"
+  s.version = "1.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mark Wunsch"]
-  s.date = %q{2010-03-14}
+  s.date = %q{2010-03-18}
   s.default_executable = %q{tumblr}
   s.description = %q{Ruby library and command line utility to work with the Tumblr Blogging Platform, powered by Weary.}
   s.email = %q{mark@markwunsch.com}
