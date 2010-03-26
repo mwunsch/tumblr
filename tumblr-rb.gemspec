@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{tumblr-rb}
-  s.version = "1.1.1"
+  s.version = "1.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mark Wunsch"]
-  s.date = %q{2010-03-18}
+  s.date = %q{2010-03-26}
   s.default_executable = %q{tumblr}
   s.description = %q{Ruby library and command line utility to work with the Tumblr Blogging Platform, powered by Weary.}
   s.email = %q{mark@markwunsch.com}
@@ -45,11 +45,13 @@ Gem::Specification.new do |s|
      "man/tumblr.5.html",
      "man/tumblr.5.ronn",
      "test/fixtures/vcr_cassettes/authenticate/authenticate.yml",
+     "test/fixtures/vcr_cassettes/read/all_pages.yml",
      "test/fixtures/vcr_cassettes/read/authenticated.yml",
      "test/fixtures/vcr_cassettes/read/authentication_failure.yml",
      "test/fixtures/vcr_cassettes/read/like.yml",
      "test/fixtures/vcr_cassettes/read/mwunsch.yml",
      "test/fixtures/vcr_cassettes/read/optional.yml",
+     "test/fixtures/vcr_cassettes/read/pages.yml",
      "test/fixtures/vcr_cassettes/read/tumblrgemtest.yml",
      "test/fixtures/vcr_cassettes/read/unlike.yml",
      "test/fixtures/vcr_cassettes/write/delete.yml",
