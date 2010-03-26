@@ -42,6 +42,14 @@ class Tumblr
     Authenticator.new(@credentials[:email],@credentials[:password]).authenticate(params)
   end
   
+  def pages(username)
+    reader.pages(username)
+  end
+  
+  def all_pages(username)
+    reader.all_pages(username)
+  end
+  
   def reader
     if @credentials.blank?
       Reader.new
