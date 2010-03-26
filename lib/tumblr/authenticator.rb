@@ -11,6 +11,7 @@ class Tumblr
     post :authenticate do |auth|
       auth.url = 'http://www.tumblr.com/api/authenticate'
       auth.requires = [:email, :password]
+      auth.with = [:'include-theme']
     end
     
   end

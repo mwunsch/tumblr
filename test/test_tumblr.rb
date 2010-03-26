@@ -110,6 +110,12 @@ link
       assert_equal auth.uri, tumbl.authenticate.uri
     end
     
+    test 'can pass include theme params to authenticate method' do
+      tumbl = Tumblr.new('test@testermcgee.com','dontrevealmysecrets')
+      include_theme = tumbl.authenticate(true)
+      assert include_theme.with.split('&').include?("include-theme=1")
+    end
+    
     test 'executes' do
       cred = {:email => 'test@testermcgee.com', :password => 'dontrevealmysecrets'}
       response = VCR.with_cassette('write/write') do
@@ -252,6 +258,8 @@ link
       end
       assert_equal 66, posts.count
     end
+    
+    # test 'pages'
   end
   
   describe 'Writer' do
@@ -305,6 +313,11 @@ link
       response = hijack! user.authenticate, 'authenticate/authenticate'
       assert response.success?
       assert_equal 'mwunsch', response["tumblr"]["tumblelog"].first["name"]
+    end
+    
+    test 'can include an optional theme' do
+      user = Tumblr::Authenticator.new('test@testermcgee.com','dontrevealmysecrets')
+      assert user.authenticate(:'include-theme' => 1).with.split('&').include?("include-theme=1")
     end
   end
   

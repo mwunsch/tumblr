@@ -36,9 +36,10 @@ class Tumblr
     reader.dashboard(parameters)
   end
   
-  def authenticate
+  def authenticate(theme = false)
     raise 'Requires an e-mail address and password' unless @credentials
-    Authenticator.new(@credentials[:email],@credentials[:password]).authenticate
+    params = theme ? {:'include-theme' => 1} : {}
+    Authenticator.new(@credentials[:email],@credentials[:password]).authenticate(params)
   end
   
   def reader
