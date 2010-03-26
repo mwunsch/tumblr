@@ -259,7 +259,20 @@ link
       assert_equal 66, posts.count
     end
     
-    # test 'pages'
+    test 'read pages' do
+      reader = Tumblr::Reader.new
+      assert_respond_to reader, :pages
+      response = hijack! reader.pages('tumblrgemtest'), 'read/pages'
+      assert response['tumblr'].has_key?("pages")
+    end
+    
+    test 'reads all pages by authenticating' do
+      reader = Tumblr::Reader.new('test@testermcgee.com','dontrevealmysecrets')
+      assert_respond_to reader, :all_pages
+      response = hijack! reader.all_pages('tumblrgemtest'), 'read/all_pages'
+      assert_equal 200, response.code
+      assert_equal 2, response['tumblr']['pages']['page'].count
+    end
   end
   
   describe 'Writer' do

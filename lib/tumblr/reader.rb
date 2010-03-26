@@ -13,6 +13,18 @@ class Tumblr
       self.class.read username, :get, parameters(params)
     end
     
+    # http://www.tumblr.com/docs/en/api#api_pages
+    def pages(username)
+      Weary.get("http://#{username}.tumblr.com/api/pages")
+    end
+    
+    def all_pages(username)
+      raise 'You must provide an email address and password' if defaults.blank?
+      Weary.post("http://#{username}.tumblr.com/api/pages") do |req|
+        req.with = {:email => defaults[:email], :password => defaults[:password]}
+      end
+    end
+    
     # http://www.tumblr.com/docs/en/api#authenticated_read
     def authenticated_read(username, params={})
       raise 'You must provide an email address and password' unless (params.include?(:email) && params.include?(:password)) || defaults
