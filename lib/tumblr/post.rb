@@ -7,6 +7,7 @@ class Tumblr
     POST_PARAMS = [:title,:body,:source,:caption,:'click-through-url',
                    :quote,:name,:url,:description,:conversation,
                    :embed,:'externally-hosted-url']
+    REBLOG_PARAMS = [:comment, :as]
     
     def self.parameters(*attributes)
       if !attributes.blank?
@@ -86,6 +87,10 @@ class Tumblr
     
     def edit(email, password)
       Writer.new(email,password).edit(to_h)
+    end
+    
+    def reblog(email, password)
+      Writer.new(email,password).reblog(to_h)
     end
     
     def delete(email, password)

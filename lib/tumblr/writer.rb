@@ -22,6 +22,13 @@ class Tumblr
       edit.with = (Post::BASIC_PARAMS | Post::POST_PARAMS)
     end
     
+    # http://www.tumblr.com/docs/en/api#reblogging_posts
+    post :reblog do |reblog|
+      reblog.url = 'http://www.tumblr.com/api/reblog'
+      reblog.requires = [:email, :password, :'post-id', :'reblog-key']
+      reblog.with = (Post::BASIC_PARAMS | Post::POST_PARAMS | Post::REBLOG_PARAMS)
+    end
+    
     # http://www.tumblr.com/docs/en/api#deleting_posts
     post :delete do |del|
       del.url = 'http://www.tumblr.com/api/delete'

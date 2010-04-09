@@ -309,6 +309,14 @@ link
       assert response.success?
       assert_equal 'Deleted', response.body
     end
+    
+    test 'reblogs a post' do
+      assert_respond_to Tumblr::Writer.new, :reblog
+      publisher = Tumblr::Writer.new('test@testermcgee.com','dontrevealmysecrets')
+      post = {:'post-id' => "507998507", :'reblog-key' => 'DifhdmQI'}
+      response = hijack! publisher.reblog(post), 'write/reblog'
+      assert_equal 201, response.code
+    end
   end
   
   describe 'Authenticator' do
@@ -467,6 +475,12 @@ link
       test 'deletes itself' do
         post = Tumblr::Post.new(123)
         assert post.delete('test@testermcgee.com','dontrevealmysecrets').is_a? Weary::Request
+      end
+      
+      test 'reblogs itself' do
+        post = Tumblr::Post.new(123)
+        post.reblog_key = '0U812'
+        assert post.reblog('test@testermcgee.com','dontrevealmysecrets').is_a? Weary::Request
       end
       
       test 'likes itself' do
