@@ -1,4 +1,4 @@
-# A sample Gemfile
+source 'http://rubygems.org'
 
 gem 'weary','>= 0.7.1'
 gem 'highline', '>= 1.5.2'
