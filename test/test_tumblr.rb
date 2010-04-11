@@ -118,7 +118,7 @@ link
     
     test 'executes' do
       cred = {:email => 'test@testermcgee.com', :password => 'dontrevealmysecrets'}
-      response = VCR.with_cassette('write/write') do
+      response = VCR.use_cassette('write/write') do
         Tumblr.execute(cred, 'Hello World.')
       end
       assert response.is_a? Weary::Response
@@ -253,7 +253,7 @@ link
     
     test 'gets all the posts for a username' do
       reader = Tumblr::Reader.new('test@testermcgee.com','dontrevealmysecrets')
-      posts = VCR.with_cassette('read/authenticated') do
+      posts = VCR.use_cassette('read/authenticated') do
         reader.get_all_posts('mwunsch')
       end
       assert_equal 66, posts.count
