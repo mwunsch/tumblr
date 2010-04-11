@@ -11,8 +11,12 @@ end
 require 'pp'
 require 'test/unit'
 require 'contest'
-require 'redgreen'
 require 'vcr'
+# Ruby 1.9 does not like redgreen
+begin
+  require 'redgreen'
+rescue LoadError
+end
 
 begin
   require 'tumblr'
@@ -26,15 +30,15 @@ FakeWeb.allow_net_connect = false
 
 VCR.config do |c|
   # the cache_dir is where the cassette yml files will be saved.
-  c.cache_dir = File.join(File.dirname(__FILE__),'fixtures', 'vcr_cassettes')
+  c.cassette_library_dir = File.join(File.dirname(__FILE__),'fixtures', 'vcr_cassettes')
 
   # this record mode will be used for any cassette you create without specifying a record mode.
-  c.default_cassette_record_mode = :none
+  c.default_cassette_options = {:record => :none}
 end
 
 def hijack!(request, fixture)
-  record_mode = File.exist?(VCR::Cassette.new(fixture).cache_file) ? :none : :unregistered
-  VCR.with_cassette(fixture, :record => record_mode) do
+  record_mode = File.exist?(VCR::Cassette.new(fixture).file) ? :none : :unregistered
+  VCR.use_cassette(fixture, :record => record_mode) do
     request.perform
   end
 end
