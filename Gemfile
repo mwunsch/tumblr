@@ -7,6 +7,6 @@ group :test do
 	gem 'rake'
 	gem 'redgreen'
 	gem 'contest'
-	gem 'vcr'
+	gem 'vcr', '>= 0.3.1'
 	gem 'jeweler'
 end
