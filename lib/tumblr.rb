@@ -1,7 +1,7 @@
 require 'weary'
 
 class Tumblr
-  VERSION = "1.2.0"
+  VERSION = "1.3.0"
   GENERATOR = "The Tumblr Gem v#{VERSION}"
   USER_AGENT = "TumblrGem/#{VERSION} (+http://github.com/mwunsch/tumblr)"
   
