@@ -63,12 +63,14 @@ class TestTumblr < Test::Unit::TestCase
 name: The Something Website
 ---
 http://something.com
+This is the description
 link
       
       post = Tumblr.parse(link)
       assert_equal :link, post.type
       assert_equal 'The Something Website', post.name
       assert_equal 'http://something.com', post.url
+      assert_equal 'This is the description', post.description
     end
   
     test 'sets up credentials for authentication' do

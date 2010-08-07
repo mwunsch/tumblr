@@ -4,7 +4,9 @@ class Tumblr
       
       def initialize(url, post_id = nil)
         super post_id
-        self.url = url
+        url = url.to_a.map
+        self.url = url.shift.strip
+        self.description = url.join
         @type = :link
       end
       

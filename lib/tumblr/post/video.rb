@@ -6,7 +6,9 @@ class Tumblr
       
       def initialize(video, post_id = nil)
         super post_id
-        self.embed = video
+        video = video.to_a.map
+        self.embed = video.shift.strip
+        self.caption = video.join
         @type = :video
       end
       
