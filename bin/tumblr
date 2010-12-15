@@ -8,11 +8,13 @@
 ## If a FILE is given, it will publish its contents. 
 ## See tumblr(5) for formatting instructions for FILE.
 ## If a URL or FILE is not given, tumblr will read from the Standard Input.
-## If tumblr reads from the Standard Input, you must authenticate with -a.
+## If tumblr reads from the Standard Input, you must authenticate with -a,
+## or add login credentials for your tumblr account to ~/.netrc.
 ##
 ##
 
 require 'optparse'
+require 'net/netrc'
 
 def usage
   File.readlines(__FILE__).
@@ -90,12 +92,16 @@ else
   STDIN.read.chomp!
 end
 
-if !STDIN.tty? && (!publisher[:email] || !publisher[:password])
-  bad_auth = %q(Error: An email address and password are required. Use 'tumblr -a' to authenticate. See 'tumblr --help' for details.)
-  abort bad_auth
-end
-
 if !publisher[:email] || !publisher[:password]
+  rc = Net::Netrc.locate('tumblr.com')
+  if rc
+    publisher[:email] = rc.login
+    publisher[:password] = rc.password
+  elsif !STDIN.tty?
+    bad_auth = %q(Error: An email address and password are required. See 'tumblr --help' for ways to supply them.)
+    abort bad_auth
+  end
+
   begin
     require 'highline/import'
   rescue LoadError
