@@ -39,6 +39,7 @@ end
 publisher = {}
 publish_state = nil
 group = nil
+send_to_twitter = nil
 
 ARGV.options do |option|
   option.banner = usage
@@ -65,6 +66,7 @@ ARGV.options do |option|
   option.on('-d','--draft', 'Save the post as a draft') { publish_state = :draft }
   
   option.on('--group=GROUP','Publish to a group blog') {|value| group = value }
+  option.on('-t','--twitter[=TWEET]', 'Tweet the post (argument can be "no" (default), "auto" or the text of the tweet"') { |value| send_to_twitter = value || "auto" }
     
   option.separator ""
   
@@ -131,6 +133,7 @@ end
 post = Tumblr.parse(input)
 post.state = publish_state if publish_state
 post.group = group if group
+post.send_to_twitter = send_to_twitter if send_to_twitter
 
 response = Tumblr.execute(publisher, post)
 if response.success?
