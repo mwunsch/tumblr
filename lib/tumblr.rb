@@ -71,7 +71,7 @@ class Tumblr
   # Parse a post out of a string
   def self.parse(doc)
     document = {}
-    if doc =~ /^(\s*---(.*)---\s*)/m
+    if doc =~ /^(\s*---(.*?)---\s*)/m
       document[:data] = YAML.load(Regexp.last_match[2].strip)
       document[:body] = doc.sub(Regexp.last_match[1],'').strip
     else
