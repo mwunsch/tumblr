@@ -1,63 +1,26 @@
---- 
-hash: 494102bf0992e5bb83118c12065b38b342f1de6a
-sources: 
-- Rubygems: 
-    uri: http://rubygems.org
-specs: 
-- rake: 
-    version: 0.8.7
-- contest: 
-    version: 0.1.2
-- crack: 
-    version: 0.1.7
-- fakeweb: 
-    version: 1.2.8
-- json_pure: 
-    version: 1.2.4
-- gemcutter: 
-    version: 0.5.0
-- git: 
-    version: 1.2.5
-- highline: 
-    version: 1.5.2
-- rubyforge: 
-    version: 2.0.4
-- jeweler: 
-    version: 1.4.0
-- oauth: 
-    version: 0.4.0
-- redgreen: 
-    version: 1.2.2
-- vcr: 
-    version: 0.3.1
-- weary: 
-    version: 0.7.2
-dependencies: 
-  weary: 
-    version: ">= 0.7.1"
-    group: 
-    - :default
-  highline: 
-    version: ">= 1.5.2"
-    group: 
-    - :default
-  rake: 
-    version: ">= 0"
-    group: 
-    - :test
-  redgreen: 
-    version: ">= 0"
-    group: 
-    - :test
-  contest: 
-    version: ">= 0"
-    group: 
-    - :test
-  vcr: 
-    version: ">= 0.3.1"
-    group: 
-    - :test
-  jeweler: 
-    version: ">= 0"
-    group: 
-    - :test
+PATH
+  remote: .
+  specs:
+    tumblr-rb (2.0.0)
+      weary (~> 1.0.0.rc1)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    addressable (2.2.7)
+    multi_json (1.1.0)
+    promise (0.3.0)
+    rack (1.4.1)
+    simple_oauth (0.1.5)
+    weary (1.0.0.rc1)
+      addressable (~> 2.2.6)
+      multi_json (~> 1.1.0)
+      promise (~> 0.3.0)
+      rack (~> 1.4.0)
+      simple_oauth (~> 0.1.5)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  tumblr-rb!
