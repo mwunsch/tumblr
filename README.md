@@ -112,6 +112,6 @@ To publish to Tumblr, do this:
 
 ## Copyright
 
-The Tumblr gem is Copyright (c) 2010 Mark Wunsch and is licensed under the [MIT License](http://creativecommons.org/licenses/MIT/). 
+The Tumblr gem is Copyright (c) 2010 - 2012 Mark Wunsch and is licensed under the [MIT License](http://creativecommons.org/licenses/MIT/). 
 
 Tumblr is Copyright (c) Tumblr, Inc. The Tumblr gem is NOT affiliated with Tumblr, Inc.
