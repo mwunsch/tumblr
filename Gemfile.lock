@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tumblr-rb (2.0.0)
+    tumblr-rb (2.0.0.rc1)
       weary (~> 1.0.0.rc1)
 
 GEM
@@ -37,6 +37,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  jruby-openssl
   rake (~> 0.9.2)
   rspec (~> 2.9.0)
   tumblr-rb!
