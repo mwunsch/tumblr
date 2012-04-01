@@ -15,5 +15,5 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = Tumblr::VERSION
 
-  gem.add_runtime_dependency "weary", "~> 1.0.0.rc1"
+  # gem.add_runtime_dependency "weary", "~> 1.0.0.rc1"
 end
