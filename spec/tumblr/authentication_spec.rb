@@ -3,6 +3,7 @@ require "spec_helper"
 describe Tumblr::Authentication do
   require "rack/test"
   include Rack::Test::Methods
+
   before do
     stub_request :any, /www\.tumblr.com\/oauth\/.*/
   end
