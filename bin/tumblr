@@ -8,11 +8,13 @@
 ## If a FILE is given, it will publish its contents. 
 ## See tumblr(5) for formatting instructions for FILE.
 ## If a URL or FILE is not given, tumblr will read from the Standard Input.
-## If tumblr reads from the Standard Input, you must authenticate with -a.
+## If tumblr reads from the Standard Input, you must authenticate with -a,
+## or add login credentials for your tumblr account to ~/.netrc.
 ##
 ##
 
 require 'optparse'
+require 'net/netrc'
 
 def usage
   File.readlines(__FILE__).
@@ -37,6 +39,7 @@ end
 publisher = {}
 publish_state = nil
 group = nil
+send_to_twitter = nil
 
 ARGV.options do |option|
   option.banner = usage
@@ -63,6 +66,7 @@ ARGV.options do |option|
   option.on('-d','--draft', 'Save the post as a draft') { publish_state = :draft }
   
   option.on('--group=GROUP','Publish to a group blog') {|value| group = value }
+  option.on('-t','--twitter[=TWEET]', 'Tweet the post (argument can be "no" (default), "auto" or the text of the tweet"') { |value| send_to_twitter = value || "auto" }
     
   option.separator ""
   
@@ -90,12 +94,16 @@ else
   STDIN.read.chomp!
 end
 
-if !STDIN.tty? && (!publisher[:email] || !publisher[:password])
-  bad_auth = %q(Error: An email address and password are required. Use 'tumblr -a' to authenticate. See 'tumblr --help' for details.)
-  abort bad_auth
-end
-
 if !publisher[:email] || !publisher[:password]
+  rc = Net::Netrc.locate('tumblr.com')
+  if rc
+    publisher[:email] = rc.login
+    publisher[:password] = rc.password
+  elsif !STDIN.tty?
+    bad_auth = %q(Error: An email address and password are required. See 'tumblr --help' for ways to supply them.)
+    abort bad_auth
+  end
+
   begin
     require 'highline/import'
   rescue LoadError
@@ -125,6 +133,7 @@ end
 post = Tumblr.parse(input)
 post.state = publish_state if publish_state
 post.group = group if group
+post.send_to_twitter = send_to_twitter if send_to_twitter
 
 response = Tumblr.execute(publisher, post)
 if response.success?
