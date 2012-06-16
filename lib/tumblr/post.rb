@@ -66,8 +66,8 @@ module Tumblr
       client.delete(:id => id)
     end
 
-    def client(oauth_keys = {})
-      Tumblr::Client.new(oauth_keys)
+    def client(hostname, oauth_keys = {})
+      Tumblr::Client.new(hostname, oauth_keys)
     end
 
     def request_parameters

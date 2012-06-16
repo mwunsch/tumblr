@@ -50,7 +50,9 @@ module Tumblr
       response = access_token(token, session[:request_token_secret], verifier,
         session[:consumer_key], session[:consumer_secret]).perform
       if response.success?
+        require 'tumblr/credentials'
         result = Rack::Utils.parse_query(response.body)
+        Tumblr::Credentials.new.write(session[:consumer_key], session[:consumer_secret], result["oauth_token"], result["oauth_token_secret"])
         status response.status
         body result.inspect
       else

@@ -115,5 +115,19 @@ module Tumblr
       r.required :id
       r.optional :reblog_key
     end
+
+    def self.load(hostname = nil, path = nil)
+      require "tumblr/credentials"
+      credentials = Tumblr::Credentials.new(path).read
+      self.new(hostname, credentials)
+    end
+
+    def initialize(hostname = nil, oauth_params = {})
+      @defaults = {}
+      @defaults[:hostname] = hostname if hostname
+      [:consumer_key, :consumer_secret, :token, :token_secret].each do |param|
+        @defaults[param] = oauth_params[param] || oauth_params[param.to_s] if oauth_params.keys.map(&:to_s).include? param.to_s
+      end
+    end
   end
 end
