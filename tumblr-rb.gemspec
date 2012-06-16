@@ -17,4 +17,5 @@ Gem::Specification.new do |gem|
 
   gem.add_runtime_dependency "weary", "~> 1.0.0"
   gem.add_runtime_dependency "sinatra", "~> 1.3.2"
+  gem.add_runtime_dependency "thor", "~> 0.15.2"
 end
