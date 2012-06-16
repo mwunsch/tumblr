@@ -1,8 +1,8 @@
 require 'tumblr/version'
 
 module Tumblr
-  autoload :Client, "tumblr/client"
-  autoload :Authentication, "tumblr/authentication"
-
+  require "tumblr/client"
   require "tumblr/post"
+
+  autoload :Authentication, "tumblr/authentication"
 end
