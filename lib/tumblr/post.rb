@@ -80,6 +80,7 @@ module Tumblr
     autoload :Answer, 'tumblr/post/answer'
     autoload :Video, 'tumblr/post/video'
     autoload :Audio, 'tumblr/post/photo'
+    autoload :Photo, 'tumblr/post/photo'
     autoload :Chat, 'tumblr/post/chat'
 
   end
