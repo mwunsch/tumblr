@@ -74,6 +74,13 @@ module Tumblr
       Hash[(Tumblr::Client::POST_OPTIONS | [:id, :type]).map {|key| [key, send(key)] if respond_to?(key) && send(key) }]
     end
 
-  end
+    autoload :Text, 'tumblr/post/text'
+    autoload :Quote, 'tumblr/post/quote'
+    autoload :Link, 'tumblr/post/link'
+    autoload :Answer, 'tumblr/post/answer'
+    autoload :Video, 'tumblr/post/video'
+    autoload :Audio, 'tumblr/post/photo'
+    autoload :Chat, 'tumblr/post/chat'
 
+  end
 end

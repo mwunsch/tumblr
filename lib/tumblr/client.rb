@@ -14,7 +14,8 @@ module Tumblr
       :url, :description, # Link posts
       :conversation, # Chat posts
       :external_url, # Audio posts
-      :embed # Video posts
+      :embed, # Video posts
+      :answer # Answer posts ??
     ]
 
     domain "http://api.tumblr.com/#{API_VERSION}"
@@ -55,19 +56,19 @@ module Tumblr
     post :post, "/blog/{hostname}/post" do |r|
       r.oauth!
       r.required :type
-      r.optional POST_OPTIONS
+      r.optional *POST_OPTIONS
     end
 
     post :edit, "/blog/{hostname}/post/edit" do |r|
       r.oauth!
       r.required :id
-      r.optional POST_OPTIONS
+      r.optional *POST_OPTIONS
     end
 
     post :reblog, "/blog/{hostname}/post/reblog" do |r|
       r.oauth!
       r.required :id, :reblog_key
-      r.optional POST_OPTIONS | [:comment]
+      r.optional *(POST_OPTIONS | [:comment])
     end
 
     post :delete, "/blog/{hostname}/post/delete" do |r|
