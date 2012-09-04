@@ -18,7 +18,7 @@ class Tumblr
     end
     
     attr_reader :type, :state, :post_id, :format
-    attr_accessor :slug, :date, :group, :generator, :reblog_key
+    attr_accessor :slug, :date, :group, :generator, :reblog_key, :send_to_twitter
     
     def initialize(post_id = nil)
       @post_id = post_id if post_id
