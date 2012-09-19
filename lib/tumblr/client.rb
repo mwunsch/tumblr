@@ -20,7 +20,7 @@ module Tumblr
 
     domain "http://api.tumblr.com/#{API_VERSION}"
 
-    headers 'User-Agent' => USER_AGENT
+    user_agent USER_AGENT
 
     get :info, "/blog/{hostname}/info" do |r|
       r.required :api_key
@@ -107,14 +107,12 @@ module Tumblr
 
     post :like, "/user/like" do |r|
       r.oauth!
-      r.required :id
-      r.optional :reblog_key
+      r.required :id, :reblog_key
     end
 
     post :unlike, "/user/unlike" do |r|
       r.oauth!
-      r.required :id
-      r.optional :reblog_key
+      r.required :id, :reblog_key
     end
 
     get :tagged, "/tagged" do |r|
