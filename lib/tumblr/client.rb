@@ -132,8 +132,19 @@ module Tumblr
       @defaults = {}
       @defaults[:hostname] = hostname if hostname
       [:consumer_key, :consumer_secret, :token, :token_secret].each do |param|
-        @defaults[param] = oauth_params[param] || oauth_params[param.to_s] if oauth_params.keys.map(&:to_s).include? param.to_s
+        @defaults[param] = value_for_key_as_string_or_symbol(oauth_params, param) if hash_includes_key_as_string_or_symbol?(oauth_params, param)
       end
+      @defaults[:api_key] = value_for_key_as_string_or_symbol(oauth_params, :consumer_key)
+    end
+
+    private
+
+    def value_for_key_as_string_or_symbol(hash, key)
+      hash[key.to_sym] || hash[key.to_s]
+    end
+
+    def hash_includes_key_as_string_or_symbol?(hash, key)
+      hash.keys.map(&:to_s).include? key.to_s
     end
   end
 end
