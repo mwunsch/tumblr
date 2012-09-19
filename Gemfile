@@ -8,6 +8,7 @@ group :test do
   gem "rspec", "~> 2.11.0"
   gem "webmock", "~> 1.8.5"
   gem "rack-test", "~> 0.6.1"
+  gem "fakefs"
 end
 
 platforms :jruby do
