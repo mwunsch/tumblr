@@ -117,6 +117,11 @@ module Tumblr
       r.optional :reblog_key
     end
 
+    get :tagged, "/tagged" do |r|
+      r.required :api_key, :tag
+      r.optional :before, :limit, :filter
+    end
+
     def self.load(hostname = nil, path = nil)
       require "tumblr/credentials"
       credentials = Tumblr::Credentials.new(path).read
