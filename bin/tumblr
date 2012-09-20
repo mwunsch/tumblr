@@ -19,7 +19,7 @@ class TumblrCommand < Thor
   desc "authorize", "Authenticate and authorize the cli"
   def authorize(*soak)
     Tumblr::Authentication.run! do |server|
-      `open http://localhost:4567/`
+      `open http://0.0.0.0:4567/`
     end
   end
 end
