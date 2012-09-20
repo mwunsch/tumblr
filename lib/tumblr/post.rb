@@ -44,7 +44,7 @@ module Tumblr
       @date
     end
 
-    def markdown
+    def markdown?
       @format.to_s == "markdown"
     end
 
