@@ -133,7 +133,7 @@ describe Tumblr::Client do
     it "gets the authorized user's account information" do
       req = @client.user @oauth
       req.perform.force
-      a_request(:post, "#{@domain}/user/info").with {|request|
+      a_request(:get, "#{@domain}/user/info").with {|request|
         request.headers.has_key? "Authorization"
       }.should have_been_made
     end

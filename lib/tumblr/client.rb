@@ -76,7 +76,7 @@ module Tumblr
       r.required :id
     end
 
-    post :user, "/user/info" do |r|
+    get :user, "/user/info" do |r|
       r.oauth!
     end
 
