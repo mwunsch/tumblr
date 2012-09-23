@@ -1,4 +1,5 @@
 module Tumblr
+  # Not a good idea to instantiate this class directly. Instead, use the Tumblr::Post::create method.
   class Post
 
     TYPES = [
@@ -13,8 +14,15 @@ module Tumblr
       :total_posts
     ]
 
+    def self.create(request)
+      response = request.perform
+      posts = response.parse["response"]["posts"]
+
+      (posts || []).map{|post| self.new(post) }
+    end
+
     def initialize(post_response = {})
-      post_response.delete_if {|k,v| !(FIELDS | Tumblr::Client::POST_OPTIONS).include? k }
+      post_response.delete_if {|k,v| !(FIELDS | Tumblr::Client::POST_OPTIONS).map(&:to_s).include? k }
       post_response.each_pair do |k,v|
         instance_variable_set "@#{k}".to_sym, v
       end
@@ -64,10 +72,6 @@ module Tumblr
     def delete(client)
       raise "Must have an id to delete a post" unless id
       client.delete(:id => id)
-    end
-
-    def client(hostname, oauth_keys = {})
-      Tumblr::Client.new(hostname, oauth_keys)
     end
 
     def request_parameters
