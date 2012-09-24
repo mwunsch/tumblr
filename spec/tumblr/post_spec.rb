@@ -8,12 +8,46 @@ describe Tumblr::Post do
 
   end
 
-  describe "::create" do
+  describe "::perform" do
     it "creates a set of Post objects given a request" do
-      posts = described_class.create(@request)
+      posts = described_class.perform(@request)
       posts.should be_all {|post| post.is_a? described_class }
     end
+  end
 
+  describe "::create" do
+    it "creates a subclass of Post from a post_response" do
+      first_post = @request.perform.parse["response"]["posts"].first
+      post = described_class.create(first_post)
+      post.should be_kind_of Tumblr::Post::Link
+    end
+  end
+
+  describe "#request_parameters" do
+    it "transforms a post into a hash for the request" do
+      first_post = @request.perform.parse["response"]["posts"].first
+      post = described_class.create(first_post)
+      post.request_parameters.keys.map(&:to_sym).should be_all do |key|
+        (Tumblr::Client::POST_OPTIONS).include? key
+      end
+    end
+  end
+
+  describe "#meta_data" do
+    it "excludes post body data from the request parameters" do
+      first_post = @request.perform.parse["response"]["posts"].first
+      post = described_class.create(first_post)
+      post.meta_data.keys.should_not include("description")
+    end
+  end
+
+  describe "#serialize" do
+    it "transforms the post into a string w/ YAML frontmatter" do
+      first_post = @request.perform.parse["response"]["posts"].first
+      post = described_class.create(first_post)
+      post.serialize =~ /^(\s*---(.*?)---\s*)/m
+      YAML.load(Regexp.last_match[2]).should eql post.meta_data
+    end
   end
 
 

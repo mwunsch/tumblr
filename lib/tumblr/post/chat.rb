@@ -13,6 +13,10 @@ module Tumblr
       def conversation
         @conversation
       end
+
+      def post_body_keys
+        [:conversation]
+      end
     end
   end
 end

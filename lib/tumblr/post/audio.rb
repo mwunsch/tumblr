@@ -17,6 +17,10 @@ module Tumblr
       def data
         @data
       end
+
+      def post_body_keys
+        [:external_url, :caption]
+      end
     end
   end
 end

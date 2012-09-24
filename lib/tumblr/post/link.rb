@@ -10,12 +10,16 @@ module Tumblr
         @title
       end
 
-      def title
+      def url
         @url
       end
 
       def description
         @description
+      end
+
+      def post_body_keys
+        [:url, :description]
       end
     end
   end

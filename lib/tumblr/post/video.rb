@@ -17,6 +17,10 @@ module Tumblr
       def data
         @data
       end
+
+      def post_body_keys
+        [:embed, :caption]
+      end
     end
   end
 end

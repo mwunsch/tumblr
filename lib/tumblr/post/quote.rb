@@ -13,6 +13,10 @@ module Tumblr
       def source
         @source
       end
+
+      def post_body_keys
+        [:quote]
+      end
     end
   end
 end
