@@ -37,8 +37,8 @@ describe Tumblr::Post do
     it "transforms a post into a hash for the request" do
       first_post = @request.perform.parse["response"]["posts"].first
       post = described_class.create(first_post)
-      post.request_parameters.keys.map(&:to_sym).should be_all do |key|
-        (Tumblr::Client::POST_OPTIONS).include? key
+      post.request_parameters.keys.should be_all do |key|
+        (Tumblr::Client::POST_OPTIONS).map(&:to_s).include? key
       end
     end
   end

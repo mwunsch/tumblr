@@ -7,7 +7,7 @@ module Tumblr
     USER_AGENT = "Tumblr API Client (Ruby)/#{Tumblr::VERSION} (+http://github.com/mwunsch/tumblr)"
 
     POST_OPTIONS = [
-      :state, :tags, :tweet, :date, :markdown, :slug,
+      :state, :tags, :tweet, :date, :format, :slug,
       :title, :body, # Text posts
       :caption, :link, :source, :data, #Photo posts
       :quote, # Quote posts
