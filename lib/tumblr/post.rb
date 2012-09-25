@@ -19,6 +19,8 @@ module Tumblr
       :total_posts
     ]
 
+    POST_BODY_SEPARATOR = "\n\n"
+
     def self.perform(request)
       response = request.perform
       posts = response.parse["response"]["posts"]
@@ -28,7 +30,40 @@ module Tumblr
 
     def self.create(post_response)
       type = post_response["type"].to_s.capitalize.to_sym
-      const_get(type).new(post_response)
+      get_post_type(post_response["type"]).new(post_response)
+    end
+
+    def self.get_post_type(type)
+      const_get type.to_s.capitalize.to_sym
+    end
+
+    def self.post_body_keys
+      [:body]
+    end
+
+    def self.load(doc)
+      doc =~ /^(\s*---(.*?)---\s*)/m
+      foo = {}
+
+      meta_data = YAML.load(Regexp.last_match[2].strip)
+      doc_body = doc.sub(Regexp.last_match[1],'').strip
+
+      post_type = get_post_type(meta_data["type"] || meta_data[:type])
+      post_body_parts = doc_body.split(POST_BODY_SEPARATOR)
+
+      pairs = pair_post_body_types(post_type.post_body_keys,post_body_parts.dup)
+      full_post = Hash[pairs].merge(meta_data)
+
+      post_type.new(full_post)
+    end
+
+    def self.pair_post_body_types(keys, values)
+      values.fill values[keys.length - 1, values.length - 1].join(POST_BODY_SEPARATOR), keys.length - 1, values.length - 1
+      keys.map(&:to_s).zip values
+    end
+
+    def self.dump(post)
+      post.serialize
     end
 
     def initialize(post_response = {})
@@ -58,7 +93,11 @@ module Tumblr
     end
 
     def tags
-      @tags.join(",") if @tags.respond_to? :join
+      if @tags.respond_to? :join
+        @tags.join(",")
+      else
+        @tags
+      end
     end
 
     def tweet
@@ -96,17 +135,13 @@ module Tumblr
     end
 
     def meta_data
-      request_parameters.reject {|k,v| post_body_keys.include?(k.to_sym) }
-    end
-
-    def post_body_keys
-      [:body]
+      request_parameters.reject {|k,v| self.class.post_body_keys.include?(k.to_sym) }
     end
 
     private
 
     def post_body
-      post_body_keys.map{|key| self.send(key) }.join("\n\n")
+      self.class.post_body_keys.map{|key| self.send(key) }.join("\n\n")
     end
 
   end

@@ -22,7 +22,7 @@ module Tumblr
         @data
       end
 
-      def post_body_keys
+      def self.post_body_keys
         [:source, :caption]
       end
     end

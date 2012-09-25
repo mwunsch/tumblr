@@ -23,6 +23,16 @@ describe Tumblr::Post do
     end
   end
 
+  describe "::load" do
+    it "loads a post from a serialized, YAML front-matter format" do
+      first_post = @request.perform.parse["response"]["posts"].first
+      post = described_class.create(first_post)
+
+      loaded_post = described_class.load(post.serialize)
+      loaded_post.serialize.should eql post.serialize
+    end
+  end
+
   describe "#request_parameters" do
     it "transforms a post into a hash for the request" do
       first_post = @request.perform.parse["response"]["posts"].first

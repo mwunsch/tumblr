@@ -14,7 +14,7 @@ module Tumblr
         @conversation
       end
 
-      def post_body_keys
+      def self.post_body_keys
         [:conversation]
       end
     end
