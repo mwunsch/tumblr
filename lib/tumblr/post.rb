@@ -132,6 +132,10 @@ module Tumblr
       @type
     end
 
+    def reblog_key
+      @reblog_key
+    end
+
     def state
       @state
     end
