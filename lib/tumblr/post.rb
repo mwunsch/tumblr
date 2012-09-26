@@ -44,6 +44,11 @@ module Tumblr
 
     # Transform a yaml front matter formatted String into a subclass of Tumblr::Post
     def self.load(doc)
+      create parse(doc)
+    end
+
+    # Transform a yaml front matter formatted String into a set of parameters to create a post.
+    def self.parse(doc)
       doc =~ /^(\s*---(.*?)---\s*)/m
 
       meta_data = YAML.load(Regexp.last_match[2].strip)
@@ -53,9 +58,7 @@ module Tumblr
       post_body_parts = doc_body.split(POST_BODY_SEPARATOR)
 
       pairs = pair_post_body_types(post_type.post_body_keys, post_body_parts.dup)
-      full_post = Hash[pairs].merge(meta_data)
-
-      post_type.new(full_post)
+      Hash[pairs].merge(meta_data)
     end
 
     # Pair the post body keys for a particular post type with a list of values.
