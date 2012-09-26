@@ -171,19 +171,19 @@ module Tumblr
     end
 
     def published?
-      @state.to_sym == :published
+      @state.to_s == "published"
     end
 
     def draft?
-      @state.to_sym == :draft
+      @state.to_s == "draft"
     end
 
     def queued?
-      @state.to_sym == (:queued || :queue)
+      @state.to_s == "queued" or @state.to_s == "queue"
     end
 
     def private?
-      @state.to_sym == :private
+      @state.to_s == "private"
     end
 
     private
