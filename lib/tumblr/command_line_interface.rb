@@ -23,5 +23,13 @@ module Tumblr
       end
     end
 
+    def help
+      if !$stdin.tty?
+        puts "you put something in the $stdin"
+      else
+        super
+      end
+    end
+
   end
 end
