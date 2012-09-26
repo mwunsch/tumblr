@@ -52,7 +52,7 @@ module Tumblr
       post_type = get_post_type(meta_data["type"] || meta_data[:type])
       post_body_parts = doc_body.split(POST_BODY_SEPARATOR)
 
-      pairs = pair_post_body_types(post_type.post_body_keys,post_body_parts.dup)
+      pairs = pair_post_body_types(post_type.post_body_keys, post_body_parts.dup)
       full_post = Hash[pairs].merge(meta_data)
 
       post_type.new(full_post)
