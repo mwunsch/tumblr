@@ -7,7 +7,7 @@ module Tumblr
     attr_reader :path
 
     def initialize(path = nil)
-      @path = path || File.join(File.expand_path("~"), FILE_NAME)
+      @path = File.expand_path(path) || File.join(File.expand_path("~"), FILE_NAME)
     end
 
     def write(consumer_key, consumer_secret, token, token_secret)
