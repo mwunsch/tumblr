@@ -81,7 +81,7 @@ module Tumblr
     end
 
     def initialize(post_response = {})
-      post_response.delete_if {|k,v| !(FIELDS | Tumblr::Client::POST_OPTIONS).map(&:to_s).include? k }
+      post_response.delete_if {|k,v| !(FIELDS | Tumblr::Client::POST_OPTIONS).map(&:to_s).include? k.to_s }
       post_response.each_pair do |k,v|
         instance_variable_set "@#{k}".to_sym, v
       end
