@@ -51,10 +51,15 @@ module Tumblr
     def self.parse(doc)
       doc =~ /^(\s*---(.*?)---\s*)/m
 
-      meta_data = YAML.load(Regexp.last_match[2].strip)
-      doc_body = doc.sub(Regexp.last_match[1],'').strip
+      if Regexp.last_match
+        meta_data = YAML.load(Regexp.last_match[2].strip)
+        doc_body = doc.sub(Regexp.last_match[1],'').strip
+      else
+        meta_data = {"type" => :text} #TODO: Infer type
+        doc_body = doc
+      end
 
-      post_type = get_post_type(meta_data["type"] || meta_data[:type])
+      post_type = get_post_type(meta_data["type"])
       post_body_parts = doc_body.split(POST_BODY_SEPARATOR)
 
       pairs = pair_post_body_types(post_type.post_body_keys, post_body_parts.dup)
@@ -65,7 +70,9 @@ module Tumblr
     # If the length list of values is greater than the list of keys, the last key
     # should be paired with the remaining values joined together.
     def self.pair_post_body_types(keys, values)
-      values.fill values[keys.length - 1, values.length - 1].join(POST_BODY_SEPARATOR), keys.length - 1, values.length - 1
+      values.fill(keys.length - 1) do |i|
+        values[keys.length - 1, values.length].join(POST_BODY_SEPARATOR)
+      end
       keys.map(&:to_s).zip values
     end
 
