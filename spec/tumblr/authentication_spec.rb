@@ -6,6 +6,13 @@ describe Tumblr::Authentication do
 
   before do
     stub_request :any, /www\.tumblr.com\/oauth\/.*/
+    @tempfile = Tempfile.new("tumblr_credentials")
+    described_class.set :credential_path, @tempfile.path
+  end
+
+  after do
+    @tempfile.close
+    @tempfile.unlink
   end
 
   def app
@@ -39,6 +46,12 @@ describe Tumblr::Authentication do
       get "/auth", :oauth_token => "token", :oauth_verifier => "verifier"
       a_request(:post, /oauth\/access_token/).should have_been_made
     end
+
+    it "writes credentials to the correct path" do
+      get "/auth", :oauth_token => "token", :oauth_verifier => "verifier"
+      YAML.load(@tempfile.read).should have_key "consumer_key"
+    end
+
   end
 
 end

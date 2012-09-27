@@ -8,6 +8,7 @@ module Tumblr
     HOST = "http://www.tumblr.com/oauth"
 
     enable :sessions
+    set :credential_path, nil
 
     def request_token(key, secret, callback)
       Weary::Request.new "#{HOST}/request_token", :POST do |req|
@@ -52,7 +53,10 @@ module Tumblr
       if response.success?
         require 'tumblr/credentials'
         result = Rack::Utils.parse_query(response.body)
-        Tumblr::Credentials.new.write(session[:consumer_key], session[:consumer_secret], result["oauth_token"], result["oauth_token_secret"])
+        Tumblr::Credentials.new(settings.credential_path).write session[:consumer_key],
+                                                                session[:consumer_secret],
+                                                                result["oauth_token"],
+                                                                result["oauth_token_secret"]
         status response.status
         body "Good to go."
       else

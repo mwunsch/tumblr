@@ -11,7 +11,7 @@ describe Tumblr::Credentials do
 
     it "can be overriden at initialization" do
       credentials = described_class.new("~/.tumblr_oauth")
-      credentials.path.should eql "~/.tumblr_oauth"
+      credentials.path.should eql File.expand_path("~/.tumblr_oauth")
     end
   end
 
