@@ -17,12 +17,12 @@ module Tumblr
     option :host, :type => :string,
                   :desc => "The hostname of the blog you want to post to"
     def post(arg)
+      abort "No, dude. No." unless has_credentials?
       if options[:host].nil?
         host = ask("Hostname plz?") if $stdin.tty?
       end
       host ||= options[:host]
       abort "You need a hostname." if host.nil? or host.empty?
-      abort "No, dude. No." unless has_credentials?
       client = Tumblr::Client.load host, options[:credentials]
       post =  if arg.respond_to? :read
                 Tumblr::Post.load arg.read
@@ -55,7 +55,7 @@ module Tumblr
         `open http://#{options[:host]}:#{options[:port]}/`
       end
       if has_credentials?
-        puts "Great success! Your Tumblr OAuth credentials were written to #{credentials.path}"
+        puts "Success! Your Tumblr OAuth credentials were written to #{credentials.path}"
       else
         abort "Something went wrong in authorization, and credentials were not correctly written to #{credentials.path}"
       end
