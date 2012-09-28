@@ -33,6 +33,18 @@ describe Tumblr::Post do
     end
   end
 
+  describe "::load_from_path" do
+    # The typical_animated_gif.gif c/o topherchris.com
+    it "determines post type based on file" do
+      post = described_class.load_from_path "#{fixture_path}/typical_animated_gif.gif"
+      post.should be_kind_of Tumblr::Post::Photo
+    end
+
+    it "raises an exception when the path is not a file" do
+      expect { described_class.load_from_path("#{fixture_path}/foo_bazzy.png") }.to raise_error(ArgumentError)
+    end
+  end
+
   describe "#request_parameters" do
     it "transforms a post into a hash for the request" do
       first_post = @request.perform.parse["response"]["posts"].first

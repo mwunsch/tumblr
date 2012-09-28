@@ -47,6 +47,24 @@ module Tumblr
       create parse(doc)
     end
 
+    # Load a document and transform into a post via file path
+    def self.load_from_path(path)
+      raise ArgumentError, "Given path: #{path} is not a file" unless File.file? File.expand_path(path)
+      post_type = infer_post_type_from_extname File.extname(path)
+      if post_type == :text
+        load File.read(File.expand_path(path))
+      else
+        load_from_binary File.new(File.expand_path(path), "rb"), post_type
+      end
+    end
+
+    def self.load_from_binary(file, post_type = nil)
+      file_size_in_mb = File.size(file.path).to_f / 2**20
+      raise ArgumentError, "File size is greater than 5 MB (Tumblr's limit)" if file_size_in_mb > 5
+      post_type ||= infer_post_type_from_extname File.extname(file.path)
+      get_post_type(post_type).new "data" => URI.encode(file.read)
+    end
+
     # Transform a yaml front matter formatted String into a set of parameters to create a post.
     def self.parse(doc)
       doc =~ /^(\s*---(.*?)---\s*)/m
@@ -55,7 +73,9 @@ module Tumblr
         meta_data = YAML.load(Regexp.last_match[2].strip)
         doc_body = doc.sub(Regexp.last_match[1],'').strip
       else
-        meta_data = {"type" => :text} #TODO: Infer type
+        # TODO: Infer type
+        # If doc is a URL, determine type of URL (image/video/audio) otherwise it's text.
+        meta_data = {"type" => :text}
         doc_body = doc
       end
 
@@ -74,6 +94,21 @@ module Tumblr
         values[keys.length - 1, values.length].join(POST_BODY_SEPARATOR)
       end
       keys.map(&:to_s).zip values
+    end
+
+    def self.infer_post_type_from_extname(extname)
+      require 'rack'
+      mime_type = Rack::Mime.mime_type extname
+      case mime_type.split("/").first
+      when "image"
+        :photo
+      when "video"
+        :video
+      when "audio"
+        :audio
+      else
+        :text
+      end
     end
 
     # A post_body_key determines what parts of the serialization map to certain
