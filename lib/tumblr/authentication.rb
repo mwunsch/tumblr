@@ -40,12 +40,12 @@ module Tumblr
         redirect to("#{HOST}/authorize?oauth_token=#{result['oauth_token']}")
       else
         status response.status
-        body response.body
+        erb response.body
       end
     end
 
     get "/auth" do
-      halt 401, "The user denied access." if params.empty?
+      halt 401, erb(:error) if params.empty?
       token = params["oauth_token"]
       verifier = params["oauth_verifier"]
       response = access_token(token, session[:request_token_secret], verifier,
@@ -53,49 +53,18 @@ module Tumblr
       if response.success?
         require 'tumblr/credentials'
         result = Rack::Utils.parse_query(response.body)
-        Tumblr::Credentials.new(settings.credential_path).write session[:consumer_key],
-                                                                session[:consumer_secret],
-                                                                result["oauth_token"],
-                                                                result["oauth_token_secret"]
+        credentials = Tumblr::Credentials.new(settings.credential_path)
+        credentials.write session[:consumer_key],
+                          session[:consumer_secret],
+                          result["oauth_token"],
+                          result["oauth_token_secret"]
+        @credential_path = credentials.path
         status response.status
-        body "Good to go."
+        erb :success
       else
         status response.status
-        body response.body
+        erb response.body
       end
-    end
-
-    template :form do
-<<FORM
-  <pre>
-          .                                 .o8       oooo
-      .o8                                "888       `888
-    .o888oo oooo  oooo  ooo. .oo.  .oo.   888oooo.   888  oooo d8b
-      888   `888  `888  `888P"Y88bP"Y88b  d88' `88b  888  `888""8P
-      888    888   888   888   888   888  888   888  888   888
-      888 .  888   888   888   888   888  888   888  888   888    .o.
-      "888"  `V88V"V8P' o888o o888o o888o `Y8bod8P' o888o d888b   Y8P
-  </pre>
-  <form class="auth" action="/">
-    <label>Consumer Key <input name="key" /></label>
-    <label>Consumer Secret <input name="secret" /></label>
-    <input type="submit" />
-  </form>
-FORM
-    end
-
-    template :layout do
-<<LAYOUT
-  <!DOCTYPE html>
-  <html>
-  <head>
-    <title>You need to authorize!</title>
-  </head>
-  <body>
-    <%= yield %>
-  </body>
-  </html>
-LAYOUT
     end
 
   end
