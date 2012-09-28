@@ -23,12 +23,15 @@ module Tumblr
       host ||= options[:host]
       abort "You need a hostname." if host.nil? or host.empty?
       abort "No, dude. No." unless has_credentials?
-      client = Tumblr::Client.load hostname, options[:credentials]
-      # TODO: Infer post type from arg and convert to post
-      #   or, if arg is a path, read it from a file
-      # file = File.read(File.expand_path(path))
-      # post = Tumblr::Post.load(file)
-      # puts post.serialize
+      client = Tumblr::Client.load host, options[:credentials]
+      post =  if arg.respond_to? :read
+                Tumblr::Post.load arg.read
+              elsif File.file?(file_path = File.expand_path(arg))
+                Tumblr::Post.load_from_path file_path
+              else
+                Tumblr::Post.load arg.to_s
+              end
+      puts post.serialize
       # response = post.post(client).perform
       # puts response.body
     end
@@ -68,7 +71,7 @@ module Tumblr
                   :desc => "The hostname of the blog you want to post to"
     def pipe
       if !$stdin.tty?
-        post($stdin.read)
+        post($stdin)
       else
         invoke :help
       end
