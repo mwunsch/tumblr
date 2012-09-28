@@ -73,11 +73,10 @@ module Tumblr
         meta_data = YAML.load(Regexp.last_match[2].strip)
         doc_body = doc.sub(Regexp.last_match[1],'').strip
       else
-        # TODO: Infer type
-        # If doc is a URL, determine type of URL (image/video/audio) otherwise it's text.
-        meta_data = {"type" => :text}
+        meta_data = {}
         doc_body = doc
       end
+      meta_data["type"] ||= infer_post_type_from_string(doc_body)
 
       post_type = get_post_type(meta_data["type"])
       post_body_parts = doc_body.split(POST_BODY_SEPARATOR)
@@ -109,6 +108,12 @@ module Tumblr
       else
         :text
       end
+    end
+
+    def self.infer_post_type_from_string(str)
+      # TODO: Infer type
+      # If doc is a URL, determine type of URL (image/video/audio) otherwise it's text.
+      :text
     end
 
     # A post_body_key determines what parts of the serialization map to certain
