@@ -9,20 +9,19 @@ module Tumblr
 
     class_option :credentials, :type => :string,
                                :desc => "The file path where your Tumblr OAuth keys are stored. Defaults to ~/.tumblr."
+    class_option :host, :type => :string,
+                        :desc => 'The hostname of the blog you want to post to i.e. "YOUR-NAME.tumblr.com"'
+
 
     check_unknown_options!(:except => [])
 
 
     desc "post", "Posts a photo from a url to tumblr"
-    option :host, :type => :string,
-                  :desc => "The hostname of the blog you want to post to"
     def post(arg)
-      abort "No, dude. No." unless has_credentials?
-      if options[:host].nil?
-        host = ask("Hostname plz?") if $stdin.tty?
-      end
+      check_credentials
+      host = ask("Hostname plz?") if options[:host].nil? and $stdin.tty?
       host ||= options[:host]
-      abort "You need a hostname." if host.nil? or host.empty?
+      abort "You need to provide a hostname i.e. --host=YOUR-NAME.tumblr.com" if host.nil? or host.empty?
       client = Tumblr::Client.load host, options[:credentials]
       post =  if arg.respond_to? :read
                 Tumblr::Post.load arg.read
@@ -42,17 +41,17 @@ module Tumblr
     LONGDESC
     option :port, :type => :string,
                   :default => "4567"
-    option :host, :type => :string,
+    option :bind, :type => :string,
                   :default => "0.0.0.0"
     def authorize(*soak)
       require 'tumblr/authentication'
       sinatra_options = {
         :port => options[:port],
-        :bind => options[:host],
+        :bind => options[:bind],
         :credential_path => options[:credentials]
       }
       Tumblr::Authentication.run!(sinatra_options) do |server|
-        `open http://#{options[:host]}:#{options[:port]}/`
+        `open http://#{options[:bind]}:#{options[:port]}/`
       end
       if has_credentials?
         puts "Success! Your Tumblr OAuth credentials were written to #{credentials.path}"
@@ -67,8 +66,6 @@ module Tumblr
     end
 
     desc "pipe", "Pipe post content in from STDIN"
-    option :host, :type => :string,
-                  :desc => "The hostname of the blog you want to post to"
     def pipe
       if !$stdin.tty?
         post($stdin)
@@ -86,6 +83,10 @@ module Tumblr
 
     def has_credentials?
       !credentials.read.empty?
+    end
+
+    def check_credentials
+      abort "Unable to find your OAuth keys. Run `tumblr authorize` to authenticate with Tumblr." unless has_credentials?
     end
 
   end
