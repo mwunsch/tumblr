@@ -237,6 +237,18 @@ module Tumblr
       @state.to_s == "private"
     end
 
+    def publish!
+      @state = "published"
+    end
+
+    def queue!
+      @state = "queue"
+    end
+
+    def draft!
+      @state ="draft"
+    end
+
     private
 
     def post_body
