@@ -17,9 +17,15 @@ module Tumblr
 
 
     desc "post", "Posts a photo from a url to tumblr"
+    method_option :publish, :type => :boolean,
+                            :aliases => "-p"
+    method_option :queue, :type => :boolean,
+                          :aliases => "-q"
+    method_option :draft, :type => :boolean,
+                          :aliases => "-d"
     def post(arg)
       check_credentials
-      host = ask("Hostname plz?") if options[:host].nil? and $stdin.tty?
+      host = ask("What is your Tumblr hostname?") if options[:host].nil? and $stdin.tty?
       host ||= options[:host]
       abort "You need to provide a hostname i.e. --host=YOUR-NAME.tumblr.com" if host.nil? or host.empty?
       client = Tumblr::Client.load host, options[:credentials]
@@ -30,9 +36,15 @@ module Tumblr
               else
                 Tumblr::Post.load arg.to_s
               end
-      puts post.serialize
-      # response = post.post(client).perform
-      # puts response.body
+      post.publish! if options[:publish]
+      post.queue! if options[:queue]
+      post.draft! if options[:draft]
+      response = post.post(client).perform
+      if response.success?
+        puts %Q(Post was successfully created! Post ID: #{response.parse["response"]["id"]})
+      else
+        abort %Q(Tumblr returned an Error #{response.status}: #{response.parse["response"]["errors"].join})
+      end
     end
 
     desc "authorize", "Authenticate and authorize the cli"
@@ -66,6 +78,12 @@ module Tumblr
     end
 
     desc "pipe", "Pipe post content in from STDIN"
+    method_option :publish, :type => :boolean,
+                            :aliases => "-p"
+    method_option :queue, :type => :boolean,
+                          :aliases => "-q"
+    method_option :draft, :type => :boolean,
+                          :aliases => "-d"
     def pipe
       if !$stdin.tty?
         post($stdin)
