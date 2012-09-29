@@ -77,6 +77,7 @@ module Tumblr
         doc_body = doc
       end
       meta_data["type"] ||= infer_post_type_from_string(doc_body)
+      meta_data["format"] ||= "markdown"
 
       post_type = get_post_type(meta_data["type"])
       post_body_parts = doc_body.split(POST_BODY_SEPARATOR)
