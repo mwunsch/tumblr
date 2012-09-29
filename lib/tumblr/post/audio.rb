@@ -1,16 +1,28 @@
-#TODO: Support File uploading
-
-class Tumblr
+module Tumblr
   class Post
     class Audio < Post
-      
-      def initialize(post_id = nil)
-        super post_id
+      def initialize(post_data = {})
+        super(post_data)
         @type = :audio
       end
-      
-      parameters :externally_hosted_url, :caption
-            
+
+      def caption
+        @caption
+      end
+
+      def external_url
+        @external_url
+      end
+
+      def data
+        @data
+      end
+
+      def self.post_body_keys
+        [:external_url, :caption]
+      end
     end
   end
 end
+
+

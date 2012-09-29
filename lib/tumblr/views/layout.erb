@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Authenticate and Authorize</title>
+  <style type="text/css">
+    body {
+      color: rgb(40, 254, 20);
+      font-size: 14px;
+      font-family: Consolas, Menlo, Monaco, monospace;
+      background: #191919;
+    }
+    .main {
+      width: 640px;
+      margin: 0 auto;
+    }
+    .tumblr-logo {
+      font-family: Consolas, Menlo, Monaco, monospace;
+    }
+    a, .command {
+      color: #94ff8a;
+    }
+    .command {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="main">
+    <pre class="tumblr-logo">
+            .                                 .o8       oooo
+        .o8                                "888       `888
+      .o888oo oooo  oooo  ooo. .oo.  .oo.   888oooo.   888  oooo d8b
+        888   `888  `888  `888P"Y88bP"Y88b  d88' `88b  888  `888""8P
+        888    888   888   888   888   888  888   888  888   888
+        888 .  888   888   888   888   888  888   888  888   888    .o.
+        "888"  `V88V"V8P' o888o o888o o888o `Y8bod8P' o888o d888b   Y8P
+    </pre>
+    <%= yield %>
+  </div>
+</body>
+</html>

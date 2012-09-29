@@ -1,17 +1,28 @@
-class Tumblr
+module Tumblr
   class Post
     class Link < Post
-      
-      def initialize(url, post_id = nil)
-        super post_id
-        url = url.to_a.map
-        self.url = url.shift.strip
-        self.description = url.join
+      def initialize(post_data = {})
+        super(post_data)
         @type = :link
       end
-      
-      parameters :url, :name, :description
-            
+
+      def title
+        @title
+      end
+
+      def url
+        @url
+      end
+
+      def description
+        @description
+      end
+
+      def self.post_body_keys
+        [:url, :description]
+      end
     end
   end
 end
+
+

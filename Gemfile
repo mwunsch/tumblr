@@ -1,13 +1,15 @@
 source 'http://rubygems.org'
 
-gem 'weary','>= 0.7.1'
-gem 'highline', '>= 1.5.2'
-gem 'net-netrc', '>= 0.2.2'
+gemspec
+
+gem "rake", "~> 0.9.2"
 
 group :test do
-	gem 'rake'
-	gem 'redgreen'
-	gem 'contest'
-	gem 'vcr', '>= 0.3.1'
-	gem 'jeweler'
+  gem "rspec", "~> 2.11.0"
+  gem "webmock", "~> 1.8.5"
+  gem "rack-test", "~> 0.6.1"
+end
+
+platforms :jruby do
+  gem "jruby-openssl"
 end

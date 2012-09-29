@@ -1,16 +1,30 @@
-#TODO: Support file uploads
-
-class Tumblr
+module Tumblr
   class Post
     class Photo < Post
-                  
-      def initialize(post_id = nil)
-        super post_id
+      def initialize(post_data = {})
+        super(post_data)
         @type = :photo
       end
-      
-      parameters :source, :caption, :click_through_url
-            
+
+      def caption
+        @caption
+      end
+
+      def link
+        @link
+      end
+
+      def source
+        @source
+      end
+
+      def data
+        @data
+      end
+
+      def self.post_body_keys
+        [:source, :caption]
+      end
     end
   end
 end

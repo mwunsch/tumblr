@@ -1,190 +1,259 @@
-# An object that represents a post. From:
-# http://www.tumblr.com/docs/en/api#api_write
-class Tumblr
+module Tumblr
+  # A Tumblr::Post object can be serialized into a YAML front-matter formatted string,
+  # and provides convenient ways to publish, edit, and delete to the API.
+  # Don't call #new directly, instead use Post::create to instantiate a subclass.
   class Post
-    BASIC_PARAMS = [:date,:tags,:format,:group,:generator,:private,
-                    :slug,:state,:'send-to-twitter',:'publish-on',:'reblog-key']
-    POST_PARAMS = [:title,:body,:source,:caption,:'click-through-url',
-                   :quote,:name,:url,:description,:conversation,
-                   :embed,:'externally-hosted-url']
-    REBLOG_PARAMS = [:comment, :as]
-    
-    def self.parameters(*attributes)
-      if !attributes.blank?
-        @parameters = attributes
-        attr_accessor *@parameters
+
+    autoload :Text, 'tumblr/post/text'
+    autoload :Quote, 'tumblr/post/quote'
+    autoload :Link, 'tumblr/post/link'
+    autoload :Answer, 'tumblr/post/answer'
+    autoload :Video, 'tumblr/post/video'
+    autoload :Audio, 'tumblr/post/audio'
+    autoload :Photo, 'tumblr/post/photo'
+    autoload :Chat, 'tumblr/post/chat'
+
+    FIELDS = [
+      :blog_name, :id, :post_url, :type, :timestamp, :date, :format,
+      :reblog_key, :tags, :bookmarklet, :mobile, :source_url, :source_title,
+      :total_posts
+    ]
+
+    # Some post types have several "body keys", which allow the YAML front-matter
+    # serialization to seem a bit more human. This separator separates those keys.
+    POST_BODY_SEPARATOR = "\n\n"
+
+    # Given a Request, perform it and transform the response into a list of Post objects.
+    def self.perform(request)
+      response = request.perform
+      posts = response.parse["response"]["posts"]
+
+      (posts || []).map{|post| self.create(post) }
+    end
+
+    # Insantiate a subclass of Tumblr::Post, corresponding to the post's type.
+    def self.create(post_response)
+      type = post_response["type"].to_s.capitalize.to_sym
+      get_post_type(post_response["type"]).new(post_response)
+    end
+
+    # Get a subclass of Tumblr::Post based on a type token.
+    def self.get_post_type(type)
+      const_get type.to_s.capitalize.to_sym
+    end
+
+    # Transform a yaml front matter formatted String into a subclass of Tumblr::Post
+    def self.load(doc)
+      create parse(doc)
+    end
+
+    # Load a document and transform into a post via file path
+    def self.load_from_path(path)
+      raise ArgumentError, "Given path: #{path} is not a file" unless File.file? File.expand_path(path)
+      post_type = infer_post_type_from_extname File.extname(path)
+      if post_type == :text
+        load File.read(File.expand_path(path))
+      else
+        load_from_binary File.new(File.expand_path(path), "rb"), post_type
       end
-      @parameters
     end
-    
-    attr_reader :type, :state, :post_id, :format
-    attr_accessor :slug, :date, :group, :generator, :reblog_key, :send_to_twitter
-    
-    def initialize(post_id = nil)
-      @post_id = post_id if post_id
+
+    def self.load_from_binary(file, post_type = nil)
+      file_size_in_mb = file.size.to_f / 2**20
+      raise ArgumentError, "File size is greater than 5 MB (Tumblr's limit)" if file_size_in_mb > 5
+      post_type ||= infer_post_type_from_extname File.extname(file.path)
+      get_post_type(post_type).new "data" => URI.encode(file.read)
     end
-    
-    def private=(bool)
-      @private = bool ? true : false
+
+    # Transform a yaml front matter formatted String into a set of parameters to create a post.
+    def self.parse(doc)
+      doc =~ /^(\s*---(.*?)---\s*)/m
+
+      if Regexp.last_match
+        meta_data = YAML.load(Regexp.last_match[2].strip)
+        doc_body = doc.sub(Regexp.last_match[1],'').strip
+      else
+        meta_data = {}
+        doc_body = doc
+      end
+      meta_data["type"] ||= infer_post_type_from_string(doc_body)
+      meta_data["format"] ||= "markdown"
+
+      post_type = get_post_type(meta_data["type"])
+      post_body_parts = doc_body.split(POST_BODY_SEPARATOR)
+
+      pairs = pair_post_body_types(post_type.post_body_keys, post_body_parts.dup)
+      Hash[pairs].merge(meta_data)
     end
-    
+
+    # Pair the post body keys for a particular post type with a list of values.
+    # If the length list of values is greater than the list of keys, the last key
+    # should be paired with the remaining values joined together.
+    def self.pair_post_body_types(keys, values)
+      values.fill(keys.length - 1) do |i|
+        values[keys.length - 1, values.length].join(POST_BODY_SEPARATOR)
+      end
+      keys.map(&:to_s).zip values
+    end
+
+    def self.infer_post_type_from_extname(extname)
+      require 'rack'
+      mime_type = Rack::Mime.mime_type extname
+      case mime_type.split("/").first
+      when "image"
+        :photo
+      when "video"
+        :video
+      when "audio"
+        :audio
+      else
+        :text
+      end
+    end
+
+    def self.infer_post_type_from_string(str)
+      # TODO: Infer type
+      # If doc is a URL, determine type of URL (image/video/audio) otherwise it's text.
+      :text
+    end
+
+    # A post_body_key determines what parts of the serialization map to certain
+    # fields in the post request.
+    def self.post_body_keys
+      [:body]
+    end
+
+    # Serialize a post.
+    def self.dump(post)
+      post.serialize
+    end
+
+    def initialize(post_response = {})
+      post_response.delete_if {|k,v| !(FIELDS | Tumblr::Client::POST_OPTIONS).map(&:to_s).include? k.to_s }
+      post_response.each_pair do |k,v|
+        instance_variable_set "@#{k}".to_sym, v
+      end
+    end
+
+    # Transform this post into it's YAML front-matter post form.
+    def serialize
+      buffer = YAML.dump(meta_data)
+      buffer << "---\x0D\x0A"
+      buffer << post_body
+      buffer
+    end
+
+    # Given a client, publish this post to tumblr.
+    def post(client)
+      client.post(request_parameters)
+    end
+
+    # Given a client, edit this post.
+    def edit(client)
+      raise "Must have an id to edit a post" unless id
+      client.edit(request_parameters)
+    end
+
+    # Given a client, delete this post.
+    def delete(client)
+      raise "Must have an id to delete a post" unless id
+      client.delete(:id => id)
+    end
+
+    # Transform this Post into a hash ready to be serialized and posted to the API.
+    # This looks for the fields of Tumblr::Client::POST_OPTIONS as methods on the object.
+    def request_parameters
+      Hash[(Tumblr::Client::POST_OPTIONS | [:id, :type]).map {|key|
+        [key.to_s, send(key)] if respond_to?(key) && send(key)
+      }]
+    end
+
+    # Which parts of this post represent it's meta data (eg. they're not part of the body).
+    def meta_data
+      request_parameters.reject {|k,v| self.class.post_body_keys.include?(k.to_sym) }
+    end
+
+    # Below this line are public methods that are used to transform this post into an API request.
+
+    def id
+      @id.to_i unless @id.nil?
+    end
+
+    def type
+      @type
+    end
+
+    def reblog_key
+      @reblog_key
+    end
+
+    def state
+      @state
+    end
+
+    def tags
+      if @tags.respond_to? :join
+        @tags.join(",")
+      else
+        @tags
+      end
+    end
+
+    def tweet
+      @tweet
+    end
+
+    def date
+      @date
+    end
+
+    def format
+      @format
+    end
+
+    def slug
+      @slug
+    end
+
+    # These are handy convenience methods.
+
+    def markdown?
+      @format.to_s == "markdown"
+    end
+
+    def published?
+      @state.to_s == "published"
+    end
+
+    def draft?
+      @state.to_s == "draft"
+    end
+
+    def queued?
+      @state.to_s == "queued" or @state.to_s == "queue"
+    end
+
     def private?
-      @private
+      @state.to_s == "private"
     end
-    
-    def tags(*post_tags)
-      @tags = post_tags.join(',') if !post_tags.blank?
-      @tags
+
+    def publish!
+      @state = "published"
     end
-    
-    def state=(published_state)
-      allowed_states = [:published, :draft, :submission, :queue]
-      if !allowed_states.include?(published_state.to_sym)
-        raise "Not a recognized published state. Must be one of #{allowed_states.inspect}"
-      end
-      @state = published_state.to_sym
+
+    def queue!
+      @state = "queue"
     end
-    
-    def format=(markup)
-      markup_format = markup.to_sym
-      if markup_format.eql?(:html) || markup_format.eql?(:markdown)
-        @format = markup_format
-      end
+
+    def draft!
+      @state ="draft"
     end
-    
-    def send_to_twitter(status=false)
-      if status
-        if status.to_sym.eql?(:no)
-          @send_to_twitter = false
-        else
-          @send_to_twitter = status
-        end
-      end
-      @send_to_twitter
-    end
-    
-    def publish_on(pubdate=nil)
-      @publish_on = pubdate if state.eql?(:queue) && pubdate
-      @publish_on
-    end
-    
-    # Convert to a hash to be used in post writing/editing
-    def to_h
-      post_hash = {}
-      basics = [:post_id, :type, :date, :tags, :format, :group, :generator,
-                :slug, :state, :send_to_twitter, :publish_on, :reblog_key]
-      params = basics.select {|opt| respond_to?(opt) && send(opt) }
-      params |= self.class.parameters.select {|opt| send(opt) } unless self.class.parameters.blank?
-      params.each { |key| post_hash[key.to_s.gsub('_','-').to_sym] = send(key) } unless params.empty?
-      post_hash[:private] = 1 if private?
-      post_hash
-    end
-    
-    # Publish this post to Tumblr
-    def write(email, password)
-      Writer.new(email,password).write(to_h)
-    end
-    
-    def edit(email, password)
-      Writer.new(email,password).edit(to_h)
-    end
-    
-    def reblog(email, password)
-      Writer.new(email,password).reblog(to_h)
-    end
-    
-    def delete(email, password)
-      Writer.new(email,password).delete(to_h)
-    end
-    
-    def like(email,password)
-      if (post_id && reblog_key)
-        Reader.new(email,password).like(:'post-id' => post_id, :'reblog-key' => reblog_key)
-      end
-    end
-    
-    def unlike(email,password)
-      if (post_id && reblog_key)
-        Reader.new(email,password).unlike(:'post-id' => post_id, :'reblog-key' => reblog_key)
-      end
-    end
-    
-    # Write to Tumblr and set state to Publish
-    def publish_now(email, password)
-      self.state = :published
-      return edit(email,password) if post_id
-      write(email,password)
-    end
-    
-    # Save as a draft
-    def save_as_draft(email, password)
-      self.state = :draft
-      return edit(email,password) if post_id
-      write(email,password)
-    end
-    
-    # Adds to Queue. Pass an additional date to publish at a specific date.
-    def add_to_queue(email, password, pubdate = nil)
-      self.state = :queue
-      self.publish_on(pubdate) if pubdate
-      return edit(email,password) if post_id
-      write(email,password)
-    end
-    
-    # Convert post to a YAML representation
-    def to_yaml
-      post = {}
-      post['data'] = post_data
-      post['body'] = to_h[post_body].to_s
-      YAML.dump(post)
-    end
-    
-    # Convert post to a string for writing to a file
-    def to_s
-      post_string = YAML.dump(post_data)
-      post_string += "---\x0D\x0A"
-      post_string += YAML.load(to_yaml)['body']
-      post_string
-    end
-    
+
     private
-    
-    def post_data
-      data = {}
-      to_h.each_pair do |key,value|
-        data[key.to_s] = value.to_s
-      end
-      data.reject! {|key,value| key.eql?(post_body.to_s) }
-      data
-    end
-    
+
     def post_body
-      case type
-        when :regular
-          :body
-        when :photo
-          :source
-        when :quote
-          :quote
-        when :link
-          :url
-        when :conversation
-          :conversation
-        when :video
-          :embed
-        when :audio
-          :'externally-hosted-url'
-        else
-          raise "#{type} is not a recognized Tumblr post type."
-      end
+      self.class.post_body_keys.map{|key| self.send(key) }.join(POST_BODY_SEPARATOR)
     end
+
   end
 end
-
-require 'tumblr/post/regular'
-require 'tumblr/post/photo'
-require 'tumblr/post/quote'
-require 'tumblr/post/link'
-require 'tumblr/post/conversation'
-require 'tumblr/post/video'
-require 'tumblr/post/audio'

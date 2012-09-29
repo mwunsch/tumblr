@@ -1,23 +1,25 @@
 module Tumblr
   class Post
-    class Quote < Post
+    class Chat < Post
       def initialize(post_data = {})
         super(post_data)
-        @type = :quote
+        @type = :chat
       end
 
-      def quote
-        @quote
+      def title
+        @title
       end
 
-      def source
-        @source
+      def conversation
+        @conversation
       end
 
       def self.post_body_keys
-        [:quote]
+        [:conversation]
       end
     end
   end
 end
+
+
 

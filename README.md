@@ -1,33 +1,30 @@
 # tumblr
 
-Ruby wrapper and command line tool for the [Tumblr API](http://www.tumblr.com/docs/en/api). In case there weren't enough of those already. This one is powered by the [Weary](http://github.com/mwunsch/weary) gem.
+Command line interface and Ruby client for the [Tumblr API](http://www.tumblr.com/docs/en/api/v2)
 
-[RDoc](http://rdoc.info/projects/mwunsch/tumblr) | [Gem](http://rubygems.org/gems/tumblr-rb) | [Metrics](http://getcaliper.com/caliper/project?repo=git%3A%2F%2Fgithub.com%2Fmwunsch%2Ftumblr.git)
+It's being rewritten from the ground up to support v2 of the api.
+
+**Check out [tag v1.3.0](https://github.com/mwunsch/tumblr/tree/v1.3.0) if you are interested in v1.** The master branch is now dedicated to v2, and is not in steady state.
+
+Like the previous version, the current version reads files with a special front-matter block, like [Jekyll](http://tom.preston-werner.com/jekyll/). In addition, this new version offers the ability to post photos, videos, and audio.
+
+Unlike the previous version, this new command line utility uses OAuth to authenticate and authorize the user.
+
+## TODO
+
++ Documentation, documentation, documentation
++ Given a URL, determine if its a link, a video, or an audio post
++ Man pages
++ `tumblr edit` and `tumblr delete` actions
++ Task to build a homebrew formula
 
 ## Installation
 
-	gem install tumblr-rb
-	
-## Usage
+Until the gem is published, you'll just need to clone this repository. Run `bundle install` and `bundle exec bin/tumblr`.
 
-	$: tumblr path/to/a_post.markdown
-	Email Address: tumblr-user@foobarmail.com
-	Password:	
-	Published to Tumblr. The ID for this post is: 123456789
-	
-You can pass `tumblr` something from standard input, but you have to set your email and password as arguments:
+## Authorization
 
-	$: echo 'Hello world.' | tumblr -a user@tumblr.com:supers3cretp4ssw0rd
-	Published to Tumblr. The ID for this post is: 123456790
-	
-Or the credentials can come from a YAML file:
-
-	$ cat ~/.tumblrlogin
-	email: tumblruser@generic-email.com
-	password: myvoiceismypassport
-	$ echo 'Hello world. | tumblr --credentials ~/.tumblrlogin
-	
-Try `tumblr --help` if you are in need of guidance. Read [tumblr(1)](http://mwunsch.github.com/tumblr/tumblr.1.html) for more information.
+Run `tumblr authorize` to boot up a small application to manage the fancy OAuth handshake with tumblr. You'll be prompted for a consumer key and secret you get from [registering an app](http://www.tumblr.com/oauth/apps).
 
 ## Getting Started
 
@@ -42,76 +39,28 @@ YAML frontmatter beings with `---` on a single line, followed by YAML, ending wi
 	tags: hamlet, shakespeare
 	---
 	"To be or not to be."
-	
-Understood YAML parameters are taken from the Tumblr API: http://www.tumblr.com/docs/en/api#api_write
 
-Read [tumblr(5)](http://mwunsch.github.com/tumblr/tumblr.5.html) for more info.
+Understood YAML parameters are taken from the Tumblr API: http://www.tumblr.com/docs/en/api/v2#posting
 
-#### All Posts
+### All Posts
 
-	type				regular, photo, link, quote, conversation, video, audio
+	type				text, photo, link, quote, chat, video, audio
 						will take a guess if ommitted.
-			
-	state				published, queue, draft, submission
-	
+
+	state				published, queue, draft, private
+
 	format				html or markdown
-	
+
 	tags				comma-separated list of tags
-	
+
 	date    			post date
-	
-	private				true if the post is private
-	
+
 	slug				A custom string to appear in the post's URL
-	
-	group				id for a secondary blog
-	
-	generator			description of the publishing application
-	
-	send-to-twitter		Twitter status update if the tumblelog has enabled it
-	
-	publish-on			if the post state is 'queue', publish on this date
-	
-#### Additional parameters for specific Post Types
 
-	regular			title
-	
-	photo			caption, click-through-url
-	
-	quote			source
-	
-	link			name, description
-	
-	conversation	title
-	
-	video			title, caption
-	
-	audio			caption
-	
-To publish to Tumblr, do this:
-
-	request = Tumblr.new(username, password).post(document)
-	request.perform do |response|
-		if response.success?
-			puts response.body 	# Returns the new post's id.
-		else
-			puts "Something went wrong: #{response.code} #{response.message}"
-		end
-	end
-
-## Goals
-
-+ Full API coverage. Leave no method behind.
-+ Well tested. Like a good Rubyist.
-+ Obnoxiously simple CLI. *nix idioms are wonderful.
-+ Kind-of-sort-of proof-of-concept for [Weary](http://github.com/mwunsch/weary).
-
-## TODO:
-
-+ File-uploading for Photos, Videos, Audio (needs to get into Weary)
+	tweet				Manages the autotweet (if enabled) for this post
 
 ## Copyright
 
-The Tumblr gem is Copyright (c) 2010 Mark Wunsch and is licensed under the [MIT License](http://creativecommons.org/licenses/MIT/). 
+The Tumblr gem is Copyright (c) 2010 - 2012 Mark Wunsch and is licensed under the [MIT License](http://creativecommons.org/licenses/MIT/).
 
 Tumblr is Copyright (c) Tumblr, Inc. The Tumblr gem is NOT affiliated with Tumblr, Inc.
