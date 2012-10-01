@@ -39,9 +39,9 @@ module Tumblr
       post.draft! if options[:draft]
       response = post.post(client).perform
       if response.success?
-        puts %Q(Post was successfully created! Post ID: #{response.parse["response"]["id"]})
+        ui_success %Q(Post was successfully created! Post ID: #{response.parse["response"]["id"]})
       else
-        abort %Q(Tumblr returned an Error #{response.status}: #{response.parse["response"]["errors"].join})
+        ui_abort %Q(Tumblr returned an Error #{response.status}: #{response.parse["response"]["errors"].join})
       end
     end
 
@@ -52,33 +52,19 @@ module Tumblr
       host = get_host
       client = Tumblr::Client.load host, options[:credentials]
       get_post_response = client.posts(:id => id, :filter => :raw).perform
-      post =  if get_post_response.success?
-                begin
-                  Tumblr::Post.create(get_post_response.parse["response"]["posts"].first)
-                rescue
-                  abort "#{$!}: #{$@}"
-                end
-              else
-                abort "Something went wrong fetching the post."
-              end
+      ui_abort "There was a #{get_post_response.status} error fetching the post." unless get_post_response.success?
+      post = Tumblr::Post.create(get_post_response.parse["response"]["posts"].first)
       require 'tempfile'
       tmp_file = Tempfile.new("post_#{id}")
-      begin
-        tmp_file.write(post.serialize)
-        tmp_file.rewind
-        edited_post = if system "$EDITOR #{tmp_file.path}"
-                        Tumblr::Post.load_from_path tmp_file.path
-                      else
-                        abort "Something went seriously wrong."
-                      end
-        if edited_post.edit(client).perform.success?
-          puts "Post #{id} successfully edited."
-        else
-          abort "Something went wrong when editing the post."
-        end
-      rescue
-        abort "#{$!}: #{$@}"
-      ensure
+      tmp_file.write(post.serialize)
+      tmp_file.rewind
+      ui_abort "Something went wrong editing the post." unless system "$EDITOR #{tmp_file.path}"
+      edited_post = Tumblr::Post.load_from_path tmp_file.path
+      edited_response = edited_post.edit(client).perform
+      ui_abort "There was a #{edited_response.status} error when editing the post." unless edited_response.success?
+      ui_success "Post #{id} successfully edited."
+    ensure
+      if tmp_file
         tmp_file.close
         tmp_file.unlink
       end
@@ -103,9 +89,9 @@ module Tumblr
         `open http://#{options[:bind]}:#{options[:port]}/`
       end
       if has_credentials?
-        puts "Success! Your Tumblr OAuth credentials were written to #{credentials.path}"
+        ui_success "Success! Your Tumblr OAuth credentials were written to #{credentials.path}"
       else
-        abort "Something went wrong in authorization, and credentials were not correctly written to #{credentials.path}"
+        ui_abort "Something went wrong in authorization, and credentials were not correctly written to #{credentials.path}"
       end
     end
 
@@ -141,7 +127,7 @@ module Tumblr
     end
 
     def check_credentials
-      abort "Unable to find your OAuth keys. Run `tumblr authorize` to authenticate with Tumblr." unless has_credentials?
+      ui_abort "Unable to find your OAuth keys. Run `tumblr authorize` to authenticate with Tumblr." unless has_credentials?
     end
 
     def get_host
@@ -149,6 +135,15 @@ module Tumblr
       host ||= options[:host]
       abort "You need to provide a hostname i.e. --host=YOUR-NAME.tumblr.com" if host.nil? or host.empty?
       host
+    end
+
+    def ui_abort(msg, exit_status = 1)
+      say msg, :red
+      exit exit_status
+    end
+
+    def ui_success(msg)
+      say msg, :green
     end
 
   end
