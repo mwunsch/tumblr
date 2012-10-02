@@ -37,11 +37,14 @@ module Tumblr
       post.publish! if options[:publish]
       post.queue! if options[:queue]
       post.draft! if options[:draft]
+      # An error will be thrown with binary posts. See Weary issue #25
       response = post.post(client).perform
       if response.success?
         ui_success %Q(Post was successfully created! Post ID: #{response.parse["response"]["id"]})
       else
-        ui_abort %Q(Tumblr returned an Error #{response.status}: #{response.parse["response"]["errors"].join})
+        parsed_response = response.parse
+        msg = parsed_response["response"].empty? ? response.parse["meta"]["msg"] : parsed_response["response"]["errors"]
+        ui_abort %Q(Tumblr returned an Error #{response.status}: #{msg})
       end
     end
 
