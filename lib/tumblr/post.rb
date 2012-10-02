@@ -180,7 +180,7 @@ module Tumblr
     end
 
     def type
-      @type
+      @type.to_s
     end
 
     def reblog_key
