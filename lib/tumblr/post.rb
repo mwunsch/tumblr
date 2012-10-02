@@ -62,7 +62,7 @@ module Tumblr
       file_size_in_mb = file.size.to_f / 2**20
       raise ArgumentError, "File size is greater than 5 MB (Tumblr's limit)" if file_size_in_mb > 5
       post_type ||= infer_post_type_from_extname File.extname(file.path)
-      get_post_type(post_type).new "data" => URI.encode(file.read)
+      get_post_type(post_type).new "data" => file.read
     end
 
     # Transform a yaml front matter formatted String into a set of parameters to create a post.
