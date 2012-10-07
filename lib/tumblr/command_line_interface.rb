@@ -16,6 +16,21 @@ module Tumblr
     check_unknown_options!(:except => [])
 
 
+    desc "pipe", "Pipe post content in from STDIN"
+    method_option :publish, :type => :boolean,
+                            :aliases => "-p"
+    method_option :queue, :type => :boolean,
+                          :aliases => "-q"
+    method_option :draft, :type => :boolean,
+                          :aliases => "-d"
+    def pipe
+      if !$stdin.tty?
+        puts post($stdin).serialize
+      else
+        invoke :help
+      end
+    end
+
     desc "post", "Posts a photo from a url to tumblr"
     method_option :publish, :type => :boolean,
                             :aliases => "-p"
@@ -37,15 +52,10 @@ module Tumblr
       post.publish! if options[:publish]
       post.queue! if options[:queue]
       post.draft! if options[:draft]
-      # An error will be thrown with binary posts. See Weary issue #25
       response = post.post(client).perform
-      if response.success?
-        ui_success %Q(Post was successfully created! Post ID: #{response.parse["response"]["id"]})
-      else
-        parsed_response = response.parse
-        msg = parsed_response["response"].empty? ? response.parse["meta"]["msg"] : parsed_response["response"]["errors"]
-        ui_abort %Q(Tumblr returned an Error #{response.status}: #{msg})
-      end
+      tumblr_error(response) unless response.success?
+      ui_success %Q(Post was successfully created! Post ID: #{response.parse["response"]["id"]}) if $stdin.tty?
+      post
     end
 
     desc "edit", "Edit a post"
@@ -55,7 +65,7 @@ module Tumblr
       host = get_host
       client = Tumblr::Client.load host, options[:credentials]
       get_post_response = client.posts(:id => id, :filter => :raw).perform
-      ui_abort "There was a #{get_post_response.status} error fetching the post." unless get_post_response.success?
+      tumblr_error(get_post_response) unless get_post_response.success?
       post = Tumblr::Post.create(get_post_response.parse["response"]["posts"].first)
       require 'tempfile'
       tmp_file = Tempfile.new("post_#{id}")
@@ -64,7 +74,7 @@ module Tumblr
       ui_abort "Something went wrong editing the post." unless system "$EDITOR #{tmp_file.path}"
       edited_post = Tumblr::Post.load_from_path tmp_file.path
       edited_response = edited_post.edit(client).perform
-      ui_abort "There was a #{edited_response.status} error when editing the post." unless edited_response.success?
+      tumblr_error(edited_response) unless edited_response.success?
       ui_success "Post #{id} successfully edited."
     ensure
       if tmp_file
@@ -103,21 +113,6 @@ module Tumblr
       puts Tumblr::VERSION
     end
 
-    desc "pipe", "Pipe post content in from STDIN"
-    method_option :publish, :type => :boolean,
-                            :aliases => "-p"
-    method_option :queue, :type => :boolean,
-                          :aliases => "-q"
-    method_option :draft, :type => :boolean,
-                          :aliases => "-d"
-    def pipe
-      if !$stdin.tty?
-        post($stdin)
-      else
-        invoke :help
-      end
-    end
-
     private
 
     def credentials
@@ -136,17 +131,27 @@ module Tumblr
     def get_host
       host = ask("What is your Tumblr hostname?") if options[:host].nil? and $stdin.tty?
       host ||= options[:host]
-      abort "You need to provide a hostname i.e. --host=YOUR-NAME.tumblr.com" if host.nil? or host.empty?
+      ui_abort "You need to provide a hostname i.e. --host=YOUR-NAME.tumblr.com" if host.nil? or host.empty?
       host
     end
 
+    def tumblr_error(response)
+      parsed_response = response.parse
+      msg = parsed_response["response"].empty? ? response.parse["meta"]["msg"] : parsed_response["response"]["errors"]
+      ui_abort %Q(Tumblr returned a #{response.status} Error: #{msg})
+    end
+
     def ui_abort(msg, exit_status = 1)
-      say msg, :red
+      ui_puts msg, :red
       exit exit_status
     end
 
     def ui_success(msg)
-      say msg, :green
+      ui_puts msg, :green
+    end
+
+    def ui_puts(msg, color = nil)
+      say msg, $stdout.tty? ? color : nil
     end
 
   end
