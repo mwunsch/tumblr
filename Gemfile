@@ -3,6 +3,7 @@ source 'http://rubygems.org'
 gemspec
 
 gem "rake", "~> 0.9.2"
+gem "ronn"
 
 group :test do
   gem "rspec", "~> 2.11.0"
