@@ -60,9 +60,7 @@ module Tumblr
     long_desc "Open up your $EDITOR to edit a published post."
     def edit(id)
       client = get_client
-      get_post_response = client.posts(:id => id, :filter => :raw).perform
-      tumblr_error(get_post_response) unless get_post_response.success?
-      post = Tumblr::Post.create(get_post_response.parse["response"]["posts"].first)
+      post = fetch(id, client)
       require 'tempfile'
       tmp_file = Tempfile.new("post_#{id}")
       tmp_file.write(post.serialize)
@@ -77,6 +75,24 @@ module Tumblr
         tmp_file.close
         tmp_file.unlink
       end
+    end
+
+    desc "fetch", "Fetch a post and print out its serialized form."
+    def fetch(id, client = nil)
+      client ||= get_client
+      response = client.posts(:id => id, :filter => :raw).perform
+      tumblr_error(response) unless response.success?
+      post = Tumblr::Post.create(response.parse["response"]["posts"].first)
+      puts post.serialize
+      post
+    end
+
+    desc "delete", "Delete a post"
+    def delete(id)
+      client = get_client
+      response = client.delete(:id => id).perform
+      tumblr_error(response) unless response.success?
+      ui_success "Post #{id} successfully deleted."
     end
 
     desc "authorize", "Authenticate and authorize the cli"
