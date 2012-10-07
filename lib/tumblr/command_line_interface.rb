@@ -39,9 +39,7 @@ module Tumblr
     method_option :draft, :type => :boolean,
                           :aliases => "-d"
     def post(arg)
-      check_credentials
-      host = get_host
-      client = Tumblr::Client.load host, options[:credentials]
+      client = get_client
       post =  if arg.respond_to? :read
                 Tumblr::Post.load arg.read
               elsif File.file?(file_path = File.expand_path(arg))
@@ -61,9 +59,7 @@ module Tumblr
     desc "edit", "Edit a post"
     long_desc "Open up your $EDITOR to edit a published post."
     def edit(id)
-      check_credentials
-      host = get_host
-      client = Tumblr::Client.load host, options[:credentials]
+      client = get_client
       get_post_response = client.posts(:id => id, :filter => :raw).perform
       tumblr_error(get_post_response) unless get_post_response.success?
       post = Tumblr::Post.create(get_post_response.parse["response"]["posts"].first)
@@ -133,6 +129,12 @@ module Tumblr
       host ||= options[:host]
       ui_abort "You need to provide a hostname i.e. --host=YOUR-NAME.tumblr.com" if host.nil? or host.empty?
       host
+    end
+
+    def get_client
+      check_credentials
+      host = get_host
+      Tumblr::Client.load host, options[:credentials]
     end
 
     def tumblr_error(response)
