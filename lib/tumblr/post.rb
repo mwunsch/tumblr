@@ -59,7 +59,7 @@ module Tumblr
     end
 
     def self.load_from_binary(file, post_type = nil)
-      file_size_in_mb = file.size.to_f / 2**20
+      file_size_in_mb = File.size(file.path).to_f / 2**20
       raise ArgumentError, "File size is greater than 5 MB (Tumblr's limit)" if file_size_in_mb > 5
       post_type ||= infer_post_type_from_extname File.extname(file.path)
       get_post_type(post_type).new "data" => file.read

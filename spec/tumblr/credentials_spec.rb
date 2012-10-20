@@ -34,7 +34,7 @@ describe Tumblr::Credentials do
 
     it "writes oauth credentials to the path" do
       @credentials.write @oauth["consumer_key"], @oauth["consumer_secret"], @oauth["token"], @oauth["token_secret"]
-      File.read(@tempfile).should eql YAML.dump(@oauth)
+      @tempfile.read.should eql YAML.dump(@oauth)
     end
   end
 
@@ -46,7 +46,9 @@ describe Tumblr::Credentials do
         "token" => "access-token",
         "token_secret" => "token-secret"
       }
-      @tempfile = Tempfile.open("tumblr_credentials") {|io| YAML.dump(@oauth, io) }
+      @tempfile = Tempfile.new("tumblr_credentials")
+      @tempfile.write YAML.dump(@oauth)
+      @tempfile.rewind
     end
 
     after do
