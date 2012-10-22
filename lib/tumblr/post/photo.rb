@@ -4,6 +4,7 @@ module Tumblr
       def initialize(post_data = {})
         super(post_data)
         @type = :photo
+        @source ||= first_photo_url_from_response
       end
 
       def caption
@@ -20,6 +21,10 @@ module Tumblr
 
       def data
         @data
+      end
+
+      def first_photo_url_from_response
+        @photos.first["original_size"]["url"] if @photos and !@photos.empty?
       end
 
       def self.post_body_keys
