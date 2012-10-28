@@ -20,6 +20,8 @@ Unlike the previous version, this new command line utility uses OAuth to authent
 
 Until the gem is published, you'll just need to clone this repository. Run `bundle install` and `bundle exec bin/tumblr`.
 
+Alternatively, you can clone the repo, and run `rake install` -- this will build the gem, place it in the `pkg` directory, and install the gem to your system. You should then be able to `require 'tumblr'` and/or run `tumblr` from the command line.
+
 ## Authorization
 
 Run `tumblr authorize` to boot up a small application to manage the fancy OAuth handshake with tumblr. You'll be prompted for a consumer key and secret you get from [registering an app](http://www.tumblr.com/oauth/apps).
