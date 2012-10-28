@@ -13,9 +13,7 @@ Unlike the previous version, this new command line utility uses OAuth to authent
 ## TODO
 
 + Documentation, documentation, documentation
-+ Given a URL, determine if its a link, a video, or an audio post
 + Man pages
-+ `tumblr edit` and `tumblr delete` actions
 + Task to build a homebrew formula
 
 ## Installation
