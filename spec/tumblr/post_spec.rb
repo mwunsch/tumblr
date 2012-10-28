@@ -45,6 +45,54 @@ describe Tumblr::Post do
     end
   end
 
+  describe "::infer_post_type_from_string" do
+    it "infers a video post from youtube" do
+      type = described_class.infer_post_type_from_string("http://www.youtube.com/watch?v=9bZkp7q19f0")
+      type.should eql :video
+    end
+
+    it "infers a video post from vimeo" do
+      type = described_class.infer_post_type_from_string("https://vimeo.com/39610693")
+      type.should eql :video
+    end
+
+    it "infers a video post from youtube short url" do
+      type = described_class.infer_post_type_from_string("http://youtu.be/9bZkp7q19f0")
+      type.should eql :video
+    end
+
+    it "infers a link post from a generic url" do
+      type = described_class.infer_post_type_from_string("http://mwunsch.tumblr.com")
+      type.should eql :link
+    end
+
+    it "infers an audio post from a spotify url" do
+      type = described_class.infer_post_type_from_string("http://open.spotify.com/track/6tGtBvK6DezcjbtUxXGyxe")
+      type.should eql :audio
+    end
+
+    it "infers an audio post from a soundcloud url" do
+      type = described_class.infer_post_type_from_string("http://soundcloud.com/novasolus/bach-goldberg-variations-1-3")
+      type.should eql :audio
+    end
+
+    it "infers an audio post from a soundcloud short url" do
+      type = described_class.infer_post_type_from_string("http://snd.sc/YbrmBi")
+      type.should eql :audio
+    end
+
+    it "infers an audio post from a spotify direct link" do
+      type = described_class.infer_post_type_from_string("spotify:track:6tGtBvK6DezcjbtUxXGyxe")
+      type.should eql :audio
+    end
+
+    it "infers a text post from anything else" do
+      type = described_class.infer_post_type_from_string("Hi, hows it going?")
+      type.should eql :text
+    end
+
+  end
+
   describe "#request_parameters" do
     it "transforms a post into a hash for the request" do
       first_post = @request.perform.parse["response"]["posts"].first

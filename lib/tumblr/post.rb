@@ -113,8 +113,20 @@ module Tumblr
     end
 
     def self.infer_post_type_from_string(str)
-      # TODO: Infer type
-      # If doc is a URL, determine type of URL (image/video/audio) otherwise it's text.
+      require 'uri'
+      video_hosts = ["youtube.com", "vimeo.com", "youtu.be"]
+      audio_hosts = ["open.spotify.com", "soundcloud.com", "snd.sc"]
+      url = URI.parse(str)
+      if url.is_a?(URI::HTTP)
+        return :video if video_hosts.find {|h| url.host.include?(h) }
+        return :audio if audio_hosts.find {|h| url.host.include?(h) }
+        :link
+      elsif url.scheme.eql?("spotify")
+        :audio
+      else
+        :text
+      end
+    rescue URI::InvalidURIError
       :text
     end
 
