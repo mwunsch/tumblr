@@ -1,37 +1,3 @@
-#!/usr/bin/env rake
-require "bundler/gem_tasks"
-require 'rspec/core/rake_task'
-
-task :default => :spec
-
-RSpec::Core::RakeTask.new(:spec) do |t|
-  t.rspec_opts = ["--color", "--format=documentation"]
-end
-
-desc "Build the manual"
-task :build_man do
-  sh "ronn -br5 --organization='Mark Wunsch' --manual='Tumblr Manual' man/*.ronn"
-end
-
-desc "Show the manual"
-task :man => :build_man do
-  exec "man man/tumblr.1"
-end
-
-desc "Build a homebrew formula"
-file "brew" do
-  # Thanks to Josh Peek for making brew-gem
-  # https://github.com/josh/brew-gem
-  require 'tumblr/version'
-  version = Tumblr::VERSION
-  gem_name = "tumblr-rb"
-  template = ERB.new(File.read(__FILE__).split(/^__END__$/, 2)[1].strip)
-  filename = File.join File.dirname(__FILE__), "share", "tumblr-rb.rb"
-  File.open(filename, "w") {|f| f.puts template.result(binding) }
-end
-
-
-__END__
 require 'formula'
 
 class RubyGemFormula < Formula
@@ -50,8 +16,8 @@ class RubyGemFormula < Formula
     # they might not be there if, say, we change to a different rvm gemset
     ENV['GEM_HOME']="#{prefix}"
     ENV['GEM_PATH']="#{prefix}"
-    system "gem", "install", "<%= gem_name %>",
-             "--version", "<%= version %>",
+    system "gem", "install", "tumblr-rb",
+             "--version", "2.0.0.alpha",
              "--no-rdoc", "--no-ri",
              "--install-dir", prefix
     bin.rmtree
@@ -78,7 +44,7 @@ load "#{file}"
 end
 
 class TumblrRb < RubyGemFormula
-  url "http://rubygems.org/downloads/<%= gem_name %>-<%= version %>.gem"
-  homepage "http://rubygems.org/gems/<%= gem_name %>"
-  version "<%= version %>"
+  url "http://rubygems.org/downloads/tumblr-rb-2.0.0.alpha.gem"
+  homepage "http://rubygems.org/gems/tumblr-rb"
+  version "2.0.0.alpha"
 end
