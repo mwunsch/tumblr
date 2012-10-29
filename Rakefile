@@ -32,6 +32,7 @@ end
 
 
 __END__
+# This is a generated file. Run `rake brew`
 require 'formula'
 
 class RubyGemFormula < Formula
