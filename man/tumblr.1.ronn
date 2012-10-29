@@ -101,12 +101,6 @@ Save it as a draft:
 
 	$ tumblr post -d http://www.youtube.com/watch?v=CW0DUg63lqU
 
-## INSTALLATION
-
-If you have RubyGems installed:
-
-	gem install tumblr-rb
-
 ## COPYRIGHT
 
 Tumblr (the gem) is Copyright (C) 2010 - 2012 Mark Wunsch
