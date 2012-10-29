@@ -187,6 +187,7 @@ module Tumblr
     end
 
     def get_host
+      return ENV["TUMBLRHOST"] if ENV["TUMBLRHOST"]
       host = ask("What is your Tumblr hostname?") if options[:host].nil? and $stdin.tty?
       host ||= options[:host]
       ui_abort "You need to provide a hostname i.e. --host=YOUR-NAME.tumblr.com" if host.nil? or host.empty?
