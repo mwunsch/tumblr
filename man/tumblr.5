@@ -1,0 +1,117 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "TUMBLR" "5" "October 2012" "Mark Wunsch" "Tumblr Manual"
+.
+.SH "NAME"
+\fBtumblr\fR \- tumblr posts in plaintext
+.
+.SH "SYNOPSIS"
+.
+.nf
+
+\-\-\-
+title: A typical Tumblr post
+state: queue
+tags: unix, manpages
+format: markdown
+\-\-\-
+
+This will create a *Regular* type of post on Tumblr\.com\. It\'s so easy\.
+That bit up at the top is called YAML frontmatter, and it just gives the
+post a bit of metadata, so publishing options are more flexible\.
+They correspond to the Tumblr API\. This post will be added to your Tumblr
+queue, to be published next Tuesday, tagged with "unix" and "manpages",
+and formatted in markdown\.
+.
+.fi
+.
+.SH "DESCRIPTION"
+Any plaintext file can be published to Tumblr\.com as a \fIText\fR post, but if you add a bit of YAML frontmatter (<yaml\.org>) to the file, you can tell Tumblr exactly what you want to do\.
+.
+.P
+YAML frontmatter beings with \fB\-\-\-\fR on a single line, followed by YAML, ending with another \fB\-\-\-\fR on a single line, e\.g\.
+.
+.IP "" 4
+.
+.nf
+
+\-\-\-
+type: quote
+source: Billy Shakespeare
+state: draft
+tags: hamlet, shakespeare
+\-\-\-
+"To be or not to be\."
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Understood YAML parameters are documented and taken from the Tumblr API: http://www\.tumblr\.com/docs/en/api/v2#posting
+.
+.SH "BASIC PARAMETERS"
+These YAML parameters are available for all posts
+.
+.TP
+\fBtype\fR
+\fBtext\fR, \fBphoto\fR, \fBquote\fR, \fBlink\fR, \fBchat\fR, \fBaudio\fR, \fBvideo\fR Will take a guess if omitted\. See \fIPOST\-TYPE SPECIFIC PARAMETERS\fR below\.
+.
+.TP
+\fBstate\fR
+\fBpublished\fR, \fBdraft\fR, \fBqueue\fR, \fBprivate\fR
+.
+.TP
+\fBformat\fR
+\fBhtml\fR or \fBmarkdown\fR Defaults to \fBmarkdown\fR
+.
+.TP
+\fBtags\fR
+Comma\-separated list of tags\.
+.
+.TP
+\fBdate\fR
+Post date\.
+.
+.TP
+\fBslug\fR
+A custom string to appear in the post\'s url\.
+.
+.TP
+\fBtweet\fR
+Manages the autotweet (if enabled) for this post
+.
+.SH "POST\-TYPE SPECIFIC PARAMETERS"
+These are parameters that are available for specific types of posts\.
+.
+.TP
+\fBtext\fR
+\fBtitle\fR, \fBbody\fR
+.
+.TP
+\fBphoto\fR
+\fBcaption\fR, \fBlink\fR, \fBsource\fR, \fBdata\fR
+.
+.TP
+\fBquote\fR
+\fBquote\fR, \fBsource\fR
+.
+.TP
+\fBlink\fR
+\fBtitle\fR, \fBurl\fR, \fBdescription\fR
+.
+.TP
+\fBchat\fR
+\fBtitle\fR,\fBconversation\fR
+.
+.TP
+\fBaudio\fR
+\fBcaption\fR, \fBexternal_url\fR, \fBdata\fR
+.
+.TP
+\fBvideo\fR
+\fBcaption\fR, \fBembed\fR, \fBdata\fR
+.
+.SH "SEE ALSO"
+tumblr(1), markdown(5)

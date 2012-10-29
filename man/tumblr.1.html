@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv='content-type' value='text/html;charset=utf8'>
+  <meta name='generator' value='Ronn/v0.7.3 (http://github.com/rtomayko/ronn/tree/0.7.3)'>
+  <title>tumblr(1) - publish to tumblr.com</title>
+  <style type='text/css' media='all'>
+  /* style: man */
+  body#manpage {margin:0}
+  .mp {max-width:100ex;padding:0 9ex 1ex 4ex}
+  .mp p,.mp pre,.mp ul,.mp ol,.mp dl {margin:0 0 20px 0}
+  .mp h2 {margin:10px 0 0 0}
+  .mp > p,.mp > pre,.mp > ul,.mp > ol,.mp > dl {margin-left:8ex}
+  .mp h3 {margin:0 0 0 4ex}
+  .mp dt {margin:0;clear:left}
+  .mp dt.flush {float:left;width:8ex}
+  .mp dd {margin:0 0 0 9ex}
+  .mp h1,.mp h2,.mp h3,.mp h4 {clear:left}
+  .mp pre {margin-bottom:20px}
+  .mp pre+h2,.mp pre+h3 {margin-top:22px}
+  .mp h2+pre,.mp h3+pre {margin-top:5px}
+  .mp img {display:block;margin:auto}
+  .mp h1.man-title {display:none}
+  .mp,.mp code,.mp pre,.mp tt,.mp kbd,.mp samp,.mp h3,.mp h4 {font-family:monospace;font-size:14px;line-height:1.42857142857143}
+  .mp h2 {font-size:16px;line-height:1.25}
+  .mp h1 {font-size:20px;line-height:2}
+  .mp {text-align:justify;background:#fff}
+  .mp,.mp code,.mp pre,.mp pre code,.mp tt,.mp kbd,.mp samp {color:#131211}
+  .mp h1,.mp h2,.mp h3,.mp h4 {color:#030201}
+  .mp u {text-decoration:underline}
+  .mp code,.mp strong,.mp b {font-weight:bold;color:#131211}
+  .mp em,.mp var {font-style:italic;color:#232221;text-decoration:none}
+  .mp a,.mp a:link,.mp a:hover,.mp a code,.mp a pre,.mp a tt,.mp a kbd,.mp a samp {color:#0000ff}
+  .mp b.man-ref {font-weight:normal;color:#434241}
+  .mp pre {padding:0 4ex}
+  .mp pre code {font-weight:normal;color:#434241}
+  .mp h2+pre,h3+pre {padding-left:0}
+  ol.man-decor,ol.man-decor li {margin:3px 0 10px 0;padding:0;float:left;width:33%;list-style-type:none;text-transform:uppercase;color:#999;letter-spacing:1px}
+  ol.man-decor {width:100%}
+  ol.man-decor li.tl {text-align:left}
+  ol.man-decor li.tc {text-align:center;letter-spacing:4px}
+  ol.man-decor li.tr {text-align:right;float:right}
+  </style>
+</head>
+<!--
+  The following styles are deprecated and will be removed at some point:
+  div#man, div#man ol.man, div#man ol.head, div#man ol.man.
+
+  The .man-page, .man-decor, .man-head, .man-foot, .man-title, and
+  .man-navigation should be used instead.
+-->
+<body id='manpage'>
+  <div class='mp' id='man'>
+
+  <div class='man-navigation' style='display:none'>
+    <a href="#NAME">NAME</a>
+    <a href="#SYNOPSIS">SYNOPSIS</a>
+    <a href="#DESCRIPTION">DESCRIPTION</a>
+    <a href="#COMMANDS">COMMANDS</a>
+    <a href="#POSTING-OPTIONS">POSTING OPTIONS</a>
+    <a href="#COMMON-OPTIONS">COMMON OPTIONS</a>
+    <a href="#AUTHORIZATION">AUTHORIZATION</a>
+    <a href="#EXAMPLES">EXAMPLES</a>
+    <a href="#INSTALLATION">INSTALLATION</a>
+    <a href="#COPYRIGHT">COPYRIGHT</a>
+    <a href="#SEE-ALSO">SEE ALSO</a>
+  </div>
+
+  <ol class='man-decor man-head man head'>
+    <li class='tl'>tumblr(1)</li>
+    <li class='tc'>Tumblr Manual</li>
+    <li class='tr'>tumblr(1)</li>
+  </ol>
+
+  <h2 id="NAME">NAME</h2>
+<p class="man-name">
+  <code>tumblr</code> - <span class="man-whatis">publish to tumblr.com</span>
+</p>
+
+<h2 id="SYNOPSIS">SYNOPSIS</h2>
+
+<p><code>tumblr</code> COMMAND [ARGS]</p>
+
+<h2 id="DESCRIPTION">DESCRIPTION</h2>
+
+<p><code>tumblr</code> is a command line utility and Ruby library for working with Tumblr.com. It can read plain-text and binary files and publish them to Tumblr.</p>
+
+<p><code>tumblr</code> is driven through a group of <a href="#COMMANDS" title="COMMANDS" data-bare-link="true">COMMANDS</a> (similar to <code>git</code> or <code>rbenv</code>).</p>
+
+<p>If you preface your plaintext file with a bit of YAML (&lt;yaml.org>) frontmatter, you can give <code>tumblr</code> more explicit instructions for how to publish your post. See <a class="man-ref" href="tumblr.5.html">tumblr<span class="s">(5)</span></a> for available YAML parameters.</p>
+
+<h2 id="COMMANDS">COMMANDS</h2>
+
+<dl>
+<dt><code>tumblr post</code> <var>POST</var> | <var>FILE</var> | <var>URL</var></dt><dd><p>  Post to tumblr.
+  A <var>POST</var> is a piece of plaintext, assumed to be formatted as <code>tumblr(5)</code>.
+  <var>FILE</var> is a path to a <var>POST</var>. If <var>FILE</var> has a binary extension, that file will be uploaded as an image, audio, or video post.
+  <var>URL</var> will create a link-type post, or a video or audio post, depending on the location of the url.</p></dd>
+<dt><code>tumblr pipe</code></dt><dd><p>  Read from STDIN and post to tumblr.</p></dd>
+<dt><code>tumblr edit</code> <var>POST_ID</var></dt><dd><p>  Edit <var>POST_ID</var> on tumblr.
+  Will open the serialized post in the foreground with $TUMBLREDITOR then $EDITOR.</p></dd>
+<dt><code>tumblr fetch</code> <var>POST_ID</var></dt><dd><p>  Fetch <var>POST_ID</var> from tumblr and write out its serialized form.</p></dd>
+<dt><code>tumblr delete</code> <var>POST_ID</var></dt><dd><p>  Delete <var>POST_ID</var> from tumblr.</p></dd>
+<dt><code>tumblr help</code> [<var>TASK</var>]</dt><dd><p>  Print the help message and the description for <var>TASK</var>.</p></dd>
+<dt><code>tumblr authorize</code></dt><dd><p>  Start a web server and application to authenticate to tumblr and authorize the cli.
+  See <a href="#AUTHORIZATION" title="AUTHORIZATION" data-bare-link="true">AUTHORIZATION</a></p></dd>
+<dt><code>tumblr version</code></dt><dd><p>  Print the <code>tumblr</code> version and quit.</p></dd>
+</dl>
+
+
+<h2 id="POSTING-OPTIONS">POSTING OPTIONS</h2>
+
+<p>These options are used when posting to tumblr, i.e. when using <code>tumblr post</code> or <code>tumblr pipe</code>.</p>
+
+<dl>
+<dt><code>-p</code>,<code>--publish</code></dt><dd><p>  Publish this post (ignoring the <code>state</code> parameter set in the post).</p></dd>
+<dt><code>-q</code>,<code>--queue</code></dt><dd><p>  Add this post to the queue.</p></dd>
+<dt><code>-d</code>,<code>--draft</code></dt><dd><p>  Save this post as a draft.</p></dd>
+</dl>
+
+
+<h2 id="COMMON-OPTIONS">COMMON OPTIONS</h2>
+
+<dl>
+<dt><code>--credentials</code>=<em>PATH</em></dt><dd><p>  The file where your OAuth keys are stored.
+  When authenticating, this path is where the keys should be stored.</p></dd>
+<dt><code>--host</code>=<em>HOST</em></dt><dd><p>  The hostname of the Tumblr account your posting to.
+  Posting and fetching posts require the hostname.</p></dd>
+</dl>
+
+
+<h2 id="AUTHORIZATION">AUTHORIZATION</h2>
+
+<p>Most actions of the cli require authorization to Tumblr. <code>tumblr authorize</code> provides a mechanism to authenticate and authorize the cli.</p>
+
+<p>In order to use <code>tumblr</code>, you first need to <a href="http://www.tumblr.com/oauth/apps">register</a> an OAuth application with tumblr.</p>
+
+<p>Run <code>tumblr authorize</code> to start up server, and type in the consumer key and secret. You'll then be asked to authorize the app.
+These keys are saved to the file noted in <code>--credentials</code>, defaulting to <code>~/.tumblr</code>.
+If you choose not to use this default, you will need to enter the <code>--credentials</code> option every time you post.
+Alternatively, use the <code>$TUMBLRCRED</code> environment variable.</p>
+
+<h2 id="EXAMPLES">EXAMPLES</h2>
+
+<p>Publish a file to Tumblr.com:</p>
+
+<pre><code>$ tumblr post my_post.txt
+</code></pre>
+
+<p>Or from standard input:</p>
+
+<pre><code>$ cat data.yml my_post.txt | tumblr --host=mwunsch.tumblr.com
+</code></pre>
+
+<p>Make a Link post:</p>
+
+<pre><code>$ tumblr post http://github.com/mwunsch/tumblr
+</code></pre>
+
+<p>Or a Video post:</p>
+
+<pre><code>$ tumblr post http://www.youtube.com/watch?v=CW0DUg63lqU
+</code></pre>
+
+<p>Save it as a draft:</p>
+
+<pre><code>$ tumblr post -d http://www.youtube.com/watch?v=CW0DUg63lqU
+</code></pre>
+
+<h2 id="INSTALLATION">INSTALLATION</h2>
+
+<p>If you have RubyGems installed:</p>
+
+<pre><code>gem install tumblr-rb
+</code></pre>
+
+<h2 id="COPYRIGHT">COPYRIGHT</h2>
+
+<p>Tumblr (the gem) is Copyright (C) 2010 - 2012 Mark Wunsch</p>
+
+<p>Tumblr is Copyright (c) Tumblr, Inc. The Tumblr gem is NOT affiliated with Tumblr, Inc.</p>
+
+<h2 id="SEE-ALSO">SEE ALSO</h2>
+
+<p><a class="man-ref" href="tumblr.5.html">tumblr<span class="s">(5)</span></a>, <span class="man-ref">gem<span class="s">(1)</span></span></p>
+
+
+  <ol class='man-decor man-foot man foot'>
+    <li class='tl'>Mark Wunsch</li>
+    <li class='tc'>October 2012</li>
+    <li class='tr'>tumblr(1)</li>
+  </ol>
+
+  </div>
+</body>
+</html>

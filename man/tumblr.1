@@ -1,0 +1,174 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "TUMBLR" "1" "October 2012" "Mark Wunsch" "Tumblr Manual"
+.
+.SH "NAME"
+\fBtumblr\fR \- publish to tumblr\.com
+.
+.SH "SYNOPSIS"
+\fBtumblr\fR COMMAND [ARGS]
+.
+.SH "DESCRIPTION"
+\fBtumblr\fR is a command line utility and Ruby library for working with Tumblr\.com\. It can read plain\-text and binary files and publish them to Tumblr\.
+.
+.P
+\fBtumblr\fR is driven through a group of \fICOMMANDS\fR (similar to \fBgit\fR or \fBrbenv\fR)\.
+.
+.P
+If you preface your plaintext file with a bit of YAML (<yaml\.org>) frontmatter, you can give \fBtumblr\fR more explicit instructions for how to publish your post\. See tumblr(5) for available YAML parameters\.
+.
+.SH "COMMANDS"
+.
+.TP
+\fBtumblr post\fR \fIPOST\fR | \fIFILE\fR | \fIURL\fR
+Post to tumblr\. A \fIPOST\fR is a piece of plaintext, assumed to be formatted as \fBtumblr(5)\fR\. \fIFILE\fR is a path to a \fIPOST\fR\. If \fIFILE\fR has a binary extension, that file will be uploaded as an image, audio, or video post\. \fIURL\fR will create a link\-type post, or a video or audio post, depending on the location of the url\.
+.
+.TP
+\fBtumblr pipe\fR
+Read from STDIN and post to tumblr\.
+.
+.TP
+\fBtumblr edit\fR \fIPOST_ID\fR
+Edit \fIPOST_ID\fR on tumblr\. Will open the serialized post in the foreground with $TUMBLREDITOR then $EDITOR\.
+.
+.TP
+\fBtumblr fetch\fR \fIPOST_ID\fR
+Fetch \fIPOST_ID\fR from tumblr and write out its serialized form\.
+.
+.TP
+\fBtumblr delete\fR \fIPOST_ID\fR
+Delete \fIPOST_ID\fR from tumblr\.
+.
+.TP
+\fBtumblr help\fR [\fITASK\fR]
+Print the help message and the description for \fITASK\fR\.
+.
+.TP
+\fBtumblr authorize\fR
+Start a web server and application to authenticate to tumblr and authorize the cli\. See \fIAUTHORIZATION\fR
+.
+.TP
+\fBtumblr version\fR
+Print the \fBtumblr\fR version and quit\.
+.
+.SH "POSTING OPTIONS"
+These options are used when posting to tumblr, i\.e\. when using \fBtumblr post\fR or \fBtumblr pipe\fR\.
+.
+.TP
+\fB\-p\fR,\fB\-\-publish\fR
+Publish this post (ignoring the \fBstate\fR parameter set in the post)\.
+.
+.TP
+\fB\-q\fR,\fB\-\-queue\fR
+Add this post to the queue\.
+.
+.TP
+\fB\-d\fR,\fB\-\-draft\fR
+Save this post as a draft\.
+.
+.SH "COMMON OPTIONS"
+.
+.TP
+\fB\-\-credentials\fR=\fIPATH\fR
+The file where your OAuth keys are stored\. When authenticating, this path is where the keys should be stored\.
+.
+.TP
+\fB\-\-host\fR=\fIHOST\fR
+The hostname of the Tumblr account your posting to\. Posting and fetching posts require the hostname\.
+.
+.SH "AUTHORIZATION"
+Most actions of the cli require authorization to Tumblr\. \fBtumblr authorize\fR provides a mechanism to authenticate and authorize the cli\.
+.
+.P
+In order to use \fBtumblr\fR, you first need to register \fIhttp://www\.tumblr\.com/oauth/apps\fR an OAuth application with tumblr\.
+.
+.P
+Run \fBtumblr authorize\fR to start up server, and type in the consumer key and secret\. You\'ll then be asked to authorize the app\. These keys are saved to the file noted in \fB\-\-credentials\fR, defaulting to \fB~/\.tumblr\fR\. If you choose not to use this default, you will need to enter the \fB\-\-credentials\fR option every time you post\. Alternatively, use the \fB$TUMBLRCRED\fR environment variable\.
+.
+.SH "EXAMPLES"
+Publish a file to Tumblr\.com:
+.
+.IP "" 4
+.
+.nf
+
+$ tumblr post my_post\.txt
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Or from standard input:
+.
+.IP "" 4
+.
+.nf
+
+$ cat data\.yml my_post\.txt | tumblr \-\-host=mwunsch\.tumblr\.com
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Make a Link post:
+.
+.IP "" 4
+.
+.nf
+
+$ tumblr post http://github\.com/mwunsch/tumblr
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Or a Video post:
+.
+.IP "" 4
+.
+.nf
+
+$ tumblr post http://www\.youtube\.com/watch?v=CW0DUg63lqU
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Save it as a draft:
+.
+.IP "" 4
+.
+.nf
+
+$ tumblr post \-d http://www\.youtube\.com/watch?v=CW0DUg63lqU
+.
+.fi
+.
+.IP "" 0
+.
+.SH "INSTALLATION"
+If you have RubyGems installed:
+.
+.IP "" 4
+.
+.nf
+
+gem install tumblr\-rb
+.
+.fi
+.
+.IP "" 0
+.
+.SH "COPYRIGHT"
+Tumblr (the gem) is Copyright (C) 2010 \- 2012 Mark Wunsch
+.
+.P
+Tumblr is Copyright (c) Tumblr, Inc\. The Tumblr gem is NOT affiliated with Tumblr, Inc\.
+.
+.SH "SEE ALSO"
+tumblr(5), gem(1)
