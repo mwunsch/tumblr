@@ -57,8 +57,6 @@ class RubyGemFormula < Formula
     bin.rmtree
     bin.mkpath
 
-    # man1.install ["tumblr.1"]
-
     Pathname.glob("#{prefix}/gems/#{name}-#{version}/man/*").select do |file|
       send("man#{$&}").install(file) if file.extname =~ /\d$/
     end
