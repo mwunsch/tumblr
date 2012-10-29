@@ -1,3 +1,4 @@
+# This is a generated file. Run `rake brew`
 require 'formula'
 
 class RubyGemFormula < Formula
@@ -17,13 +18,11 @@ class RubyGemFormula < Formula
     ENV['GEM_HOME']="#{prefix}"
     ENV['GEM_PATH']="#{prefix}"
     system "gem", "install", "tumblr-rb",
-             "--version", "2.0.0.alpha",
+             "--version", "2.0.0",
              "--no-rdoc", "--no-ri",
              "--install-dir", prefix
     bin.rmtree
     bin.mkpath
-
-    # man1.install ["tumblr.1"]
 
     Pathname.glob("#{prefix}/gems/#{name}-#{version}/man/*").select do |file|
       send("man#{$&}").install(file) if file.extname =~ /\d$/
@@ -44,7 +43,7 @@ load "#{file}"
 end
 
 class TumblrRb < RubyGemFormula
-  url "http://rubygems.org/downloads/tumblr-rb-2.0.0.alpha.gem"
+  url "http://rubygems.org/downloads/tumblr-rb-2.0.0.gem"
   homepage "http://rubygems.org/gems/tumblr-rb"
-  version "2.0.0.alpha"
+  version "2.0.0"
 end
