@@ -2,21 +2,21 @@
 
 Command line interface and Ruby client for the [Tumblr API](http://www.tumblr.com/docs/en/api/v2)
 
-It's being rewritten from the ground up to support v2 of the api.
+It's been rewritten from the ground up to support v2 of the api.
 
-**Check out [tag v1.3.0](https://github.com/mwunsch/tumblr/tree/v1.3.0) if you are interested in v1.** The master branch is now dedicated to v2, and is not in steady state.
-
-Like the previous version, the current version reads files with a special front-matter block, like [Jekyll](http://tom.preston-werner.com/jekyll/). In addition, this new version offers the ability to post photos, videos, and audio.
+Like the v1, the current version reads files with a special front-matter block, like [Jekyll](http://tom.preston-werner.com/jekyll/). In addition, this new version offers the ability to post photos, videos, and audio.
 
 Unlike the previous version, this new command line utility uses OAuth to authenticate and authorize the user.
 
-## TODO
-
-+ Task to build a homebrew formula
-
 ## Installation
 
-Until the gem is published, you'll just need to clone this repository. Run `bundle install` and `bundle exec bin/tumblr`.
+If you're on a Mac using [Homebrew](http://mxcl.github.com/homebrew/) and are just interested in the cli:
+
+		brew install https://raw.github.com/mwunsch/tumblr/master/share/tumblr-rb.rb
+
+Or with gem:
+
+		gem install tumblr-rb
 
 Alternatively, you can clone the repo, and run `rake install` -- this will build the gem, place it in the `pkg` directory, and install the gem to your system. You should then be able to `require 'tumblr'` and/or run `tumblr` from the command line.
 
@@ -56,6 +56,8 @@ Understood YAML parameters are taken from the Tumblr API: http://www.tumblr.com/
 	slug				A custom string to appear in the post's URL
 
 	tweet				Manages the autotweet (if enabled) for this post
+
+See [tumblr(5)](http://mwunsch.github.com/tumblr/tumblr.5.html) for more info.
 
 ## Copyright
 
