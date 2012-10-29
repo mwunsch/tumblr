@@ -12,8 +12,6 @@ Unlike the previous version, this new command line utility uses OAuth to authent
 
 ## TODO
 
-+ Documentation, documentation, documentation
-+ Man pages
 + Task to build a homebrew formula
 
 ## Installation
