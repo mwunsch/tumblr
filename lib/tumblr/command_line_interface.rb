@@ -18,11 +18,21 @@ module Tumblr
 
     desc "pipe", "Pipe post content in from STDIN"
     method_option :publish, :type => :boolean,
-                            :aliases => "-p"
+                            :aliases => "-p",
+                            :desc => "Publish this post"
     method_option :queue, :type => :boolean,
-                          :aliases => "-q"
+                          :aliases => "-q",
+                          :desc => "Add this post to the queue"
     method_option :draft, :type => :boolean,
-                          :aliases => "-d"
+                          :aliases => "-d",
+                          :desc => "Save this post as a draft"
+    long_desc <<-LONGDESC
+      Publish a post to tumblr from STDIN for HOST.
+      It is assumed that STDIN contains a document formatted according to `tumblr(5)`.
+      If STDIN contains a URL, it will create a post using the same rules as `tumblr post`.
+
+      Writes the serialized post to STDOUT.
+    LONGDESC
     def pipe
       if !$stdin.tty?
         puts post($stdin).serialize
@@ -31,13 +41,26 @@ module Tumblr
       end
     end
 
-    desc "post", "Posts a photo from a url to tumblr"
+    desc "post <POST> | <FILE> | <URL>", "Posts to tumblr"
     method_option :publish, :type => :boolean,
-                            :aliases => "-p"
+                            :aliases => "-p",
+                            :desc => "Publish this post"
     method_option :queue, :type => :boolean,
-                          :aliases => "-q"
+                          :aliases => "-q",
+                          :desc => "Add this post to the queue"
     method_option :draft, :type => :boolean,
-                          :aliases => "-d"
+                          :aliases => "-d",
+                          :desc => "Save this post as a draft"
+    long_desc <<-LONGDESC
+      Post a POST to Tumblr for HOST. If a FILE path is given, the file will be read and posted to Tumblr.
+      It is assumed the post follows the `tumblr(5)` format.
+
+      If the FILE is an audio, image, or video file, it will create the respective post type on tumblr.
+
+      If a URL is given, a link post will be created.
+      If URL is a YouTube or Vimeo link, it will create a video post.
+      If URL is a SoundCloud or Spotify link, an audio post will be published.
+    LONGDESC
     def post(arg)
       client = get_client
       post =  if arg.respond_to? :read
@@ -56,8 +79,14 @@ module Tumblr
       post
     end
 
-    desc "edit", "Edit a post"
+    desc "edit POST_ID", "Edit a post"
     long_desc "Open up your $EDITOR to edit a published post."
+    long_desc <<-LONGDESC
+      Get a post from Tumblr and edit it.
+
+      Behaves similar to `git commit`, in that it will open up your editor in the foreground.
+      Look for a $TUMBLREDITOR environment variable, and if that's not found, will use $EDITOR.
+    LONGDESC
     def edit(id)
       client = get_client
       response = client.posts(:id => id, :filter => :raw).perform
@@ -67,7 +96,7 @@ module Tumblr
       tmp_file = Tempfile.new("post_#{id}")
       tmp_file.write(post.serialize)
       tmp_file.rewind
-      ui_abort "Something went wrong editing the post." unless system "$EDITOR #{tmp_file.path}"
+      ui_abort "Something went wrong editing the post." unless system "#{editor} #{tmp_file.path}"
       edited_post = Tumblr::Post.load_from_path tmp_file.path
       edited_response = edited_post.edit(client).perform
       tumblr_error(edited_response) unless edited_response.success?
@@ -79,7 +108,7 @@ module Tumblr
       end
     end
 
-    desc "fetch", "Fetch a post and print out its serialized form."
+    desc "fetch POST_ID", "Fetch a post and write out its serialized form."
     def fetch(id)
       client = get_client
       response = client.posts(:id => id, :filter => :raw).perform
@@ -89,7 +118,7 @@ module Tumblr
       post
     end
 
-    desc "delete", "Delete a post"
+    desc "delete POST_ID", "Delete a post"
     def delete(id)
       client = get_client
       response = client.delete(:id => id).perform
@@ -97,14 +126,25 @@ module Tumblr
       ui_success "Post #{id} successfully deleted."
     end
 
-    desc "authorize", "Authenticate and authorize the cli"
-    long_desc <<-LONGDESC
-      `tumblr authorize` will start up a server to run an app to do the OAuth handshake with tumblr.
-    LONGDESC
+    desc "authorize", "Authenticate and authorize the cli to post on your behalf"
     option :port, :type => :string,
-                  :default => "4567"
+                  :default => "4567",
+                  :desc => "Use PORT"
     option :bind, :type => :string,
-                  :default => "0.0.0.0"
+                  :default => "0.0.0.0",
+                  :desc => "listen on BIND"
+    long_desc <<-LONGDESC
+      `tumblr authorize` will start up a server (listening on BIND and PORT) running
+      a small app to do the OAuth handshake with tumblr.
+
+      The app will open in the default browser, allowing you to authenticate to Tumblr
+      and authorize `tumblr` to do actions on your behalf. You will need to register
+      an application and enter the consumer key and consumer secret. The application will
+      write the OAuth keys to your CREDENTIALS file.
+
+      After authorization, you will be prompted to return to your terminal and shut down
+      the server (using CTRL-C).
+    LONGDESC
     def authorize(*soak)
       require 'tumblr/authentication'
       sinatra_options = {
@@ -131,7 +171,11 @@ module Tumblr
 
     def credentials
       require 'tumblr/credentials'
-      Tumblr::Credentials.new(options[:credentials])
+      Tumblr::Credentials.new(options[:credentials] || ENV["TUMBLRCRED"])
+    end
+
+    def editor
+      ENV["TUMBLREDITOR"] || ENV["EDITOR"]
     end
 
     def has_credentials?
