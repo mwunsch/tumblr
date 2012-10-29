@@ -59,6 +59,10 @@ Understood YAML parameters are taken from the Tumblr API: http://www.tumblr.com/
 
 See [tumblr(5)](http://mwunsch.github.com/tumblr/tumblr.5.html) for more info.
 
+## TODO
+
++ Photoset support
+
 ## Copyright
 
 The Tumblr gem is Copyright (c) 2010 - 2012 Mark Wunsch and is licensed under the [MIT License](http://creativecommons.org/licenses/MIT/).
