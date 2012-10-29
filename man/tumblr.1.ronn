@@ -3,79 +3,104 @@ tumblr(1) -- publish to tumblr.com
 
 ## SYNOPSIS
 
-`tumblr` [<OPTIONS>] <FILE OR URL>
+`tumblr` COMMAND [ARGS]
 
 ## DESCRIPTION
 
-`tumblr` is a command line utility and Ruby library for working with Tumblr.com. It can read plain-text files and publish them to Tumblr. 
+`tumblr` is a command line utility and Ruby library for working with Tumblr.com. It can read plain-text and binary files and publish them to Tumblr.
 
-The `tumblr` command will publish a named input <FILE> (or Standard Input if no file is given), or if a <URL> is given it will publish that URL as a Link post (or a Video post if the url is a YouTube or Vimeo post).
-	
-If you preface your <FILE> with a bit of YAML (<yaml.org>) frontmatter, you can give `tumblr` more explicit instructions for publishing your post. See tumblr(5) for available YAML parameters.
+`tumblr` is driven through a group of [COMMANDS][] (similar to `git` or `rbenv`).
 
-## OPTIONS
+If you preface your plaintext file with a bit of YAML (<yaml.org>) frontmatter, you can give `tumblr` more explicit instructions for how to publish your post. See tumblr(5) for available YAML parameters.
 
-* `-a`,`--auth` _EMAIL:PASSWORD_:
-	Provide Email Address and Password, to authenticate to Tumblr, separated by a colon. 
-	If these are not provided, you will be prompted for them. 
-	You <b>must</b> provide this or the `--credentials` argument if the post comes from standard input.
-	
-* `-e`, `--email` _EMAIL_:
-	Email Address associated with your Tumblr account.
-	You will be prompted for a password.
-	
-* `--credentials` _FILE_:
-	A YAML file with the user credentials. Should have keys `email` and `password`.
-	
+## COMMANDS
+
+* `tumblr post` <POST> | <FILE> | <URL>:
+	Post to tumblr.
+	A <POST> is a piece of plaintext, assumed to be formatted as `tumblr(5)`.
+	<FILE> is a path to a <POST>. If <FILE> has a binary extension, that file will be uploaded as an image, audio, or video post.
+	<URL> will create a link-type post, or a video or audio post, depending on the location of the url.
+
+* `tumblr pipe`:
+	Read from STDIN and post to tumblr.
+
+* `tumblr edit` <POST_ID>:
+	Edit <POST_ID> on tumblr.
+	Will open the serialized post in the foreground with $TUMBLREDITOR then $EDITOR.
+
+* `tumblr fetch` <POST_ID>:
+	Fetch <POST_ID> from tumblr and write out its serialized form.
+
+* `tumblr delete` <POST_ID>:
+	Delete <POST_ID> from tumblr.
+
+* `tumblr help` [<TASK>]:
+	Print the help message and the description for <TASK>.
+
+* `tumblr authorize`:
+	Start a web server and application to authenticate to tumblr and authorize the cli.
+	See [AUTHORIZATION][]
+
+* `tumblr version`:
+	Print the `tumblr` version and quit.
+
+## POSTING OPTIONS
+
+These options are used when posting to tumblr, i.e. when using `tumblr post` or `tumblr pipe`.
+
 * `-p`,`--publish`:
-	Publish the post immediately. This will ignore the `state` parameter set in the post.
+	Publish this post (ignoring the `state` parameter set in the post).
 
 * `-q`,`--queue`:
-	Add the post to the queue.
-	
+	Add this post to the queue.
+
 * `-d`,`--draft`:
-	Save the post as a draft.
-	
-* `--group`=_GROUP_:
-	Publish the post to a _GROUP_ tumblelog.
+	Save this post as a draft.
 
-Other:
 
-* `-h`, `--help`:
-	Print the help message and quit.
-	
-* `-v`, `--version`:
-	Print the `tumblr` version and quit.
+## COMMON OPTIONS
+
+* `--credentials`=_PATH_:
+	The file where your OAuth keys are stored.
+	When authenticating, this path is where the keys should be stored.
+
+* `--host`=_HOST_:
+	The hostname of the Tumblr account your posting to.
+	Posting and fetching posts require the hostname.
+
+## AUTHORIZATION
+
+Most actions of the cli require authorization to Tumblr. `tumblr authorize` provides a mechanism to authenticate and authorize the cli.
+
+In order to use `tumblr`, you first need to [register](http://www.tumblr.com/oauth/apps) an OAuth application with tumblr.
+
+Run `tumblr authorize` to start up server, and type in the consumer key and secret. You'll then be asked to authorize the app.
+These keys are saved to the file noted in `--credentials`, defaulting to `~/.tumblr`.
+If you choose not to use this default, you will need to enter the `--credentials` option every time you post.
+Alternatively, use the `$TUMBLRCRED` environment variable.
 
 ## EXAMPLES
 
 Publish a file to Tumblr.com:
 
-	$ tumblr my_post.txt
-	
+	$ tumblr post my_post.txt
+
 Or from standard input:
 
-	$ cat data.yml my_post.txt | tumblr -a tumblr_user@foobar.com:p4ssw0rd
-	
+	$ cat data.yml my_post.txt | tumblr --host=mwunsch.tumblr.com
+
 Make a Link post:
 
-	$ tumblr http://github.com/mwunsch/tumblr
-	
+	$ tumblr post http://github.com/mwunsch/tumblr
+
 Or a Video post:
 
-	$ tumblr http://www.youtube.com/watch?v=CW0DUg63lqU
-	
+	$ tumblr post http://www.youtube.com/watch?v=CW0DUg63lqU
+
 Save it as a draft:
 
-	$ tumblr -d http://www.youtube.com/watch?v=CW0DUg63lqU
-	
-Authenticate with credentials given from a file:
+	$ tumblr post -d http://www.youtube.com/watch?v=CW0DUg63lqU
 
-	$ cat ~/.tumblrlogin
-	email: tumblruser@generic-email.com
-	password: myvoiceismypassport
-	$ cat data.yml my_post.txt | tumblr --credentials ~/.tumblrlogin
-	
 ## INSTALLATION
 
 If you have RubyGems installed:
@@ -84,7 +109,7 @@ If you have RubyGems installed:
 
 ## COPYRIGHT
 
-Tumblr (the gem) is Copyright (C) 2010 Mark Wunsch
+Tumblr (the gem) is Copyright (C) 2010 - 2012 Mark Wunsch
 
 Tumblr is Copyright (c) Tumblr, Inc. The Tumblr gem is NOT affiliated with Tumblr, Inc.
 
