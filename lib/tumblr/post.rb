@@ -81,13 +81,12 @@ module Tumblr
       meta_data["format"] ||= "markdown"
 
       post_type = get_post_type(meta_data["type"])
-      if meta_data["type"] == "text"
-        pairs = [["body", doc_body]]
-      else
-        post_body_parts = doc_body.split(POST_BODY_SEPARATOR)
-        pairs = pair_post_body_types(post_type.post_body_keys, post_body_parts.dup)
-      end
-
+      pairs = if post_type.post_body_keys.length > 1 
+                pair_post_body_types(post_type.post_body_keys, doc_body.split(POST_BODY_SEPARATOR).dup)
+              else
+                [[:body, doc_body]]
+              end
+      
       Hash[pairs].merge(meta_data)
     end
 
