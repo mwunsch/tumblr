@@ -84,7 +84,7 @@ module Tumblr
       pairs = if post_type.post_body_keys.length > 1 
                 pair_post_body_types(post_type.post_body_keys, doc_body.split(POST_BODY_SEPARATOR).dup)
               else
-                [[:body, doc_body]]
+                [[post_type.post_body_keys.first, doc_body]]
               end
       
       Hash[pairs].merge(meta_data)
