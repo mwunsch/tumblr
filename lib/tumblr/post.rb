@@ -231,6 +231,10 @@ module Tumblr
       @slug
     end
 
+    def post_url
+      @post_url
+    end
+
     # These are handy convenience methods.
 
     def markdown?
