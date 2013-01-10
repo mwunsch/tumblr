@@ -134,7 +134,7 @@ module Tumblr
     def list()
       client = get_client
       posts = Tumblr::Post.perform client.posts(:tag => options[:tag], :type => options[:type], :filter => :text)
-      y Hash[ posts.map {|post| [post.id, post.post_url]} ]
+      ui_puts Hash[ posts.map {|post| [post.id, post.post_url]} ].to_yaml
     end
 
     desc "authorize", "Authenticate and authorize the cli to post on your behalf"
