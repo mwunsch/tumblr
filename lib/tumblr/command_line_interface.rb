@@ -126,6 +126,17 @@ module Tumblr
       ui_success "Post #{id} successfully deleted."
     end
 
+    desc "list", "List Tumblr post_ids and URLs for posts."
+    method_option :tag, :type => :string,
+                        :desc => "Post tag"
+    method_option :type, :type => :string,
+                         :desc => "Post type: text, quote, link, answer, video, audio, photo, chat"
+    def list()
+      client = get_client
+      posts = Tumblr::Post.perform client.posts(:tag => options[:tag], :type => options[:type], :filter => :text)
+      ui_puts Hash[ posts.map {|post| [post.id, post.post_url]} ].to_yaml
+    end
+
     desc "authorize", "Authenticate and authorize the cli to post on your behalf"
     option :port, :type => :string,
                   :default => "4567",
