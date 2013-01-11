@@ -34,6 +34,9 @@ If you preface your plaintext file with a bit of YAML (<yaml.org>) frontmatter, 
 * `tumblr delete` <POST_ID>:
 	Delete <POST_ID> from tumblr.
 
+* `tumblr list`:
+  Print a YAML listing of Post IDs to Post URLs.
+
 * `tumblr help` [<TASK>]:
 	Print the help message and the description for <TASK>.
 
