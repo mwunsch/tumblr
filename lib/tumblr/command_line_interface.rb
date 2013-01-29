@@ -158,13 +158,14 @@ module Tumblr
     LONGDESC
     def authorize(*soak)
       require 'tumblr/authentication'
+      require 'launchy'
       sinatra_options = {
         :port => options[:port],
         :bind => options[:bind],
         :credential_path => options[:credentials]
       }
       Tumblr::Authentication.run!(sinatra_options) do |server|
-        Launchy.open("http://#{options[:bind]}:#{options[:port]}/")
+        ::Launchy.open("http://#{options[:bind]}:#{options[:port]}/")
       end
       if has_credentials?
         ui_success "Success! Your Tumblr OAuth credentials were written to #{credentials.path}"
