@@ -164,7 +164,7 @@ module Tumblr
         :credential_path => options[:credentials]
       }
       Tumblr::Authentication.run!(sinatra_options) do |server|
-        `open http://#{options[:bind]}:#{options[:port]}/`
+        Launchy.open("http://#{options[:bind]}:#{options[:port]}/")
       end
       if has_credentials?
         ui_success "Success! Your Tumblr OAuth credentials were written to #{credentials.path}"
