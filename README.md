@@ -59,6 +59,10 @@ Understood YAML parameters are taken from the Tumblr API: http://www.tumblr.com/
 
 See [tumblr(5)](http://mwunsch.github.com/tumblr/tumblr.5.html) for more info.
 
+## Configuration
+
+The gem has some configuration options – API keys are kept in `~/.tumblr` and can be changed if needed. It will also use a `$HOST` environment variable if specified. These are usually placed in your `.bashrc` or `.zshrc`, or specified on running the `tumblr` command: `HOST=foo.tumblr.com tumblr post "Hello world!"`
+
 ## TODO
 
 - [ ] Photoset support
