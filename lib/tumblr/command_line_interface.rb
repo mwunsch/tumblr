@@ -33,7 +33,7 @@ module Tumblr
 
       Writes the serialized post to STDOUT.
     LONGDESC
-    def pipe
+    def pipe(*args)
       if !$stdin.tty?
         puts post($stdin).serialize
       else
