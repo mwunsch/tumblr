@@ -6,16 +6,24 @@ module Tumblr
         @type = :quote
       end
 
-      def quote
-        @quote
+      def text
+        @text
       end
 
       def source
         @source
       end
 
+      def source_url
+        @source_url
+      end
+
+      def source_title
+        @source_title
+      end
+
       def self.post_body_keys
-        [:quote]
+        [:text]
       end
     end
   end
