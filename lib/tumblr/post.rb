@@ -17,7 +17,7 @@ module Tumblr
       :blog_name, :id, :post_url, :type, :timestamp, :date, :format,
       :reblog_key, :tags, :bookmarklet, :mobile, :source_url, :source_title,
       :total_posts,
-      :photos, :dialogue, :player # Post-specific response fields
+      :photos, :dialogue, :player, :text # Post-specific response fields
     ]
 
     # Some post types have several "body keys", which allow the YAML front-matter
