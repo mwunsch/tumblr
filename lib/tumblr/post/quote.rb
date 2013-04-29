@@ -6,8 +6,8 @@ module Tumblr
         @type = :quote
       end
 
-      def text
-        @text
+      def quote
+        @quote
       end
 
       def source
@@ -22,8 +22,12 @@ module Tumblr
         @source_title
       end
 
+      def text
+        @text
+      end
+      
       def self.post_body_keys
-        [:text]
+        [:quote,:text]
       end
     end
   end
