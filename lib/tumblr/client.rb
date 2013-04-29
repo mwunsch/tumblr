@@ -10,7 +10,7 @@ module Tumblr
       :state, :tags, :tweet, :date, :format, :slug, :source_url, :source_title,
       :title, :body, # Text posts
       :caption, :link, :source, :data, #Photo posts
-      :text, :quote, # Quote posts
+      :quote, # Quote posts
       :url, :description, # Link posts
       :conversation, # Chat posts
       :external_url, # Audio posts

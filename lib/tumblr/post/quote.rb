@@ -4,6 +4,7 @@ module Tumblr
       def initialize(post_data = {})
         super(post_data)
         @type = :quote
+        @quote ||= @text
       end
 
       def quote
@@ -22,12 +23,8 @@ module Tumblr
         @source_title
       end
 
-      def text
-        @text
-      end
-      
       def self.post_body_keys
-        [:source]
+        [:quote]
       end
     end
   end
