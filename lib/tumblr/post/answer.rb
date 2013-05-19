@@ -9,9 +9,15 @@ module Tumblr
       def answer
         @answer
       end
+
+      def question
+        @question
+      end
+
+      def self.post_body_keys
+        [:question, :answer]
+      end
     end
   end
 end
-
-
 
