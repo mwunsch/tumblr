@@ -108,7 +108,7 @@ module Tumblr
       end
     end
 
-    desc "fetch POST_ID", "Fetch a post and write out its serialized form."
+    desc "fetch POST_ID", "Fetch a post and write out its serialized form"
     def fetch(id)
       client = get_client
       response = client.posts(:id => id, :filter => :raw).perform
@@ -126,7 +126,7 @@ module Tumblr
       ui_success "Post #{id} successfully deleted."
     end
 
-    desc "list", "List Tumblr post_ids and URLs for posts."
+    desc "list", "List Tumblr post_ids and URLs for posts"
     method_option :tag, :type => :string,
                         :desc => "Post tag"
     method_option :type, :type => :string,
@@ -135,6 +135,43 @@ module Tumblr
       client = get_client
       posts = Tumblr::Post.perform client.posts(:tag => options[:tag], :type => options[:type], :filter => :text)
       ui_puts Hash[ posts.map {|post| [post.id, post.post_url]} ].to_yaml
+    end
+
+    desc "backup <DIR>", "Download, serialize, and save all the public posts for HOST into DIR"
+    long_desc <<-LONGDESC
+      Download all of the public posts for the host tumblr, and save them into DIR.
+      DIR, if absent, is the current working directory.
+
+      The posts are written to .txt files with the filename {POST-ID}_{POST-SLUG}, or just the POST-ID if there is no slug.
+    LONGDESC
+    def backup(dir = Dir.getwd, offset = 0)
+      backup_dir = File.expand_path(dir)
+      unless File.directory?(backup_dir) && File.writable?(backup_dir)
+        ui_abort "Can't write to directory: #{backup_dir}"
+      end
+      client = get_client
+      response = client.posts(:filter => :raw, :offset => offset).perform
+      tumblr_error(response) unless response.success?
+      json = response.parse["response"]
+      total_post_count = json["blog"]["posts"]
+
+      ui_puts "Downloading #{total_post_count} posts to #{backup_dir}." if offset.zero?
+
+      posts = json["posts"].map{|post| Tumblr::Post.create(post) }
+      posts.each do |post|
+        file_name = post.id.to_s + (post.slug.empty? ? "" : "_#{post.slug}") + ".txt"
+        File.open(File.join(backup_dir, file_name), "w") do |f|
+          ui_puts "Writing file: #{f.path} for #{post.type} post #{post.id}."
+          f.write(post.serialize)
+        end
+      end
+
+      new_offset = offset + posts.size
+      if total_post_count > new_offset
+        backup(dir, new_offset)
+      else
+        ui_success "Downloaded #{new_offset}/#{total_post_count} posts to #{backup_dir}"
+      end
     end
 
     desc "authorize", "Authenticate and authorize the cli to post on your behalf"
@@ -179,7 +216,7 @@ module Tumblr
       puts Tumblr::VERSION
     end
 
-    private
+  private
 
     def credentials
       require 'tumblr/credentials'
