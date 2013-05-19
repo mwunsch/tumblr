@@ -1,7 +1,7 @@
 .\" generated with Ronn/v0.7.3
 .\" http://github.com/rtomayko/ronn/tree/0.7.3
 .
-.TH "TUMBLR" "1" "January 2013" "Mark Wunsch" "Tumblr Manual"
+.TH "TUMBLR" "1" "May 2013" "Mark Wunsch" "Tumblr Manual"
 .
 .SH "NAME"
 \fBtumblr\fR \- publish to tumblr\.com
@@ -47,6 +47,10 @@ Print a YAML listing of Post IDs to Post URLs\.
 .TP
 \fBtumblr help\fR [\fITASK\fR]
 Print the help message and the description for \fITASK\fR\.
+.
+.TP
+\fBtumblr backup\fR [\fIDIR\fR]
+Download, serialize, and save all the public posts for this \fIHOST\fR into \fIDIR\fR\. \fIDIR\fR will default to the current working directory\.
 .
 .TP
 \fBtumblr authorize\fR
@@ -156,7 +160,7 @@ $ tumblr post \-d http://www\.youtube\.com/watch?v=CW0DUg63lqU
 .IP "" 0
 .
 .SH "COPYRIGHT"
-Tumblr (the gem) is Copyright (C) 2010 \- 2012 Mark Wunsch
+Tumblr (the gem) is Copyright (C) 2010 \- 2013 Mark Wunsch
 .
 .P
 Tumblr is Copyright (c) Tumblr, Inc\. The Tumblr gem is NOT affiliated with Tumblr, Inc\.

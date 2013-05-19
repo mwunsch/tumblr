@@ -40,6 +40,10 @@ If you preface your plaintext file with a bit of YAML (<yaml.org>) frontmatter, 
 * `tumblr help` [<TASK>]:
 	Print the help message and the description for <TASK>.
 
+* `tumblr backup` [<DIR>]:
+  Download, serialize, and save all the public posts for this <HOST> into <DIR>.
+  <DIR> will default to the current working directory.
+
 * `tumblr authorize`:
 	Start a web server and application to authenticate to tumblr and authorize the cli.
 	See [AUTHORIZATION][]
@@ -106,7 +110,7 @@ Save it as a draft:
 
 ## COPYRIGHT
 
-Tumblr (the gem) is Copyright (C) 2010 - 2012 Mark Wunsch
+Tumblr (the gem) is Copyright (C) 2010 - 2013 Mark Wunsch
 
 Tumblr is Copyright (c) Tumblr, Inc. The Tumblr gem is NOT affiliated with Tumblr, Inc.
 

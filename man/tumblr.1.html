@@ -86,7 +86,7 @@
 
 <p><code>tumblr</code> is driven through a group of <a href="#COMMANDS" title="COMMANDS" data-bare-link="true">COMMANDS</a> (similar to <code>git</code> or <code>rbenv</code>).</p>
 
-<p>If you preface your plaintext file with a bit of YAML (&lt;yaml.org>) frontmatter, you can give <code>tumblr</code> more explicit instructions for how to publish your post. See <a href="tumblr.5.html" class="man-ref">tumblr<span class="s">(5)</span></a> for available YAML parameters.</p>
+<p>If you preface your plaintext file with a bit of YAML (&lt;yaml.org>) frontmatter, you can give <code>tumblr</code> more explicit instructions for how to publish your post. See <a class="man-ref" href="tumblr.5.html">tumblr<span class="s">(5)</span></a> for available YAML parameters.</p>
 
 <h2 id="COMMANDS">COMMANDS</h2>
 
@@ -102,6 +102,8 @@
 <dt><code>tumblr delete</code> <var>POST_ID</var></dt><dd><p>  Delete <var>POST_ID</var> from tumblr.</p></dd>
 <dt><code>tumblr list</code></dt><dd><p>Print a YAML listing of Post IDs to Post URLs.</p></dd>
 <dt><code>tumblr help</code> [<var>TASK</var>]</dt><dd><p>  Print the help message and the description for <var>TASK</var>.</p></dd>
+<dt><code>tumblr backup</code> [<var>DIR</var>]</dt><dd><p>Download, serialize, and save all the public posts for this <var>HOST</var> into <var>DIR</var>.
+<var>DIR</var> will default to the current working directory.</p></dd>
 <dt><code>tumblr authorize</code></dt><dd><p>  Start a web server and application to authenticate to tumblr and authorize the cli.
   See <a href="#AUTHORIZATION" title="AUTHORIZATION" data-bare-link="true">AUTHORIZATION</a></p></dd>
 <dt><code>tumblr version</code></dt><dd><p>  Print the <code>tumblr</code> version and quit.</p></dd>
@@ -169,18 +171,18 @@ Alternatively, use the <code>$TUMBLRCRED</code> environment variable.</p>
 
 <h2 id="COPYRIGHT">COPYRIGHT</h2>
 
-<p>Tumblr (the gem) is Copyright (C) 2010 - 2012 Mark Wunsch</p>
+<p>Tumblr (the gem) is Copyright (C) 2010 - 2013 Mark Wunsch</p>
 
 <p>Tumblr is Copyright (c) Tumblr, Inc. The Tumblr gem is NOT affiliated with Tumblr, Inc.</p>
 
 <h2 id="SEE-ALSO">SEE ALSO</h2>
 
-<p><a href="tumblr.5.html" class="man-ref">tumblr<span class="s">(5)</span></a>, <span class="man-ref">gem<span class="s">(1)</span></span></p>
+<p><a class="man-ref" href="tumblr.5.html">tumblr<span class="s">(5)</span></a>, <span class="man-ref">gem<span class="s">(1)</span></span></p>
 
 
   <ol class='man-decor man-foot man foot'>
     <li class='tl'>Mark Wunsch</li>
-    <li class='tc'>January 2013</li>
+    <li class='tc'>May 2013</li>
     <li class='tr'>tumblr(1)</li>
   </ol>
 
