@@ -18,7 +18,7 @@ class RubyGemFormula < Formula
     ENV['GEM_HOME']="#{prefix}"
     ENV['GEM_PATH']="#{prefix}"
     system "gem", "install", "tumblr-rb",
-             "--version", "2.0.0",
+             "--version", "2.1.0",
              "--no-rdoc", "--no-ri",
              "--install-dir", prefix
     bin.rmtree
@@ -43,7 +43,7 @@ load "#{file}"
 end
 
 class TumblrRb < RubyGemFormula
-  url "http://rubygems.org/downloads/tumblr-rb-2.0.0.gem"
+  url "http://rubygems.org/downloads/tumblr-rb-2.1.0.gem"
   homepage "http://rubygems.org/gems/tumblr-rb"
-  version "2.0.0"
+  version "2.1.0"
 end

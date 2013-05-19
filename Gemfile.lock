@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tumblr-rb (2.0.1.snapshot)
+    tumblr-rb (2.1.0)
       launchy (~> 2.1.2)
       sinatra (~> 1.4.0)
       thor (~> 0.18.0)
