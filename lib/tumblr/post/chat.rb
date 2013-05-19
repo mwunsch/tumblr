@@ -4,6 +4,7 @@ module Tumblr
       def initialize(post_data = {})
         super(post_data)
         @type = :chat
+        @conversation ||= @body
       end
 
       def title
