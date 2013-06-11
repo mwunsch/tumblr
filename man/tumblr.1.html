@@ -97,7 +97,7 @@
   <var>URL</var> will create a link-type post, or a video or audio post, depending on the location of the url.</p></dd>
 <dt><code>tumblr pipe</code></dt><dd><p>  Read from STDIN and post to tumblr.</p></dd>
 <dt><code>tumblr edit</code> <var>POST_ID</var></dt><dd><p>  Edit <var>POST_ID</var> on tumblr.
-  Will open the serialized post in the foreground with $TUMBLREDITOR then $EDITOR.</p></dd>
+  Will open the serialized post in the foreground with $TUMBLREDITOR, $VISUAL, or $EDITOR (in that order).</p></dd>
 <dt><code>tumblr fetch</code> <var>POST_ID</var></dt><dd><p>  Fetch <var>POST_ID</var> from tumblr and write out its serialized form.</p></dd>
 <dt><code>tumblr delete</code> <var>POST_ID</var></dt><dd><p>  Delete <var>POST_ID</var> from tumblr.</p></dd>
 <dt><code>tumblr list</code></dt><dd><p>Print a YAML listing of Post IDs to Post URLs.</p></dd>
@@ -182,7 +182,7 @@ Alternatively, use the <code>$TUMBLRCRED</code> environment variable.</p>
 
   <ol class='man-decor man-foot man foot'>
     <li class='tl'>Mark Wunsch</li>
-    <li class='tc'>May 2013</li>
+    <li class='tc'>June 2013</li>
     <li class='tr'>tumblr(1)</li>
   </ol>
 
