@@ -80,12 +80,12 @@ module Tumblr
     end
 
     desc "edit POST_ID", "Edit a post"
-    long_desc "Open up your $EDITOR to edit a published post."
+    long_desc "Open up your $VISUAL to edit a published post."
     long_desc <<-LONGDESC
       Get a post from Tumblr and edit it.
 
       Behaves similar to `git commit`, in that it will open up your editor in the foreground.
-      Look for a $TUMBLREDITOR environment variable, and if that's not found, will use $EDITOR.
+      Looks for a $TUMBLREDITOR environment variable, and if that's not found, will use $VISUAL, with a fall back to $EDITOR.
     LONGDESC
     def edit(id)
       client = get_client
@@ -224,7 +224,7 @@ module Tumblr
     end
 
     def editor
-      ENV["TUMBLREDITOR"] || ENV["EDITOR"]
+      ENV["TUMBLREDITOR"] || ENV["VISUAL"] || ENV["EDITOR"]
     end
 
     def has_credentials?

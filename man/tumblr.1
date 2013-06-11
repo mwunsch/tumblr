@@ -1,7 +1,7 @@
 .\" generated with Ronn/v0.7.3
 .\" http://github.com/rtomayko/ronn/tree/0.7.3
 .
-.TH "TUMBLR" "1" "May 2013" "Mark Wunsch" "Tumblr Manual"
+.TH "TUMBLR" "1" "June 2013" "Mark Wunsch" "Tumblr Manual"
 .
 .SH "NAME"
 \fBtumblr\fR \- publish to tumblr\.com
@@ -30,7 +30,7 @@ Read from STDIN and post to tumblr\.
 .
 .TP
 \fBtumblr edit\fR \fIPOST_ID\fR
-Edit \fIPOST_ID\fR on tumblr\. Will open the serialized post in the foreground with $TUMBLREDITOR then $EDITOR\.
+Edit \fIPOST_ID\fR on tumblr\. Will open the serialized post in the foreground with $TUMBLREDITOR, $VISUAL, or $EDITOR (in that order)\.
 .
 .TP
 \fBtumblr fetch\fR \fIPOST_ID\fR
