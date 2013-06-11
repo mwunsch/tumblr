@@ -26,7 +26,7 @@ If you preface your plaintext file with a bit of YAML (<yaml.org>) frontmatter, 
 
 * `tumblr edit` <POST_ID>:
 	Edit <POST_ID> on tumblr.
-	Will open the serialized post in the foreground with $TUMBLREDITOR then $EDITOR.
+	Will open the serialized post in the foreground with $TUMBLREDITOR, $VISUAL, or $EDITOR (in that order).
 
 * `tumblr fetch` <POST_ID>:
 	Fetch <POST_ID> from tumblr and write out its serialized form.
