@@ -181,7 +181,7 @@ module Tumblr
     def request_parameters
       Hash[(Tumblr::Client::POST_OPTIONS | [:id, :type]).map {|key|
         [key.to_s, send(key)] if respond_to?(key) && send(key)
-      }]
+      }.compact]
     end
 
     # Which parts of this post represent it's meta data (eg. they're not part of the body).
